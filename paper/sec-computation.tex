@@ -116,9 +116,12 @@ sources for \texttt{sorry}, \texttt{admit} and \texttt{axiom}
 declarations, finding exactly five occurrences, listed in
 Section~\ref{com:subsec-lean}.
 \item \emph{Snapshot integrity}: SHA-256 verification of the archived source
-snapshot, reporting the files that changed since the snapshot; the six
-changed files are the expected post-review repair edits to the working
-notes and four section files, not frozen deliverables.
+snapshot (20 files plus the pinned artifacts). In the review environment the
+same check additionally reported the six post-review-edit live files (the
+expected repair edits to the working notes and four section files, not frozen
+deliverables); that comparison required the live working tree, which is not
+part of the released repository, so the released script reports the field as
+empty.
 \end{itemize}
 
 One reading rule binds the released result file: a PASS records that the
@@ -287,7 +290,13 @@ separate fact outside the theorem). Both carry the standard axiom profile
 \texttt{[propext, Classical.choice, Quot.sound]} and no \texttt{sorryAx}.
 On the criterion line, two declarations are formalized without
 \texttt{sorryAx}: the criterion-level bound $g_{13}\le d_2+1$
-(\texttt{thmA2663\_upgraded}, axioms \texttt{[propext, Quot.sound]}), whose
+(\texttt{thmA2663\_upgraded}, axioms \texttt{[propext, Quot.sound]}), where
+$g_{13}$ is the criterion-layer count functional of the valuation line
+(in the paper's notation, the number of ``leaks'' of $C_1$ --- points of
+the shifted layer $F_{13}$ of Definition~\ref{int:def-legalval} outside
+$C_1$; in the Lean sources it is defined as a count over
+\texttt{List.range n} in the base module and quoted by
+\texttt{ThmA2663.lean}), whose
 hypotheses --- the target side has the prescribed size, and
 $\mathrm{val}\le1$ --- are \emph{assumed, not proved} (it is a bound under a
 hypothesis, not a feasibility-existence proof; see no-claim

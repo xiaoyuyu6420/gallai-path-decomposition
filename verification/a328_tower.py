@@ -11,23 +11,26 @@ verification/snapshot/artifacts/deepA32x/a328_tower.py; verification/checks.py
 does not re-execute it — it only re-checks the arithmetic of the JSON outputs
 (census ledger and o2-table accounting).
 
-The original module docstring (verbatim, in Chinese) follows.
+The original module docstring was in the project's internal working language;
+an English summary precedes the verbatim code below. The verbatim original
+itself is preserved, hash-pinned, in the released review snapshot.
 """
 import itertools
 import json
+import os
 import sys
 import numpy as np
 
-CAP = 20_000_000  # per-layer candidate-pair cap（超限如实记 truncated）
+CAP = 20_000_000  # per-layer candidate-pair cap (past the cap, the layer is recorded honestly as truncated)
 
 
 def lift_count(P, d0, d1):
-    """profile P 从 d0 提升到 d1 的提升个数（不枚举）。"""
+    """Number of lifts of profile P from modulus d0 to d1 (computed without enumeration)."""
     p = d1 // d0
     r = 1
     for a in range(d0):
         j = P[a]
-        # comps(j, p) 个数 = C(j+p-1, p-1)
+        # the number of comps(j, p) equals C(j+p-1, p-1)
         c = 1
         for t in range(1, p):
             c = c * (j + t) // t
@@ -38,7 +41,7 @@ def lift_count(P, d0, d1):
 
 
 def lifts_from(surv_pairs, d0, d1, cap):
-    """从 surv_pairs 提升到 d1；超 cap 返回 (None, True)。"""
+    """Lift surv_pairs up to modulus d1; past the cap, return (None, True)."""
     cand = []
     trunc = False
     for (C, M) in surv_pairs:
@@ -55,7 +58,7 @@ def divisors(k):
 
 
 def comps(s, parts):
-    """非负和 s 拆 parts 份，字典序。"""
+    """Partition the non-negative sum s into parts components, in lexicographic order."""
     if parts == 1:
         yield (s,)
         return
@@ -69,13 +72,13 @@ def comps(s, parts):
 
 
 def fresh_pairs(d, n, mode, e=None, o=None):
-    """首层（模 d）新枚举 profile 对。reg: 固定 (e,o)，e≥1，C₀≥1；inf: e+o=n−1 无约束。"""
+    """Enumerate fresh profile pairs at the first layer (modulus d). reg: fixed (e,o) with e >= 1 and C0 >= 1; inf: e + o = n - 1, unconstrained."""
     if mode == "reg":
         for x in comps(e - 1, d):
             C = (x[0] + 1,) + x[1:]
             for M in comps(o, d):
                 yield (C, M)
-    else:  # inf: m = n-1 有限点
+    else:  # inf: m = n - 1 is a finite point count
         m = n - 1
         for j in range(m + 1):
             for C in comps(j, d):
@@ -84,7 +87,7 @@ def fresh_pairs(d, n, mode, e=None, o=None):
 
 
 def lifts(P, d0, d1):
-    """profile P（模 d₀）到模 d₁=d₀·p 的全部提升。"""
+    """All lifts of a profile P (modulus d0) to modulus d1 = d0 * p."""
     p = d1 // d0
     per = [list(comps(P[a], p)) for a in range(d0)]
     for combo in itertools.product(*per):
@@ -96,7 +99,7 @@ def lifts(P, d0, d1):
 
 
 def check_pairs(pairs, d, k, mode, block=60_000):
-    """count-eq 向量筛。pairs: [(C,M)] at modulus d.  返回幸存 [(C,M)]。"""
+    """The count-equality vector sieve. pairs: [(C, M)] at modulus d. Returns the surviving [(C, M)]."""
     tgt = k // d
     out = []
     if not pairs:
@@ -147,10 +150,13 @@ def collect(gen, cap=None):
 
 
 def run_regime(k, n, mode, e, o, verbose=False):
-    """对 (mode,e,o) 跑塔。素层新枚举；合数层 d 从【枚举量最小的非空幸存除子】提升
-    （柔性除子：任何 d₀|d 且 surv[d₀] 非空皆可，完备性由「通过者必是某 d₀-幸存者的
-    提升」承载）。任一层幸存空 ⟹ 死于该层；枚举超 CAP ⟹ truncated（该层及之后的
-    判决无效，如实标记）。"""
+    """Run the tower for (mode, e, o). Prime layers are freshly enumerated; a
+    composite layer d is reached by lifting from the surviving divisor with the
+    smallest estimated enumeration cost (flexible divisors: any d0 | d with a
+    non-empty surv[d0] may serve as the source; completeness rests on "any
+    survivor at d is a lift of some d0-survivor"). An empty survivor set at any
+    layer means death at that layer; exceeding CAP means truncated (the verdict
+    at that layer and beyond is inconclusive and is marked as such)."""
     layers = divisors(k)
     surv = {}
     hist = []
@@ -162,7 +168,7 @@ def run_regime(k, n, mode, e, o, verbose=False):
         src = None
         divs0 = [d0 for d0 in range(2, d) if d % d0 == 0 and surv.get(d0)]
         if divs0:
-            # 成本升序：按首对提升量的估计排序（lift_count 带早退），小者先试
+            # ascending cost: order the surviving divisors by the estimated size of the first-pair lift (lift_count with early exit), cheapest first
             def est(d0):
                 C0, M0 = surv[d0][0]
                 return lift_count(C0, d0, d) * lift_count(M0, d0, d)
@@ -181,7 +187,7 @@ def run_regime(k, n, mode, e, o, verbose=False):
             truncated = True
             hist.append({"d": d, "cand": -1, "surv": -1, "note": "CAP-truncated",
                          "src": src})
-            break  # 截断非死亡：该 (mode,regime) 判决无效（inconclusive）
+            break  # truncation is not death: the verdict for this (mode, regime) is inconclusive
         truncated = truncated or trunc_f
         cur = check_pairs(cand, d, k, mode)
         surv[d] = cur
@@ -204,7 +210,8 @@ def run_regime(k, n, mode, e, o, verbose=False):
 
 
 def sieve_primes(n):
-    """[L1] 筛素数：奇 p | n−1（2-齿按 [E9] 自动满足，不排除）。"""
+    """[L1] The prime sieve: odd primes p dividing n - 1 (the 2-tooth case is
+    satisfied automatically by [E9] and is not excluded)."""
     ps, m = [], n - 1
     p = 2
     while p * p <= m:
@@ -225,11 +232,14 @@ def regime_allowed(n, e, ps):
 
 
 def order2_feasible(n, e):
-    """k=C(n,2) 偶时 regime(e,n−e) 的 order-2 必要条件
-    x_E² + 2 x_E x_O − x_O² = e − o （x_E≡e, x_O≡o mod 2, |x_E|≤e, |x_O|≤o）
-    的可解性。True=可行 / False=不可行（纸面死）/ None=k 奇无二阶特征。"""
+    """When k = C(n,2) is even, the order-2 necessary condition for the regime
+    (e, n - e): solvability of
+    x_E^2 + 2 x_E x_O - x_O^2 = e - o  (x_E = e mod 2, x_O = o mod 2,
+    |x_E| <= e, |x_O| <= o).
+    True = solvable / False = unsolvable (dead on paper) / None = k odd, no
+    order-2 signature."""
     if (n * (n - 1)) % 4 != 0:
-        return None  # k 奇：无二阶特征
+        return None  # k odd: no order-2 signature
     o = n - e
     D = e - o
     for xe in range(-e, e + 1):
@@ -253,7 +263,8 @@ def math_isqrt(t):
 
 
 def tower_n(n, regimes_only_allowed=True, verbose=False):
-    """对层 k=C(n,2) 的全部 regime + ∞ 跑塔。"""
+    """Run the tower for every regime of the layer k = C(n,2), plus the infinity
+    mode."""
     k = n * (n - 1) // 2
     ps = sieve_primes(n)
     rows = []
@@ -270,7 +281,7 @@ def tower_n(n, regimes_only_allowed=True, verbose=False):
         r["sieve"] = "allow" if allowed else "elim"
         r["q"] = e * o
         rows.append(r)
-    # ∞ 模式
+    # infinity mode
     ri = run_regime(k, n, "inf", 0, n - 1, verbose)
     ri["sieve"] = "allow"
     ri["q"] = None
@@ -280,7 +291,8 @@ def tower_n(n, regimes_only_allowed=True, verbose=False):
 
 
 def layer_survs(k, n, mode, e, o, upto_d):
-    """跑到模 upto_d 为止的幸存对（锚点用；链规则与 run_regime 一致）。"""
+    """Surviving pairs up to modulus upto_d (for the anchors; the chain rules
+    match run_regime)."""
     layers = divisors(k)
     surv = {}
     for d in layers:
@@ -303,7 +315,8 @@ def layer_survs(k, n, mode, e, o, upto_d):
 
 def main():
     out = {"anchors": {}, "towers": {}, "o2table": {}}
-    # ---- 锚点（上账前置；对 A324/A325 已审计机账）----
+    # ---- anchors (prerequisites for the ledger; cross-checked against the
+    # previously audited machine accounts) ----
     out["anchors"]["k36_q0_layer3_survs"] = [tuple(map(list, p)) for p in layer_survs(36, 9, "reg", 9, 0, 3)]
     out["anchors"]["k36_q0_layer4"] = run_regime(36, 9, "reg", 9, 0)["layers"]
     out["anchors"]["k36_q0_dead_at"] = run_regime(36, 9, "reg", 9, 0)["dead_at"]
@@ -313,12 +326,14 @@ def main():
     out["anchors"]["k15_q0_final"] = run_regime(15, 6, "reg", 6, 0)
     out["anchors"]["k21_q0_final"] = run_regime(21, 7, "reg", 7, 0)
 
-    # ---- 正控（hit 承载 regime/模式必须幸存：dead_at 必须为 None）----
+    # ---- positive controls (hit-carrying regimes/modes must survive: dead_at must stay None) ----
     for (kk, nn, ee) in [(10, 5, 2), (10, 5, 3), (6, 4, 3), (6, 4, 1), (3, 3, 1), (3, 3, 2), (3, 3, 3)]:
         out["anchors"][f"ctl_k{kk}_n{nn}_e{ee}"] = run_regime(kk, nn, "reg", ee, nn - ee)
     for (kk, nn) in [(3, 3), (6, 4)]:
         out["anchors"][f"ctl_inf_k{kk}_n{nn}"] = run_regime(kk, nn, "inf", 0, nn - 1)
-    # 预期死亡观察项（census 0 命中，非正控）：inf@k=10（A314 (甲4) 五点数据之一）
+    # expected-death observation (census 0 hits; a negative control, not a
+    # positive one): inf@k=10, one of the five expected-death data points of
+    # the paper's classification section
     out["anchors"]["obs_inf_k10_n5_expected_dead"] = run_regime(10, 5, "inf", 0, 4)
 
     ctl_bad = []
@@ -326,10 +341,10 @@ def main():
         if key.startswith("ctl_") and a["dead_at"] is not None:
             ctl_bad.append((key, a["dead_at"]))
     if ctl_bad:
-        print("CONTROL FAIL (tower over-kills a hit-carrying regime):", ctl_bad, file=sys.stderr)
+        print("CONTROL FAIL (tower over-excludes a hit-carrying regime):", ctl_bad, file=sys.stderr)
         sys.exit(1)
 
-    # ---- 主塔 n=6..14（全部 regime 含筛排除侧+∞）----
+    # ---- main towers n=6..14 (every regime, sieve-excluded sides plus infinity) ----
     for n in range(6, 15):
         out["towers"][str(n)] = tower_n(n, regimes_only_allowed=False)
         rows = out["towers"][str(n)]["rows"]
@@ -338,7 +353,7 @@ def main():
         print(f"n={n} k={n*(n-1)//2} alive={alive}", file=sys.stderr)
         print(f"   dead_at={deadlayer}", file=sys.stderr)
 
-    # ---- order-2 可解表 + 筛表 n=6..60 ----
+    # ---- order-2 solvability table and sieve table, n=6..60 ----
     for n in range(6, 61):
         ps = sieve_primes(n)
         rows = []
@@ -347,12 +362,18 @@ def main():
             rows.append({"e": e, "o": o, "q": e * o,
                          "sieve": regime_allowed(n, e, ps),
                          "o2": order2_feasible(n, e)})
-        killed = all((not r["sieve"]) or (r["o2"] is False) for r in rows)
+        # NB: the JSON key "all_noninf_killed_by_sieve_o2" is the pinned
+        # artifact field name (a328_o2table.json) and must stay verbatim;
+        # "dead" here is the paper's terminology for a regime excluded by
+        # the necessary-condition sieves.
+        dead = all((not r["sieve"]) or (r["o2"] is False) for r in rows)
         out["o2table"][str(n)] = {"sieve_primes": ps, "k_parity": ("even" if (n * (n - 1)) % 4 == 0 else "odd"),
-                                  "rows": rows, "all_noninf_killed_by_sieve_o2": killed}
+                                  "rows": rows, "all_noninf_killed_by_sieve_o2": dead}
     fully = [n for n in range(6, 61) if out["o2table"][str(n)]["all_noninf_killed_by_sieve_o2"]]
-    print("o2-fully-killed n (6..60):", fully, file=sys.stderr)
-    with open("/tmp/deepA32x/a328_tower_out.json", "w") as f:
+    print("o2: all non-infinity regimes dead for n (6..60):", fully, file=sys.stderr)
+    out_path = os.environ.get("TOWER_OUT", "/tmp/tower_out/a328_tower_out.json")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, "w") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print("WROTE a328_tower_out.json", file=sys.stderr)
 

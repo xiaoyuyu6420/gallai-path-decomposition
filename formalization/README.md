@@ -15,9 +15,8 @@ packages, so no network access is needed).
 
 | File | Content |
 |---|---|
-| `Front583/Pi3L2b.lean` | The packing predicate `pkg` (a Lean reimplementation of the reference Python `labA174._pkg`: lattice x block x key three-dimensional matching, with the M-side bans), the embedded certificate data (120 canonical orbits, 330 demand vectors, 1,761 top-failure vectors), and the main table theorem `l2b_toplevel_certificate` checking all 79,200 points (120 x 330 x two board sides) pointwise. Also data anchors: `dem330_len`, `dem330_sum`, `orbits_len`, `cert_count`, `cert_count_N` (= 204), `cert_count_M` (= 1,557). |
-| `Front583/Pi3Uni.lean` | Nine table-domain theorems over the same 79,200-point domain: downset tables on both sides, the uniform layer (Sigma d <= |S| - 1 feasible on both sides), the no-threshold witness `m_no_threshold_witness` (two demands with equal Sigma d = 4, one feasible and one not), `fails_top_only` (all 1,761 failures in the top layer), `mf_upset`, and the failure-orbit counts `mf_orbits` (= 110) / `nf_orbits` (= 2). |
-| `Front583/Pi3Downset.lean` | `pkg_downset`, the general-form downset theorem, proved with plain tactics only: if `slot(d', i) = slot(d, i) - 1` with all other slots equal and `slot(d, i) >= 1`, then feasibility of `d` implies feasibility of `d'` — for arbitrary inputs, not just the 120-orbit table domain. |
+| `Front583/Pi3L2b.lean` | The packing predicate `pkg` (a Lean reimplementation of the reference Python implementation's `_pkg` routine: lattice x block x key three-dimensional matching, with the M-side bans), the embedded certificate data (120 canonical orbits, 330 demand vectors, 1,761 top-failure vectors), and the main table theorem `l2b_toplevel_certificate` checking all 79,200 points (120 x 330 x two board sides) pointwise. Also data anchors: `dem330_len`, `dem330_sum`, `orbits_len`, `cert_count`, `cert_count_N` (= 204), `cert_count_M` (= 1,557). |
+| `Front583/Pi3Uni.lean` | Nine table-domain theorems over the same 79,200-point domain: downset tables on both sides, the uniform layer (Sigma d <= |S| - 1 feasible on both sides), the no-threshold witness `m_no_threshold_witness` (two demands with equal Sigma d = 4, one feasible and one not), `fails_top_only` (all 1,761 failures in the top layer), `mf_upset`, and the failure-orbit counts `mf_orbits` (= 110) / `nf_orbits` (= 2). || `Front583/Pi3Downset.lean` | `pkg_downset`, the general-form downset theorem, proved with plain tactics only: if `slot(d', i) = slot(d, i) - 1` with all other slots equal and `slot(d, i) >= 1`, then feasibility of `d` implies feasibility of `d'` — for arbitrary inputs, not just the 120-orbit table domain. |
 
 ## How to build
 
@@ -57,6 +56,9 @@ directory's build). Summarised:
 
 ## Scope boundaries
 
+- Module and file names (`Front583`, `Pi3*`, `2663`) preserve the project's
+  internal provenance labels and are retained verbatim for auditability; they
+  are provenance anchors, not paper terminology.
 - The `val <= 1` hypothesis (min-val-<=1-type criterion in the paper's
   wording) mentioned in the released 2026-10-10 review log
   (`lean_axioms_2026-10-10-review.log`, covering earlier declarations
@@ -78,8 +80,9 @@ directory's build). Summarised:
 
 ## Provenance
 
-`Front583/Pi3*.lean` are byte-identical copies of the sources developed in
-the underlying research workspace (verified by `cmp` at release time).
+`Front583/Pi3*.lean` are the sources developed in the underlying research
+workspace, released verbatim with header comments edited for public release
+(the semantics, data, and theorem statements are unchanged).
 `lean_axioms_2026-10-10-review.log` is the byte-identical copy of the axiom
 audit recorded in the 2026-10-10 independent review (covering the earlier
 declarations); `lean_axioms.log` is the fresh audit of this directory's

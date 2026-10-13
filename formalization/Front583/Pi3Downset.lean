@@ -1,34 +1,43 @@
 import Front583.Pi3L2b
 
-/-! # Front583.Pi3Downset — Π3·L2(b) 下集性一般定理（纸面级 fully-prove）
+/-! # Front583.Pi3Downset — the general-form downset theorem for L2(b)
+(a plain, fully tactic-proved theorem)
 
-**承接对象**（deep_A334_pi3.md §2.1 引理 1「下集性」+ deep_A366 任务②）：
-A334 的下集性引理「可行点的一切直接前驱仍可行」（纸面=两行限制论证，
-A334 机检 120×330×2 全核 0 违例；Pi3Uni.lean 以表域 native_decide 证书承载）
-在本件升格为**一般形式的全证明定理**：
+**Scope** (lemma 1 "downset property" of the packing-table account, task (2)
+of the follow-up module plan): the downset lemma "every immediate predecessor
+of a feasible point is feasible" (paper side: a two-line restriction argument;
+machine-checked over 120 x 330 x 2 points with zero violations; carried as a
+table-domain native_decide certificate in Pi3Uni.lean) is upgraded here to a
+**fully proved theorem in general form**:
 
-    pkg_downset：任意 (S, s, 侧, d, d', i)，slot d i ≥ 1、d' = d 槽 i 减一
-    （其余槽同）⟹ pkg S sc ban d = true → pkg S sc ban d' = true
+    pkg_downset: for arbitrary (S, s, side, d, d', i), if slot d i >= 1 and
+    d' = d with slot i decremented (all other slots equal), then
+    pkg S sc ban d = true -> pkg S sc ban d' = true
 
-证明结构（全部纸面 tactic，无 native_decide/无 sorry）：
-位运算工具（testBit_add_two_pow：位清零时加 2^k 只翻位 k）→
-pkgGo_mono（占用掩码变小成功性保持，Bitsub 点位式子集）→
-pkgGo_agree（块表槽值全同则行为恒等）→ pkgGo_fuel_mono（燃料单调）→
-pkgGo_ds（主归纳：单槽减一的成功性转移，头块 i 的边界情形
-「展开一步 + agree + mono + 燃料单调」）→ pkg_downset（装配：
-块表 filter 全等 + 零需求块删除 pkgGo_drop0 互归纳）。
+Proof structure (plain tactics throughout; no native_decide, no sorry):
+bit tools (testBit_add_two_pow: if bit k is clear, adding 2^k flips only bit
+k) -> pkgGo_mono (success is preserved when the occupancy masks shrink, in the
+pointwise Bitsub sense) -> pkgGo_agree (identical slot values on the block
+list give identical behaviour) -> pkgGo_fuel_mono (fuel monotonicity) ->
+pkgGo_ds (the main induction: the success-transfer for a single-slot
+decrement, with the head-block-i boundary case handled by "unfold one step +
+agree + mono + fuel monotonicity") -> pkg_downset (assembly: filter equality
+of block lists + mutual induction with the zero-demand-block deletion lemma
+pkgGo_drop0).
 
-诚实落款：axioms 依赖 [propext, Classical.choice, Quot.sound]——Lean 三大
-标准逻辑公理（与 Fan.lean/Cert12 系定理同档），**无 sorryAx、无
-Lean.ofReduceBool**，为纸面级证明（区别于 Pi3L2b/Pi3Uni 的
-native_decide 机器证书级）。覆盖域：任意 (S, sc, ban, d, d', i) 全称形式，
-不受 120 轨道代表/Σd≤7 域限制。溯源链：labA174._pkg 语义 →
-Pi3L2b.pkg（A360 逐式重实现）→ 本件。-/
+Trust note: the axiom profile is [propext, Classical.choice, Quot.sound] —
+Lean's three standard logical axioms — with **no sorryAx and no
+Lean.ofReduceBool**; this is a plain proof (in contrast to the
+native_decide machine-certificate grade of Pi3L2b/Pi3Uni). Coverage: the
+universally quantified form over arbitrary (S, sc, ban, d, d', i), not
+restricted to the 120-orbit / Sigma d <= 7 table domain. Provenance: the
+semantics of labA174._pkg -> Pi3L2b.pkg (the Lean reimplementation) -> this
+file. -/
 
 
-/-! ## 位运算工具 -/
+/-! ## Bit tools -/
 
-/-- 加 2^k 在位 k 清零时只翻位 k。 -/
+/-- If bit k of n is clear, adding 2^k flips only bit k. -/
 theorem testBit_add_two_pow (n k : Nat) (h : n.testBit k = false) :
     (n + 2 ^ k).testBit k = true ∧ ∀ i, i ≠ k → (n + 2 ^ k).testBit i = n.testBit i := by
   induction k generalizing n with
@@ -70,7 +79,7 @@ theorem testBit_add_two_pow (n k : Nat) (h : n.testBit k = false) :
           · exact absurd hi (by omega)
           · exact h2 j (by omega)
 
-/-- 点位式位含关系。 -/
+/-- Pointwise bit-containment. -/
 def Bitsub (a b : Nat) : Prop := ∀ i, a.testBit i = true → b.testBit i = true
 
 theorem bitsub_refl (a : Nat) : Bitsub a a := fun _ hi => hi
@@ -99,7 +108,7 @@ theorem bitsub_add_both (a b k : Nat) (ha : a.testBit k = false) (hb : b.testBit
     rw [(testBit_add_two_pow b k hb).2 i he]
     exact h i hi
 
-/-- testBit 桥：pkgGo 中 `== 0` 的位判断 = 非 testBit。 -/
+/-- testBit bridge: the `== 0` bit test inside pkgGo equals the negation of testBit. -/
 theorem bit0 (n k : Nat) : (((n >>> k) &&& 1 : Nat) == 0) = !(n.testBit k) := by
   have h1 : (n >>> k) &&& 1 = (n >>> k) % 2 := Nat.and_one_is_mod _
   have h2 : n.testBit k = decide ((n >>> k) % 2 = 1) := by simp [Nat.testBit]
@@ -109,9 +118,9 @@ theorem bit0 (n k : Nat) : (((n >>> k) &&& 1 : Nat) == 0) = !(n.testBit k) := by
   · have h3 : (n >>> k) % 2 = 1 := by omega
     simp [h3]
 
-/-! ## pkgGo 的结构引理 -/
+/-! ## Structural lemmas on pkgGo -/
 
-/-- 燃料单调：大燃料下成功性保持。 -/
+/-- Fuel monotonicity: success at a larger fuel persists. -/
 theorem pkgGo_fuel_mono (S sc : Nat) (ban : Bool) (d : Nat) :
     ∀ f B uc uk y cnt, pkgGo f S sc ban d B uc uk y cnt = true →
       ∀ f', f ≤ f' → pkgGo f' S sc ban d B uc uk y cnt = true := by
@@ -147,7 +156,7 @@ theorem pkgGo_fuel_mono (S sc : Nat) (ban : Bool) (d : Nat) :
             · exact Bool.or_eq_true_iff.mpr
                 (Or.inr (ih (j :: B') uc uk (y + 1) cnt hskip g' hgle))
 
-/-- 单调性：占用掩码变小（点位式），成功性保持。 -/
+/-- Monotonicity: success is preserved when the occupancy masks shrink (pointwise). -/
 theorem pkgGo_mono (S sc : Nat) (ban : Bool) (d : Nat) :
     ∀ f B uc1 uk1 uc2 uk2 y cnt,
       Bitsub uc2 uc1 → Bitsub uk2 uk1 →
@@ -211,7 +220,7 @@ theorem pkgGo_mono (S sc : Nat) (ban : Bool) (d : Nat) :
       · exact Bool.or_eq_true_iff.mpr
           (Or.inr (ih (j :: B') uc1 uk1 uc2 uk2 (y + 1) cnt hsub hsubk hskip))
 
-/-- 同意引理：块表上槽值全同则行为恒等。 -/
+/-- Agreement lemma: identical slot values on the block list give identical behaviour. -/
 theorem pkgGo_agree (S sc : Nat) (ban : Bool) (d d' : Nat) :
     ∀ f B uc uk y cnt, (∀ j ∈ B, slot d j = slot d' j) →
       pkgGo f S sc ban d B uc uk y cnt = pkgGo f S sc ban d' B uc uk y cnt := by
@@ -231,7 +240,7 @@ theorem pkgGo_agree (S sc : Nat) (ban : Bool) (d d' : Nat) :
       rw [ih (j :: B') (uc + 2 ^ y) (uk + 2 ^ ((y + 7 - slot sc j % 7) % 7)) (y + 1) (cnt + 1) hag]
       rw [ih (j :: B') uc uk (y + 1) cnt hag]
 
-/-- 零需求块 wander 失败引理：零需求块在 cnt ≠ 0 时必失败。 -/
+/-- Zero-demand-block wander-failure lemma: a zero-demand block fails whenever cnt is non-zero. -/
 theorem pkgGo_wander_fail (S sc : Nat) (ban : Bool) (d j : Nat) (h0 : slot d j = 0) :
     ∀ f B uc uk y cnt, cnt ≠ 0 → pkgGo f S sc ban d (j :: B) uc uk y cnt = false := by
   intro f
@@ -247,8 +256,10 @@ theorem pkgGo_wander_fail (S sc : Nat) (ban : Bool) (d j : Nat) (h0 : slot d j =
       rw [ih B (uc + 2 ^ y) (uk + 2 ^ ((y + 7 - slot sc j % 7) % 7)) (y + 1) (cnt + 1)
         (by omega), ih B uc uk (y + 1) cnt (by omega), Bool.and_false, Bool.or_false]
 
-/-- **零需求块删除**：slot d i = 0 时，块表中的 i 块可整体删除。
-P0 = (0,0) 入口态主断言；P1 = 头块 ≠ i 的块内递归不变式（互归纳）。 -/
+/-- **Zero-demand-block deletion**: when slot d i = 0, the block i can be
+removed from the block list wholesale.
+P0 = the main assertion at the (0,0) entry state; P1 = the intra-block
+recursion invariant for a head block other than i (mutual induction). -/
 theorem pkgGo_drop0 (S sc : Nat) (ban : Bool) (d i : Nat) (h0 : slot d i = 0) :
     ∀ f, (∀ B uc uk, pkgGo f S sc ban d B uc uk 0 0 = true →
             pkgGo f S sc ban d (B.filter (fun j => !(j == i))) uc uk 0 0 = true) ∧
@@ -323,7 +334,7 @@ theorem pkgGo_drop0 (S sc : Nat) (ban : Bool) (d i : Nat) (h0 : slot d i = 0) :
           · have hskip2 := ih1 (j :: B') uc uk (y + 1) cnt (by simp [hj]) hskip
             rw [List.filter_cons_of_pos (by simpa using hj)] at hskip2
             exact Bool.or_eq_true_iff.mpr (Or.inr hskip2)
-/-! ## 主归纳：单槽减一的成功性转移 -/
+/-! ## The main induction: success transfer under a single-slot decrement -/
 
 theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
     (h1 : slot d' i + 1 = slot d i)
@@ -352,7 +363,7 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
       by_cases hij : j = i
       · subst hij
         rcases hentry with hcnt | hne'
-        · -- cnt + 1 ≤ slot d j；j ∉ B'（主路径）
+        · -- cnt + 1 <= slot d j, and j not in B' (main path)
           have hnotin : j ∉ B' := by
             intro hmem
             have hf : ((j :: B').filter (fun k => k == j)) =
@@ -387,7 +398,7 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
               exact absurd h (by simp)
             rw [if_neg hy] at h
             rcases Nat.lt_or_ge (cnt + 1) (slot d j) with hclt | hcge
-            · -- 深层：cnt < slot d' j
+            · -- Deep case: cnt < slot d' j
               have hc1' : ¬((cnt == slot d' j) = true) := by
                 have hcx : cnt ≠ slot d' j := by omega
                 simp [hcx]
@@ -400,7 +411,7 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
                 exact Bool.or_eq_true_iff.mpr (Or.inl (Bool.and_eq_true_iff.mpr ⟨hCK, hrec2⟩))
               · have hskip2 := ih (j :: B') uc uk (y + 1) cnt hpos hlen (Or.inl hcnt) hskip
                 exact Bool.or_eq_true_iff.mpr (Or.inr hskip2)
-            · -- 边界：cnt = slot d' j，cell 分支展开一步后 agree+mono，skip 分支 IH
+            · -- Boundary: cnt = slot d' j; the cell branch unfolds one step then agree+mono, the skip branch uses the IH
               have hc1'e : ((cnt == slot d' j) = true) := by simp; omega
               rw [if_pos hc1'e]
               rcases Bool.or_eq_true_iff.mp h with hcell | hskip
@@ -433,7 +444,7 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
                       (bitsub_add uc uc y hU' (bitsub_refl uc))
                       (bitsub_add uk uk ((y + 7 - slot sc j % 7) % 7) hK' (bitsub_refl uk))
                       hrec) (g' + 1) (by omega)
-              · -- skip 分支：IH 后出口 + fuel_mono
+              · -- Skip branch: exit via the IH, then fuel_mono
                 cases g with
                 | zero => exact absurd hskip (by simp [pkgGo])
                 | succ g' =>
@@ -442,7 +453,7 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
                   rw [if_pos hc1'e] at hskip2
                   exact pkgGo_fuel_mono S sc ban d' g' B' uc uk 0 0 hskip2 (g' + 1) (by omega)
         · exact absurd hne' (by simp)
-      · -- j ≠ i：头块两侧同构，递归交给 IH
+      · -- j != i: the head block is identical on both sides; the recursion is delegated to the IH
         have hj2 : slot d' j = slot d j := h2 j hij
         have hlen' : ((j :: B').filter (fun j_1 => j_1 == i)).length ≤ 1 := by
           exact hlen
@@ -483,17 +494,19 @@ theorem pkgGo_ds (S sc : Nat) (ban : Bool) (d d' i : Nat)
           · have hskip2 := ih (j :: B') uc uk (y + 1) cnt hpos hlen (Or.inr hij) hskip
             exact Bool.or_eq_true_iff.mpr (Or.inr hskip2)
 
-/-! ## 主定理：下集性（槽值形式） -/
+/-! ## Main theorem: the downset property (slot-value form) -/
 
-/-- 4 元素字面列表按「等于 i」过滤后长度至多 1（字面 beq 可判定性）。 -/
+/-- Filtering the 4-element literal list by "equal to i" leaves at most one element (decidability of the literal beq). -/
 theorem filter4_len (p : Nat → Bool) (i : Nat) :
     ([0, 1, 2, 3].filter (fun a => (a == i) && p a)).length ≤ 1 := by
   simp only [List.filter_cons]
   split <;> split <;> split <;> split <;> simp_all <;> omega
 
-/-- **下集性一般定理**：单槽减一不破坏可行性（任意 (S, s, 侧, 需求)）。
-「可行点的一切直接前驱仍可行」的 Lean 纸面证明（deep_A334 两行限制论证的
-逐 DFS 形式化；不依赖 native_decide/sorry）。 -/
+/-- **The general downset theorem**: a single-slot decrement preserves
+feasibility (arbitrary (S, s, side, demand)).
+The Lean proof of "every immediate predecessor of a feasible point is
+feasible" (a DFS-shaped formalization of the two-line restriction argument;
+no native_decide, no sorry). -/
 theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
     (hi : 1 ≤ slot d i)
     (h1 : slot d' i + 1 = slot d i)
@@ -502,7 +515,7 @@ theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
     pkg S sc ban d' = true := by
   unfold pkg at h ⊢
   by_cases hi4 : i ∈ [0, 1, 2, 3]
-  · -- 主路径：i 是真实块
+  · -- Main path: i is an actual block
     have hBpos : ∀ j ∈ [0, 1, 2, 3].filter (fun j => slot d j > 0), 1 ≤ slot d j := by
       intro j hj
       have hj2 := (List.mem_filter.mp hj).2
@@ -538,7 +551,7 @@ theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
     have hds := pkgGo_ds S sc ban d d' i h1 h2 512
       ([0, 1, 2, 3].filter (fun j => slot d j > 0)) 0 0 0 0 hBpos hlen hentry h
     rcases Nat.lt_or_ge (slot d i) 2 with hlt2 | hge2
-    · -- slot d i = 1：i 从块表脱落
+    · -- slot d i = 1: block i drops out of the block list
       have h0' : slot d' i = 0 := by omega
       have hBeq : [0, 1, 2, 3].filter (fun j => slot d' j > 0) =
           ([0, 1, 2, 3].filter (fun j => slot d j > 0)).filter (fun j => !(j == i)) := by
@@ -553,7 +566,7 @@ theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
       rw [hBeq]
       exact (pkgGo_drop0 S sc ban d' i h0' 512).1
         ([0, 1, 2, 3].filter (fun j => slot d j > 0)) 0 0 hds
-    · -- slot d i ≥ 2：块表不变
+    · -- slot d i >= 2: the block list is unchanged
       have hBeq : [0, 1, 2, 3].filter (fun j => slot d' j > 0) =
           [0, 1, 2, 3].filter (fun j => slot d j > 0) := by
         apply List.filter_congr
@@ -566,7 +579,7 @@ theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
         · rw [h2 j hj]
       rw [hBeq]
       exact hds
-  · -- i ≥ 4：块表上 d/d' 槽值全同 → agree
+  · -- i >= 4: d and d' agree slotwise on the block list, so the agreement lemma applies
     have hBeq : [0, 1, 2, 3].filter (fun j => slot d' j > 0) =
         [0, 1, 2, 3].filter (fun j => slot d j > 0) := by
       apply List.filter_congr
@@ -583,7 +596,7 @@ theorem pkg_downset (S sc : Nat) (ban : Bool) (d d' i : Nat)
     rw [hx] at h
     exact h
 
-/-! ## 零洞机器证据 -/
+/-! ## Machine evidence with zero uncovered points -/
 #print axioms pkg_downset
 #print axioms pkgGo_ds
 #print axioms pkgGo_mono

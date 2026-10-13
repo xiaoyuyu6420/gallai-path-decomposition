@@ -187,6 +187,8 @@ def census_ledger():
 
 def noninf_table_accounting():
     data = json.loads((OUT / 'snapshot/artifacts/deepA32x/a328_o2table.json').read_text())
+    # "full_kill_n_6_to_200" and "all_noninf_killed_by_sieve_o2" below are
+    # pinned artifact field names (a328_o2table.json) and must stay verbatim.
     numbers = data['_summary']['full_kill_n_6_to_200']
     from_rows = [int(n) for n, row in data.items()
                  if n.isdigit() and row['all_noninf_killed_by_sieve_o2']]
@@ -197,7 +199,7 @@ def noninf_table_accounting():
     composites = [n for n in numbers if not prime(n - 1)]
     assert len(numbers) == 28 and len(primes) == 23
     assert composites == [112, 116, 124, 160, 188]
-    return dict(full_kill_points=28, prime_previous_points=23,
+    return dict(full_death_points=28, prime_previous_points=23,
                 composite_previous_points=composites,
                 verification='artifact accounting; does not rerun all table feasibility searches')
 

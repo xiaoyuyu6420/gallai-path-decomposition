@@ -74,6 +74,14 @@ correctness.
 The per-theorem machine anchors (scripts and certificate files) are referenced in the
 paper's computational-appendix table and are released with the paper.
 
+`verification/snapshot/` preserves byte-exact copies of the project's internal
+working documents (in the project's internal working language) solely as
+hash-pinned review evidence; its internal terminology is not part of the
+paper's presentation. The same applies to the field names of the pinned
+machine-account artifacts under `verification/snapshot/artifacts/` (e.g. the
+`a328_o2table.json` keys quoted verbatim by the recheck script): they are
+frozen record identifiers, not terminology.
+
 ## Formalization
 
 The Lean development (toolchain `leanprover/lean4:4.34.0`) certifies a precise subset of

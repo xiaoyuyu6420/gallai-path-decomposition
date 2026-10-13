@@ -132,7 +132,7 @@
   "noninf_table_accounting": {
     "status": "PASS",
     "result": {
-      "full_kill_points": 28,
+      "full_death_points": 28,
       "prime_previous_points": 23,
       "composite_previous_points": [
         112,

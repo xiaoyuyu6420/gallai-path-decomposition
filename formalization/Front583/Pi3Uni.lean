@@ -1,120 +1,152 @@
 import Front583.Pi3L2b
 
-/-! # Front583.Pi3Uni — Π3·L2(b) 三均匀引理的表域机器证书 + M 侧「无均匀律」精确化
+/-! # Front583.Pi3Uni — table-domain machine certificates for the three
+uniform-layer lemmas of L2(b), plus the sharpened M-side "no uniform law" result
 
-**承接对象**（deep_A334_pi3.md §2.1 路线 1 的三引理 + deep_A366_leanm.md 任务①②）：
-A334 把 L2(b) 表压缩为「三引理 + 顶层证书 1,761 向量」，其中三引理是：
+**Scope** (route 1 of the packing-table account, tasks (1) and (2) of the
+follow-up module plan): the L2(b) table is compressed into "three lemmas + a
+top-level certificate of 1,761 vectors", the three lemmas being:
 
-1. **下集性**：可行域 = 下集（纸面=两行限制论证；A334 机检 120×330×2 全核 0 违例）；
-2. **均匀层 U-A334.1**：Σd ≤ |S|−1 双侧恒可行（A334 机检全零失败）；
-3. **AGL(1,7) 不变性**：可行域只依赖 (S,s) 的 AGL(1,7) 轨道（A175 :46 纸面+A334
-   53,760 检；本件不承载，另件处理）。
+1. **Downset property**: the feasible region is a downset (paper side: a
+   two-line restriction argument; the machine scan checked 120 x 330 x 2
+   points with zero violations);
+2. **Uniform layer**: Sigma d <= |S| - 1 is feasible on both sides at every
+   point (the machine scan found zero failures);
+3. **AGL(1,7) invariance**: the feasible region depends on (S,s) only through
+   its AGL(1,7) orbit (paper side plus a 53,760-point machine check; not
+   carried in this file — handled in a separate module).
 
-本件在 `Front583.Pi3L2b` 的打包谓词 `pkg` 与 120 轨道数据层之上，把引理 1、2 落为
-**表域机器证书定理**（120 正典轨道 ×330 需求 ×双侧全域 `native_decide` 全查），
-并把 A334「M 侧顶层 1,557 无均匀律」从开放表述精确化为 Lean 定理：
+On top of the packing predicate `pkg` of `Front583.Pi3L2b` and the 120-orbit
+data layer, this file turns lemmas 1 and 2 into **table-domain machine
+certificate theorems** (a full `native_decide` sweep over 120 canonical
+orbits x 330 demands x both sides), and sharpens the open statement "the
+M-side top layer's 1,557 vectors admit no uniform law" into a Lean theorem:
 
-- `m_no_threshold_witness`：同轨道同 Σd=4 两需求一活一死——任何「可行 ⟺ f(Σd)」
-  型均匀律在该轨道上不成立（oracle 侧统计：阈值律 M 侧仅 12/120 轨道存活，
-  Σd/(Σd,max槽)/槽多重集三族统计量律均杀 108/120，机器账见 a366_mstruct.json）；
-- `fails_top_only`：两侧顶层失败向量全部落在 Σd=|S| 层；
-- `mf_upset`：M 侧顶层失败集 = 上集（下集性的顶层像）；
-- `mf_orbits` / `nf_orbits`：失败轨道计数 110 / 2。
+- `m_no_threshold_witness`: within one orbit, two demands with the same
+  Sigma d = 4, one feasible and one not — any uniform law of the form
+  "feasible iff f(Sigma d)" fails on that orbit (oracle-side statistics: a
+  threshold law survives on only 12/120 M-side orbits, and laws via Sigma d /
+  (Sigma d, max slot) / the slot multiset each fail on 108/120 orbits; the
+  machine account is the mstruct JSON artifact of the follow-up module);
+- `fails_top_only`: all top-failure vectors on both sides lie in the
+  Sigma d = |S| layer;
+- `mf_upset`: the M-side top-failure set is an upset (the top-layer image of
+  the downset property);
+- `mf_orbits` / `nf_orbits`: the failure-orbit counts are 110 / 2.
 
-**诚实落款**（承 Pi3L2b/Cert12Led 口径）：本件全部定理以 `native_decide` 承载，
-axioms 依赖 `Lean.ofReduceBool`（原生求值语义公理），非未证断言件、无 sorryAx；
-覆盖域 = 120 正典轨道代表 ×330 需求（Σd≤7）×双侧，raw 4,480 对口径引用须携
-AGL(1,7) 不变性（A175 :46 纸面 + 另件机器证书）。引理的一般形（任意 (S,s,d)）
-纸面化不在本件内（下集性一般定理见另件；均匀层/不变性维持 A334 原档）。
+**Trust note**: every theorem in this file is carried by `native_decide`,
+whose axiom profile depends on `Lean.ofReduceBool` (the native-evaluation
+kernel-reflection axiom); they are machine-checked by kernel reduction, not
+unproved assertions, and contain no `sorryAx`. The coverage domain is the 120
+canonical orbit representatives x 330 demands (Sigma d <= 7) x both sides;
+citations of the raw 4,480-point account must carry AGL(1,7) invariance
+(paper side + a separate machine-certificate module). The general form of the
+lemmas (arbitrary (S,s,d)) is not paper-formalized in this file (the general
+downset theorem lives in a separate module; the uniform layer and invariance
+remain at their original account grade).
 
-**溯源链**：labA174.py::_pkg（md5 29a1272b…）→ a334_l2b_toplevel.json（md5
-0d1e9f3f…）→ Front583.Pi3L2b（A360，lake build+axioms 双过、A361 复核）→ 本件。
-本件 oracle 侧独立复验：a366_mstruct.py 对 _pkg 直算 79,200 点证书规则 0 违例 +
-json↔oracle 120/120 轨道零失配（deep_A366 报告登记）。
+**Provenance**: labA174.py::_pkg (md5 29a1272b...) ->
+a334_l2b_toplevel.json (md5 0d1e9f3f...) -> Front583.Pi3L2b (built with
+`lake build`, axiom audit passed) -> this file. Independent oracle-side
+re-verification of this file: the follow-up module's structural audit script
+recomputed the certificate rule
+directly from _pkg over all 79,200 points with zero violations, and the
+json-vs-orbit cross-check matched on 120/120 orbits (recorded in the audit
+report).
 -/
 
-/-! ## 预备层：需求向量运算 -/
+/-! ## Preliminaries: demand-vector operations -/
 
-/-- 需求码 c 的第 i 槽减一（前置条件 `slot c i ≥ 1` 保证无跨槽借位）。 -/
+/-- Decrement slot i of the demand code c (the side condition `slot c i >= 1` guarantees no cross-slot borrow). -/
 def decCode (c : Nat) (i : Nat) : Nat := c - 2 ^ (3 * i)
 
-/-- 需求支配：c' 逐槽 ≥ c（c 是 c' 的直接前驱方向）。 -/
+/-- Demand domination: c' dominates c slotwise (c is c's immediate-predecessor direction). -/
 def covers (c' c : Nat) : Bool :=
   Nat.ble (slot c 0) (slot c' 0) && Nat.ble (slot c 1) (slot c' 1) &&
     Nat.ble (slot c 2) (slot c' 2) && Nat.ble (slot c 3) (slot c' 3)
 
-/-! ## 引理 1（下集性）：表域机器证书
-可行点的一切直接前驱仍可行——120 轨道 ×330 需求 ×双侧逐点全查
-（A334「可行域=下集」机器面的 Lean 全域承载）。 -/
+/-! ## Lemma 1 (downset property): table-domain machine certificate
+Every immediate predecessor of a feasible point is feasible — checked
+pointwise over 120 orbits x 330 demands x both sides (the Lean domain-wide
+carrier of the machine face of the downset property). -/
 
-/-- 单轨道单侧下集性：非零槽 i 的需求码 c，可行 ⟹ 前驱 decCode c i 可行。 -/
+/-- Per-orbit, per-side downset property: for a demand code c with a non-zero slot i, feasibility of c implies feasibility of its predecessor decCode c i. -/
 def downOK (o : Orb) (ban : Bool) : Bool :=
   Dem330.all (fun c => [0, 1, 2, 3].all (fun i =>
     (slot c i == 0) || (pkg o.S o.s ban c == false) ||
       (pkg o.S o.s ban (decCode c i) == true)))
 
-/-- **下集性·N 侧全域证书**。 -/
+/-- **Downset property, N side: domain-wide certificate.** -/
 theorem downset_table_N : orbitList.all (fun o => downOK o false) = true := by
   native_decide
 
-/-- **下集性·M 侧全域证书**。 -/
+/-- **Downset property, M side: domain-wide certificate.** -/
 theorem downset_table_M : orbitList.all (fun o => downOK o true) = true := by
   native_decide
 
-/-! ## 引理 2（均匀层 U-A334.1）：表域机器证书
-Σd ≤ |S|−1 ⟹ 双侧恒可行——A334 机检引理候选的全域 Lean 承载
-（覆盖全部低层，强于 A334 的层 m−2/m−1 抽查口径）。 -/
+/-! ## Lemma 2 (uniform layer): table-domain machine certificate
+Sigma d <= |S| - 1 implies feasibility on both sides at every point — the
+Lean domain-wide carrier of the machine-checked lemma candidate (covering the
+whole low layer, stronger than the spot-check account at layers m-2/m-1). -/
 
-/-- 单轨道单侧均匀层：Σd+1 ≤ |S|（即 Σd ≤ |S|−1）的需求码恒可行。 -/
+/-- Per-orbit, per-side uniform layer: a demand code with Sigma d + 1 <= |S| (i.e. Sigma d <= |S| - 1) is always feasible. -/
 def uniOK (o : Orb) (ban : Bool) : Bool :=
   Dem330.all (fun c => !(Nat.ble (sumd c + 1) (pc o.S)) || (pkg o.S o.s ban c == true))
 
-/-- **均匀层·N 侧全域证书**。 -/
+/-- **Uniform layer, N side: domain-wide certificate.** -/
 theorem uniform_layer_N : orbitList.all (fun o => uniOK o false) = true := by
   native_decide
 
-/-- **均匀层·M 侧全域证书**。 -/
+/-- **Uniform layer, M side: domain-wide certificate.** -/
 theorem uniform_layer_M : orbitList.all (fun o => uniOK o true) = true := by
   native_decide
 
-/-! ## M 侧结构定理：任务①「无均匀律」的精确化
-A334：M 侧顶层 1,557 向量散布 110 轨道，「是否再有均匀律未解决——阻断如实」。
-本节把它精确化为可判定命题并机器裁决：任何经由 Σd（或更细统计量）的均匀律
-在 108/120 轨道上被同层双值反例杀死；残存结构=上集性+全失败落顶层。 -/
+/-! ## M-side structural theorem: sharpening the "no uniform law" task
+The reference account records: the M-side top layer's 1,557 vectors are spread
+over 110 orbits, and whether any further uniform law exists was left open.
+This section turns that into a decidable statement and settles it by machine:
+any uniform law via Sigma d (or finer statistics) fails on 108/120 orbits
+through same-layer two-valued counterexamples; the surviving structure is the
+upset property plus all failures lying in the top layer. -/
 
-/-- **M 侧「无均匀(阈值)律」见证定理**：轨道 (S={0,1,2,3}, s=[0,1,2,3]) 上
-需求 585=(1,1,1,1) 与 2048=(0,0,0,4) 同有 Σd=4，前者可行、后者不可行——
-故不存在函数 f 使「M 侧可行 ⟺ f(Σd)」（同一 Σd 两值）。oracle 侧由
-a366_mstruct.py 对 labA174._pkg 直算确认（pkg(585)=True / pkg(2048)=False）。 -/
+/-- **M-side "no uniform (threshold) law" witness theorem**: on the orbit
+(S={0,1,2,3}, s=[0,1,2,3]) the demands 585=(1,1,1,1) and 2048=(0,0,0,4) share
+Sigma d = 4, the former feasible and the latter not — hence no function f
+satisfies "M-side feasible iff f(Sigma d)" (one Sigma d, two values). The
+oracle side was confirmed by the follow-up module's structural audit script,
+computing the reference Python implementation directly
+(pkg(585)=True / pkg(2048)=False). -/
 theorem m_no_threshold_witness :
     pkg 15 1672 true 585 = true ∧ pkg 15 1672 true 2048 = false ∧
       sumd 585 = 4 ∧ sumd 2048 = 4 := by
   native_decide
 
-/-- **失败层级锚**：两侧全部顶层失败向量落在 Σd=|S| 层（1,761 条逐条）。 -/
+/-- **Failure-layer anchor**: all top-failure vectors on both sides lie in the Sigma d = |S| layer (all 1,761, one by one). -/
 theorem fails_top_only : orbitList.all (fun o =>
     o.nf.all (fun c => sumd c == pc o.S) && o.mf.all (fun c => sumd c == pc o.S)) = true := by
   native_decide
 
-/-- M 侧顶层失败集的上集性：c 失败、c' 支配 c 且 c' 在顶层 ⟹ c' 失败
-（下集性 downset_table_M 的顶层像；A334 上集性机器面的独立 Lean 全查）。 -/
+/-- Upset property of the M-side top-failure set: if c fails, c' dominates c
+and c' is in the top layer, then c' fails (the top-layer image of the downset
+property downset_table_M; an independent Lean sweep of the machine face of the
+upset account). -/
 def mfUpOK (o : Orb) : Bool :=
   o.mf.all (fun c => Dem330.all (fun c' =>
     (covers c' c == false) || (!(sumd c' == pc o.S)) || (o.mf.contains c')))
 
-/-- **M 侧顶层失败集 = 上集（全域证书）**。 -/
+/-- **The M-side top-failure set is an upset (domain-wide certificate).** -/
 theorem mf_upset : orbitList.all mfUpOK = true := by
   native_decide
 
-/-- **失败轨道计数**：M 侧 1,557 向量散布恰 110 轨道（A334 §2.1 数字）。 -/
+/-- **Failure-orbit count**: the M-side 1,557 vectors are spread over exactly 110 orbits (the figure recorded in the reference account). -/
 theorem mf_orbits : (orbitList.filter (fun o => !(o.mf.isEmpty))).length = 110 := by
   native_decide
 
-/-- **失败轨道计数**：N 侧 204 向量恰在 2 例外轨道（=L2(a) 2 色 key-Hall 墙轨道）。 -/
+/-- **Failure-orbit count**: the N-side 204 vectors sit on exactly 2 exceptional orbits (the two-colour key-Hall wall orbits of the sub-case L2(a)). -/
 theorem nf_orbits : (orbitList.filter (fun o => !(o.nf.isEmpty))).length = 2 := by
   native_decide
 
-/-! ## 零洞机器证据（承 Fan.lean lane_314 先例） -/
+/-! ## Machine evidence with zero uncovered points (following the pattern of the Fan.lean counting-lane module) -/
 
 #print axioms downset_table_N
 #print axioms downset_table_M

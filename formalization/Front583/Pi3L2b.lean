@@ -1,45 +1,63 @@
-/-! # Front583.Pi3L2b — Π3·GAP-A174.1 L2(b) Z₇ 打包有限表：顶层证书的 Lean 承接件
+/-! # Front583.Pi3L2b — the L2(b) Z_7 packing finite table: Lean carrier of the
+top-level certificate
 
-**承接对象**（deep_A334_pi3.md §2.1 路线 1 + deep_A335_verify_a334.md §2.2）：
-簇档 L2(b) 表（raw 4,480 / AGL(1,7) 轨道 120 / 需求向量 330 / 上界 39,600 条目每侧）
-经三引理压缩为「顶层证书 1,761 向量」：全 120 轨道代表 ×330 需求 ×双侧（N/M）：
+**Scope** (route 1 of the packing-table account): the cluster-archived L2(b)
+table (4,480 raw points / 120 AGL(1,7) orbits / 330 demand vectors / bound
+39,600 entries per side) is compressed by three lemmas into a top-level
+certificate of 1,761 vectors, covering all 120 orbit representatives x 330
+demands x both board sides (N/M):
 
-    pkg(S,s,d,side) = true ⟺ Σd ≤ |S|−1 ∨ (Σd = |S| ∧ d ∉ TopFail_side(S,s))
+    pkg(S,s,d,side) = true  iff  Sigma d <= |S| - 1  or  (Sigma d = |S| and
+    d not in TopFail_side(S,s))
 
-本件在 Lean 内独立重实现打包谓词 `pkg`（格×块×键三维匹配，labA174._pkg
-labA174.py:272-313 语义的逐式重写：块 i 取 dᵢ 个 S 中两两不交的格，键
-(a−sᵢ)%7 全局两两不交；ban=true（M 侧）另禁格 y=sᵢ 与键 0），并将证书数据
-（120 轨道头 + 1,761 失败向量，源 a334_l2b_toplevel.json，md5
-0d1e9f3fd3eaa6abc2fca38ec5ac9684）内嵌为字面量，以一条全量判定定理承载整表。
+This file re-implements the packing predicate `pkg` independently in Lean
+(lattice x block x key three-dimensional matching, a clause-by-clause rewrite
+of the reference Python implementation `labA174._pkg` (labA174.py:272-313):
+block i picks d_i pairwise-disjoint cells of S, the keys (a - s_i) mod 7 are
+globally pairwise disjoint; on the M side (ban = true) cell y = s_i and key 0
+are additionally banned), and embeds the certificate data (120 orbit headers +
+1,761 failure vectors, from a334_l2b_toplevel.json, md5
+0d1e9f3fd3eaa6abc2fca38ec5ac9684) as literals, carrying the whole table with a
+single exhaustive decision theorem.
 
-**主定理** `l2b_toplevel_certificate`：79,200 点全查（120×330×2）全过。
+**Main theorem** `l2b_toplevel_certificate`: all 79,200 points
+(120 x 330 x 2) check out.
 
-**诚实落款**（承 Cert12Led01 先例口径）：主定理与数据锚以 `native_decide`
-承载，axioms 依赖 `Lean.ofReduceBool`（原生求值语义公理），非未证断言件、
-无 sorryAx；三引理本身（AGL(1,7) 不变性/下集性/均匀层）不在本件内纸面化，
-其机器面由本主定理在证书口径下整体覆盖，纸面化维持开放（deep_A334 §5 六不宣称）。
+**Trust note**: the main theorem and the data anchors are carried by
+`native_decide`, whose axiom profile depends on `Lean.ofReduceBool` (the
+native-evaluation kernel-reflection axiom); they are machine-checked by kernel
+reduction, not unproved assertions, and contain no `sorryAx`. The three
+compressing lemmas themselves (AGL(1,7) invariance / downset property / uniform
+layer) are not formalized on paper in this file; their machine face is covered
+wholesale by the main theorem at certificate grade, and their paper
+formalization remains open (see the project's registered non-claims list).
 
-**溯源链**：labA174.py::_pkg（A174 出货、A175 审计，md5 29a1272b…）→
-a334_l2b_toplevel.json（A334 净域账；生成命令由 A360 棒
-/tmp/deepA36x/a360_regen_toplevel.py 逐位重建，md5 合）→
-deep_A335 审计（独立重算 0/240 失配 + 本棒复算 79,200 点 0 违例）→ 本件。
+**Provenance**: labA174.py::_pkg (md5 29a1272b...) ->
+a334_l2b_toplevel.json (md5 0d1e9f3f..., regenerated bit-for-bit by the
+release-time regen script) -> independent audit (recomputation with 0/240
+mismatches and a fresh 79,200-point sweep with zero violations) -> this file.
 -/
 
-/-! ## 判定层：Z₇ 打包谓词（labA174._pkg 的 Lean 逐式重实现） -/
+/-! ## Decision layer: the Z_7 packing predicate (a Lean reimplementation of
+labA174._pkg) -/
 
-/-- 打包码第 i 槽：dcode 按 3 位/槽打包，槽值 ∈ [0,7]。 -/
+/-- Packing code slot i: the code packs three bits per slot, slot values in
+[0,7]. -/
 def slot (c : Nat) (i : Nat) : Nat := (c >>> (3 * i)) &&& 7
 
-/-- 需求向量和 Σd。 -/
+/-- Sum of the demand vector (Sigma d). -/
 def sumd (c : Nat) : Nat := slot c 0 + slot c 1 + slot c 2 + slot c 3
 
-/-- 7 位掩码位数（|S|）。 -/
+/-- Popcount of the 7-bit mask (the size |S|). -/
 def pc (n : Nat) : Nat := (List.range 7).countP (fun y => ((n >>> y) &&& 1) == 1)
 
-/-- 打包 DFS（燃料结构递归，fuel 单调递减保终止）：
-blocks=待装需求非零块序，uc/uk=格/键占用掩码（当前块的选择即时并入：
-格按 y 单调递增选取天然两两不交，键 (y−sᵢ)%7 对固定 sᵢ 单射亦然），
-y=当前格游标，cnt=当前块已选格数。 -/
+/-- Packing DFS (fuel-structured recursion; the fuel decreases monotonically,
+guaranteeing termination):
+blocks = the non-zero demand blocks still to place; uc/uk = the cell/key
+occupancy masks (the current block's choices are folded in immediately:
+cells chosen in increasing y are pairwise disjoint by construction, and so are
+the keys (y - s_i) mod 7, injective in y for fixed s_i);
+y = the current cell cursor; cnt = cells placed in the current block. -/
 def pkgGo : Nat → Nat → Nat → Bool → Nat → List Nat → Nat → Nat → Nat → Nat → Bool
   | 0, _, _, _, _, _, _, _, _, _ => false
   | _ + 1, _, _, _, _, [], _, _, _, _ => true
@@ -57,26 +75,29 @@ def pkgGo : Nat → Nat → Nat → Bool → Nat → List Nat → Nat → Nat �
             pkgGo fuel S scode ban dcode (i :: rest) (uc + 2 ^ y) (uk + 2 ^ x) (y + 1) (cnt + 1))
           || pkgGo fuel S scode ban dcode (i :: rest) uc uk (y + 1) cnt
 
-/-- N/M 侧打包可行性（labA174._pkg 语义：格×块×键三维匹配；
-ban=true（M 侧）禁格 y=sᵢ 与键 0；ban=false（N 侧）无附加禁制）。
-燃料 512 ≫ 状态数上界（4 块 × 每块 ≤8 个 (y,cnt) 状态），燃尽保守判败。 -/
+/-- N/M-side packing feasibility (semantics of the reference Python
+implementation labA174._pkg: lattice x block x key three-dimensional matching;
+ban = true (M side) additionally bans cell y = s_i and key 0;
+ban = false (N side) has no extra bans).
+The fuel 512 far exceeds the state-space bound (4 blocks x at most 8 (y,cnt)
+states each); running out of fuel conservatively reports failure. -/
 def pkg (S scode : Nat) (ban : Bool) (dcode : Nat) : Bool :=
   pkgGo 512 S scode ban dcode ([0, 1, 2, 3].filter (fun i => slot dcode i > 0)) 0 0 0 0
 
-/-! ## 数据层：330 需求域 + 120 轨道证书（a334_l2b_toplevel.json 原序内嵌） -/
+/-! ## Data layer: the 330-demand domain and the 120-orbit certificate data (embedded verbatim, in source order, from a334_l2b_toplevel.json) -/
 
-/-- 330 个 Σd ≤ 7 非负四维需求向量的打包码（(d0,d1,d2,d3) 字典序，A334 pilotA 同序）。 -/
+/-- The 330 packing codes of the non-negative four-slot demand vectors with Sigma d <= 7 (lexicographic in (d0,d1,d2,d3), matching the reference implementation's pilot ordering). -/
 def Dem330 : List Nat := [ 0, 512, 1024, 1536, 2048, 2560, 3072, 3584, 64, 576, 1088, 1600, 2112, 2624, 3136, 128, 640, 1152, 1664, 2176, 2688, 192, 704, 1216, 1728, 2240, 256, 768, 1280, 1792, 320, 832, 1344, 384, 896, 448, 8, 520, 1032, 1544, 2056, 2568, 3080, 72, 584, 1096, 1608, 2120, 2632, 136, 648, 1160, 1672, 2184, 200, 712, 1224, 1736, 264, 776, 1288, 328, 840, 392, 16, 528, 1040, 1552, 2064, 2576, 80, 592, 1104, 1616, 2128, 144, 656, 1168, 1680, 208, 720, 1232, 272, 784, 336, 24, 536, 1048, 1560, 2072, 88, 600, 1112, 1624, 152, 664, 1176, 216, 728, 280, 32, 544, 1056, 1568, 96, 608, 1120, 160, 672, 224, 40, 552, 1064, 104, 616, 168, 48, 560, 112, 56, 1, 513, 1025, 1537, 2049, 2561, 3073, 65, 577, 1089, 1601, 2113, 2625, 129, 641, 1153, 1665, 2177, 193, 705, 1217, 1729, 257, 769, 1281, 321, 833, 385, 9, 521, 1033, 1545, 2057, 2569, 73, 585, 1097, 1609, 2121, 137, 649, 1161, 1673, 201, 713, 1225, 265, 777, 329, 17, 529, 1041, 1553, 2065, 81, 593, 1105, 1617, 145, 657, 1169, 209, 721, 273, 25, 537, 1049, 1561, 89, 601, 1113, 153, 665, 217, 33, 545, 1057, 97, 609, 161, 41, 553, 105, 49, 2, 514, 1026, 1538, 2050, 2562, 66, 578, 1090, 1602, 2114, 130, 642, 1154, 1666, 194, 706, 1218, 258, 770, 322, 10, 522, 1034, 1546, 2058, 74, 586, 1098, 1610, 138, 650, 1162, 202, 714, 266, 18, 530, 1042, 1554, 82, 594, 1106, 146, 658, 210, 26, 538, 1050, 90, 602, 154, 34, 546, 98, 42, 3, 515, 1027, 1539, 2051, 67, 579, 1091, 1603, 131, 643, 1155, 195, 707, 259, 11, 523, 1035, 1547, 75, 587, 1099, 139, 651, 203, 19, 531, 1043, 83, 595, 147, 27, 539, 91, 35, 4, 516, 1028, 1540, 68, 580, 1092, 132, 644, 196, 12, 524, 1036, 76, 588, 140, 20, 532, 84, 28, 5, 517, 1029, 69, 581, 133, 13, 525, 77, 21, 6, 518, 70, 14, 7
  ]
 
-/-- 轨道证书：S 掩码 / 键码（3 位×4 槽）/ N 侧顶层失败码表 / M 侧顶层失败码表。 -/
+/-- Orbit record: the S mask / the key code (3 bits x 4 slots) / the N-side top-failure code list / the M-side top-failure code list. -/
 structure Orb where
   S : Nat
   s : Nat
   nf : List Nat
   mf : List Nat
 
-/-- 120 轨道代表（(imS, im_s) 字典序，A334 pilotA sorted(reps) 同序）。 -/
+/-- The 120 orbit representatives (lexicographic in (imS, im_s), matching the reference implementation's sorted representative order). -/
 def orbitList : List Orb := [
   ⟨0, 1672, [], []⟩,  -- S=[] s=[0, 1, 2, 3] |S|=0 nf=0 mf=0
   ⟨0, 2184, [], []⟩,  -- S=[] s=[0, 1, 2, 4] |S|=0 nf=0 mf=0
@@ -200,55 +221,57 @@ def orbitList : List Orb := [
   ⟨127, 2184, [3136, 2688, 2240, 1792, 1344, 896, 3080, 2632, 1736, 1288, 840, 392, 2576, 2128, 1680, 1232, 336, 2072, 1624, 1176, 728, 280, 1568, 672, 224, 1064, 616, 168, 560, 112, 3073, 2625, 2177, 1729, 1281, 385, 2121, 1673, 1225, 777, 329, 2065, 1617, 721, 273, 1561, 1113, 665, 217, 1057, 609, 161, 553, 49, 2562, 2114, 1666, 770, 322, 2058, 1610, 1162, 714, 266, 1106, 658, 210, 1050, 602, 546, 98, 42, 2051, 1155, 707, 259, 1547, 1099, 651, 1043, 595, 147, 91, 35, 1540, 1092, 644, 196, 1036, 140, 532, 84, 28, 1029, 581, 133, 525, 77, 21, 518, 70, 14], [3584, 3136, 2688, 2240, 1792, 1344, 896, 448, 3080, 2632, 2184, 1736, 1288, 840, 392, 2576, 2128, 1680, 1232, 784, 336, 2072, 1624, 1176, 728, 280, 1568, 1120, 672, 224, 1064, 616, 168, 560, 112, 56, 3073, 2625, 2177, 1729, 1281, 833, 385, 2569, 2121, 1673, 1225, 777, 329, 2065, 1617, 1169, 721, 273, 1561, 1113, 665, 217, 1057, 609, 161, 553, 105, 49, 2562, 2114, 1666, 1218, 770, 322, 2058, 1610, 1162, 714, 266, 1554, 1106, 658, 210, 1050, 602, 154, 546, 98, 42, 2051, 1603, 1155, 707, 259, 1547, 1099, 651, 203, 1043, 595, 147, 539, 91, 35, 1540, 1092, 644, 196, 1036, 588, 140, 532, 84, 28, 1029, 581, 133, 525, 77, 21, 518, 70, 14, 7]⟩,  -- S=[0, 1, 2, 3, 4, 5, 6] s=[0, 1, 2, 4] |S|=7 nf=102 mf=120
  ]
 
-/-! ## 证书层：逐轨道检查 + 全量定理 + 数据锚 -/
+/-! ## Certificate layer: per-orbit checks, the master theorem, and the data anchors -/
 
-/-- N 侧证书点：pkg(S,s,d,false) ⟺ Σd≤|S|−1 ∨ (Σd=|S| ∧ d∉N_top_fail)。 -/
+/-- N-side certificate point: pkg(S,s,d,false) iff Sigma d <= |S| - 1, or Sigma d = |S| and d not in N_top_fail. -/
 def certN (o : Orb) (c : Nat) : Bool :=
   let m := pc o.S
   let sd := sumd c
   pkg o.S o.s false c == (Nat.ble (sd + 1) m || (sd == m && !(o.nf.contains c)))
 
-/-- M 侧证书点：pkg(S,s,d,true) ⟺ Σd≤|S|−1 ∨ (Σd=|S| ∧ d∉M_top_fail)。 -/
+/-- M-side certificate point: pkg(S,s,d,true) iff Sigma d <= |S| - 1, or Sigma d = |S| and d not in M_top_fail. -/
 def certM (o : Orb) (c : Nat) : Bool :=
   let m := pc o.S
   let sd := sumd c
   pkg o.S o.s true c == (Nat.ble (sd + 1) m || (sd == m && !(o.mf.contains c)))
 
-/-- 单轨道全查：330 需求 × 双侧。 -/
+/-- Full check of one orbit: 330 demands x both sides. -/
 def orbitCheck (o : Orb) : Bool := Dem330.all (fun c => certN o c && certM o c)
 
-/-- 全表判定：120 轨道全过。 -/
+/-- Whole-table verdict: all 120 orbits pass. -/
 def tableOK : Bool := orbitList.all orbitCheck
 
-/-- 数据锚①：需求域恰 330 点。 -/
+/-- Data anchor 1: the demand domain has exactly 330 points. -/
 theorem dem330_len : Dem330.length = 330 := by native_decide
 
-/-- 数据锚②：需求域每点 Σd ≤ 7。 -/
+/-- Data anchor 2: every point of the demand domain has Sigma d <= 7. -/
 theorem dem330_sum : Dem330.all (fun c => sumd c ≤ 7) = true := by native_decide
 
-/-- 数据锚③：轨道表恰 120 条。 -/
+/-- Data anchor 3: the orbit table has exactly 120 rows. -/
 theorem orbits_len : orbitList.length = 120 := by native_decide
 
-/-- 数据锚④：证书总量恰 1,761（N 204 + M 1,557）。 -/
+/-- Data anchor 4: the total number of certificate vectors is exactly 1,761 (204 on the N side + 1,557 on the M side). -/
 theorem cert_count :
     (orbitList.map (fun o => o.nf.length + o.mf.length)).sum = 1761 := by
   native_decide
 
-/-- 数据锚⑤：N 侧顶层失败证书恰 204（A334 §2.1 数字）。 -/
+/-- Data anchor 5: the N-side top-failure certificates number exactly 204 (the figure recorded in the reference account). -/
 theorem cert_count_N : (orbitList.map (fun o => o.nf.length)).sum = 204 := by
   native_decide
 
-/-- 数据锚⑥：M 侧顶层失败证书恰 1,557。 -/
+/-- Data anchor 6: the M-side top-failure certificates number exactly 1,557. -/
 theorem cert_count_M : (orbitList.map (fun o => o.mf.length)).sum = 1557 := by
   native_decide
 
-/-- **主定理：L2(b) 顶层证书全量判定**——120 轨道 ×330 需求 ×双侧 = 79,200 点，
-pkg 可行性逐点等于「均匀层 ∨ 顶层非证书」判定。表本体自此 Lean 承载
-（GAP-A174.1 的 Lean 形式化主体件）。 -/
+/-- **Main theorem: the L2(b) top-level certificate, checked exhaustively** ---
+120 orbits x 330 demands x both sides = 79,200 points; the pkg feasibility of
+each point equals the "uniform layer or top-layer non-certificate" verdict.
+The table itself is henceforth carried in Lean (the main Lean formalization of
+the packing-table account). -/
 theorem l2b_toplevel_certificate : tableOK = true := by
   native_decide
 
-/-! ## 零洞机器证据（承 Fan.lean lane_314 先例） -/
+/-! ## Machine evidence with zero uncovered points (following the pattern of the Fan.lean counting-lane module) -/
 
 #print axioms l2b_toplevel_certificate
 #print axioms cert_count
