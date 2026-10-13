@@ -1,0 +1,184 @@
+{
+  "infinity_fourier": {
+    "status": "PASS",
+    "result": {
+      "k": 3,
+      "vertices": [
+        "inf",
+        1,
+        3
+      ],
+      "classes": [
+        1,
+        0,
+        2
+      ],
+      "printed_sum": [
+        -2,
+        -1
+      ],
+      "corrected_sum": [
+        0,
+        0
+      ]
+    }
+  },
+  "block_vs_vertex": {
+    "status": "PASS",
+    "result": {
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          11
+        ]
+      ],
+      "even_vertices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "ev_max_degree": 5,
+      "block_max_degree": 1,
+      "high_vertex": 0
+    }
+  },
+  "ring_construction": {
+    "status": "PASS",
+    "result": {
+      "parameter_pairs": 280,
+      "failures": 0
+    }
+  },
+  "k4_construction": {
+    "status": "PASS",
+    "result": {
+      "k_min": 6,
+      "k_max": 100,
+      "parameter_values": 95,
+      "failures": 0
+    }
+  },
+  "noninf_infinite_family": {
+    "status": "PASS",
+    "result": {
+      "primes_checked": 86,
+      "largest_prime": 991,
+      "scope": "non-infinity only",
+      "failures": 0
+    }
+  },
+  "odd_clique_engine": {
+    "status": "PASS",
+    "result": {
+      "odd_j_values": 61,
+      "largest_j": 121,
+      "failures": 0,
+      "scope": "j odd; this does not verify even j"
+    }
+  },
+  "census_ledger": {
+    "status": "PASS",
+    "result": {
+      "six_line_configurations": 10343246760,
+      "all_noninf": 10639125640,
+      "infinity": 7746647040,
+      "total": 18385772680,
+      "verification": "ledger arithmetic only; no full census rerun"
+    }
+  },
+  "noninf_table_accounting": {
+    "status": "PASS",
+    "result": {
+      "full_kill_points": 28,
+      "prime_previous_points": 23,
+      "composite_previous_points": [
+        112,
+        116,
+        124,
+        160,
+        188
+      ],
+      "verification": "artifact accounting; does not rerun all table feasibility searches"
+    }
+  },
+  "lean_placeholders": {
+    "status": "PASS",
+    "result": [
+      {
+        "path": "front583/lean/Front583/Astar.lean",
+        "line": 2592,
+        "code": "sorry"
+      },
+      {
+        "path": "front583/lean/Front583/Astar.lean",
+        "line": 2849,
+        "code": "sorry"
+      },
+      {
+        "path": "front583/lean/Front583/Astar.lean",
+        "line": 2864,
+        "code": "sorry"
+      },
+      {
+        "path": "front583/lean/Front583/Fan.lean",
+        "line": 765,
+        "code": "sorry"
+      },
+      {
+        "path": "front583/lean/Front583/Fan.lean",
+        "line": 4487,
+        "code": "sorry"
+      }
+    ]
+  },
+  "snapshot_integrity": {
+    "status": "PASS",
+    "result": {
+      "files": 20,
+      "live_changed": []
+    }
+  }
+}

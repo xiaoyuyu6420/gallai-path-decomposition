@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+title: "Verified constructions, a classification programme, and conditional reductions for Gallai's path decomposition conjecture"
+authors:
+  - name: "Independent Researcher"
+    email: 672178818@qq.com
+year: 2026
+date-released: 2026-10-13
+type: article
+message: "Preprint, 60 pages. Paper text released under CC BY 4.0; repository code and scripts under MIT."
+license: MIT
+abstract: "The paper is a self-contained study organised around exact constructions, a classification programme, and conditional reductions for Gallai's path decomposition conjecture (1966): the edges of every connected graph on n vertices can be decomposed into at most ceil(n/2) paths."
+keywords:
+  - graph theory
+  - path decomposition
+  - Gallai's conjecture
+  - Lean formalization

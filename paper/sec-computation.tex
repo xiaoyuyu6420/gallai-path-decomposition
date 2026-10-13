@@ -1,0 +1,1131 @@
+% ============================================================================
+% sec-computation.tex — Computational methodology: exhaustive accounts,
+% audits, and Lean trust boundaries. Label prefix: com: (all labels owned
+% by this file).
+% ============================================================================
+
+\section{Computational methodology: exhaustive accounts, audits, and trust
+boundaries}\label{sec:computation}
+
+Every machine-backed statement in this paper is quoted at a measured
+strength, and this section documents the apparatus that produces the
+measurements. There are four layers. First, the exact-value pipeline behind
+the constructive parts (Section~\ref{com:subsec-pipeline}), together with a
+self-contained recheck script released with the paper
+(Section~\ref{com:subsec-recheck}). Second, the re-verification account of
+the conditional chain's machine layer
+(Section~\ref{com:subsec-kline}). Third, the Lean development: what is
+formalized, and where its trust boundaries lie
+(Section~\ref{com:subsec-lean}). Fourth, the key-table ledger behind the
+covering identity (Proposition~\ref{prop:clacover}) and the independent
+audit it passed (Section~\ref{com:subsec-ledger}). Formalization status is
+itemized declaration by declaration in Section~\ref{sec:open}.
+
+\subsection{The exhaustive construction pipeline}\label{com:subsec-pipeline}
+
+All exact values and all decompositions cited in the constructive parts were
+produced and re-checked by one pipeline: a bitmask exact dynamic program
+over edge subsets computes exact values of $\pn(G)$ (and of the endpoint
+budget $\beta(G,x)$ of Definition~\ref{int:def-budget}, with an endpoint
+constraint); a backtracking exact-cover solver with longest-path-first
+enumeration handles larger instances; and an independent
+\texttt{verify\_decomposition} routine asserts that a witness consists of
+simple paths exactly partitioning the edge set. Randomized steps use fixed
+seeds, and every number is reproducible from the scripts and certificate
+files released with the paper. In the per-theorem verification table
+(Appendix~\ref{com:app-comp}), ``exact'' means computed by an exact algorithm
+(dynamic program or exhaustive cover), ``witness'' means a machine-verified
+decomposition, and ``census'' means that all graphs of the stated class were
+processed.
+
+Three rows of that table indicate its granularity.
+
+\begin{itemize}[leftmargin=1.8em]
+\item The odd-column value $\pn(K_{4,n})=(n+1)/2$
+(Proposition~\ref{prop:conk4large}) was re-derived independently for every
+$n=3,\dots,31$ by a structured exact search over $K_{4,n}$, recovering
+$(n+1)/2$ each time; the closed-form construction was verified for
+$k=6,\dots,301$ (i.e.\ $n=13,\dots,603$), with witness lists
+machine-verified. The printed small-case witnesses of
+Proposition~\ref{prop:conk4small} are machine-verified by the same pipeline
+(edge-exact partition, simplicity).
+\item The witnesses behind Corollary~\ref{cor:concol6} of the $n_2=6$ column
+($K_{7,6}$, $K_{9,6}$, $K_{11,6}$, $K_{13,6}$) were each verified by two
+independent implementations (the pipeline verifier and an adjacency-matrix
+checker); the ring construction was re-derived for $k=7..31$ from the base
+$k_0=3$, with overlapping chains from $k_0=4,5$.
+\item The negatives on the five open bases
+(Observation~\ref{obs:concostwall}) are \emph{truncations, not exclusions}:
+more than $14$ million search nodes (column $n_2=8$) and about $0.9$ million
+nodes (column $n_2=10$) were spent over every ledger-feasible deficit
+multiset, without a hit and without exhausting a single schedule. The
+conjectural status of the five bases is therefore unchanged by these
+searches, in either direction.
+\end{itemize}
+
+\subsection{A self-contained independent recheck script}\label{com:subsec-recheck}
+
+The repository releases a recheck script, \texttt{checks.py}, written from
+scratch during the independent review of the paper: it imports none of the
+project's research code, consists of ten check functions built from
+assertions only, writes its results to \texttt{check\_results.json}, and
+exits nonzero if any assertion fails. Running
+\texttt{python3 checks.py} from the repository root executes all ten checks
+in about three seconds (wall clock on a laptop-class machine; measured
+$3.1$\,s for the release version). The coverage is:
+
+\begin{itemize}[leftmargin=1.8em]
+\item \emph{Ring closure} (Theorem~\ref{thm:conringclosure}): all $280$
+parameter pairs ($h=1,\dots,14$; per $h$ the $20$ even ring sizes $m$ from
+$2h+2$ to $2h+41$), checking path simplicity and that the paths partition
+the edge set exactly once.
+\item \emph{The $K_{4,n}$ construction} (Proposition~\ref{prop:conk4large}):
+all $95$ parameter values $k=6,\dots,100$, asserting $k+1$ paths, simplicity,
+and the exact $A\times B$ edge partition with multiplicity $1$.
+\item \emph{The odd-clique local engine} (Theorem~\ref{thm:conL0}): $61$ odd
+values $j=1,3,\dots,121$, checking that the removed arcs form a Hamilton
+path, that the remaining $j$ paths have the prescribed lengths, and that the
+partition is exact. Scope: odd $j$ only; even $j$ is not verified by the
+script (it is open; Remark~\ref{rem:conchaincomp}).
+\item \emph{The non-infinity prime-family arithmetic}
+(Theorem~\ref{thm:claprimefam}): $86$ primes $p\equiv3\pmod4$ up to $991$,
+checking the sieve's allowed regimes and the perfect-square obstruction. This
+is a finite recheck of the elementary steps; it does not substitute for the
+paper proof and covers the non-infinity regimes only.
+\item \emph{The $K_9@36$ census ledger}: the six recorded regime lines'
+configuration counts against their closed combinatorial forms, the histogram
+sums, the zero recorded hits, and the total-domain arithmetic
+$18{,}385{,}772{,}680=\binom{71}{8}+\binom{36}{8}\cdot2^8$. This is ledger
+and artifact arithmetic; the census itself is not rerun.
+\item \emph{The non-infinity death table}: $28$ full-death points for
+$n\le200$, of which $23$ have $n-1$ prime (matching
+Theorem~\ref{thm:claprimefam}) and the composite points are
+$\{112,116,124,160,188\}$. Again artifact accounting, not a rerun of the
+table's feasibility searches.
+\item \emph{The corrected Fourier identity} (Theorem~\ref{thm:clafourier}):
+the $K_3$ configuration $\{\infty,1,3\}$ at $k=3$ with $\psi(a)=\omega^a$,
+reproducing both the failure of the superseded form (residual $-2-\omega$)
+and the vanishing of the corrected form \eqref{eq:clarho}, in exact
+$\mathbb{Z}[\omega]$ integer arithmetic.
+\item \emph{Block versus global degree}
+(Section~\ref{int:subsec-blockvsglobal}): the $K_{1,5}$-with-pendant-leaves
+witness, confirming that $\EV(G)\cong K_{1,5}$ has a vertex of E-degree $5$
+while every block of $\EV(G)$ is a single edge (maximum degree $1$).
+\item \emph{The Lean placeholder scan}: a comment-stripped scan of the Lean
+sources for \texttt{sorry}, \texttt{admit} and \texttt{axiom}
+declarations, finding exactly five occurrences, listed in
+Section~\ref{com:subsec-lean}.
+\item \emph{Snapshot integrity}: SHA-256 verification of the archived source
+snapshot, reporting the files that changed since the snapshot; the six
+changed files are the expected post-review repair edits to the working
+notes and four section files, not frozen deliverables.
+\end{itemize}
+
+One reading rule binds the released result file: a PASS records that the
+intended recheck succeeded, and for two of the ten checks success means
+\emph{reproducing a recorded error or distinction} (the falsified Fourier
+form; the block-versus-global-degree witness). A PASS is an execution
+record, not a certificate of global correctness.
+
+\paragraph{Census methodology note ($K_9@36$).} The largest
+configuration-level account behind the classification programme is
+conducted line by line: for each regime line of $K_9@36$, the
+configurations are enumerated in full and summarized by a closed-form
+count checked against the enumeration, with a histogram-sum completeness
+assertion per line. The nine regime lines sum to
+$\binom{71}{8}=10{,}639{,}125{,}640$ (the Vandermonde identity is
+machine-checked against the per-line counts); the infinity line,
+$\binom{36}{8}\cdot2^8=7{,}746{,}647{,}040$, is covered in four shards of
+$1{,}936{,}661{,}760$ each under an exact non-overlapping-partition
+assertion; every line has zero hits; and the total domain is
+$18{,}385{,}772{,}680$ configurations. The released checks verify the
+ledger arithmetic of this account (per-line closed forms, histogram sums,
+recorded hits, and the total); the census itself is not rerun by them.
+The tier of the verdict --- machine universal-closure candidate, not
+independently audited --- is the one recorded in
+Section~\ref{subsubsec:firstlayers}, and the layered-arithmetic verdict of
+the same section provides a mechanism-level cross-check.
+
+\paragraph{Complete-walk counts on the flicker line.} The GEN existence
+programme contributes a counting account of a different kind: exact
+enumeration of zero-dodge complete walks on the skeleton template family,
+$w_1=r-5$, by depth-first search with node budgets and cap tracking,
+cross-checked across independent implementations. On the odd tiers the
+exact counts are $158$, $1{,}733$, $11{,}466$, $81{,}660$, $484{,}578$,
+$3{,}670{,}846$ for $r=19,21,23,25,27,29$ --- six tiers, never presented
+as one closed sequence; the $r=29$ count is exact but
+class-bound-conditioned and is quoted only with that caveat. One further
+exact single point, $23{,}933{,}468$ at $r=31$, stands apart at
+exhaustive grade ($j=0$: $22{,}607{,}250$; $j=1$: $1{,}326{,}218$). At
+$r=33$ there is no count: the search volume is a quantified hard wall,
+and a segmented long run reports none. The $w_1=r-4$ side is zero for all
+$r\ge19$ and the even-$r$ side with $w_1=r-5$ is zero by the parity
+theorem --- both theorem-level, with the four theorem-relevant cells
+($r\in\{20,22\}$, both $w_1$) genuinely exhausted at zero; the theorem
+clears the zero-dodge side only, complete walks with a positive
+zero-defect existing at $r=20,22$ in the record and remaining untouched.
+
+\subsection{The re-verification account of the conditional chain's machine
+layer}\label{com:subsec-kline}
+
+The conditional chain of Section~\ref{int:subsec-budget} (Theorem~\ref{int:thm-ledger})
+was subjected to an independent
+re-derivation review: a from-scratch re-derivation of its load-bearing
+implications, conducted before reading the recorded proofs and then
+reconciled against them, accompanied by fresh machine checks re-implemented
+from the definitions.
+
+\paragraph{Implications.} Of the $34$ load-bearing implications of the chain,
+$31$ were independently re-derived as valid. The remaining $3$ are
+wording- and registration-level only: an overstated equivalence in the
+density remark of the chain (the unconditional direction is one-way), an
+under-registered residue inside the degree-two layer of the budget
+conjecture (recorded in Section~\ref{sta:subsec-limitations}), and one
+stale supporting statistic. None reverses an implication direction, and no
+mathematical hole was found in any implication.
+
+\paragraph{Machine checks, at the downgraded caliber.} Six independent
+machine-check groups accompanied the review. \emph{Five of the six} closed
+with zero failures (volumes: $180{,}070$ construction instances;
+$550$ end-to-end pipeline instances; $876$ census graphs; $121$ types of the
+placement family; $2{,}342$ buried-vertex instances; $5{,}880$ alignment
+instances; plus a dedicated connected-domain cut-vertex check on $106$
+instances). The sixth group closed with three of its four blocks at zero
+failures and one block emitting $60$ alerts; each of the $60$ was examined
+individually and all $60$ are \emph{disconnected} graphs, outside the
+connected domain on which the budget conjecture is stated --- zero connected
+counterexamples. The account is therefore never ``six groups with zero
+failures'': the correct statement is five groups clean, and the sixth clean
+up to a fully discharged false alarm caused by a missing connectivity
+filter, with the connected domain covered by the dedicated check.
+
+\paragraph{What was \emph{not} re-verified.} The same review registered its
+limits, which travel with any citation of it: three combinational notes of
+the chain were logic-checked but not separately machine-checked; machine
+checks predating the review were not replayed; the reviewers'
+derivation-before-reading process is not itself reproducible (only its
+products were reconciled against the originals); the full proof
+reconstruction of the all-odd branch of Theorem~\ref{int:thm-lovasz}
+remains open (Section~\ref{sta:subsec-limitations}); and the domains $n\ge13$
+and the general-graph domain beyond $12$ edges at $n\ge9$ were not
+enumerated. (One gap registered by the review --- two of the five domains
+below not freshly recomputed --- was subsequently closed by a full fresh
+recomputation of all five domains, $178{,}860/178{,}860$ instances over
+$16$ fields with zero differences.)
+
+\paragraph{The five exhaustively enumerated domains.} The budget conjecture
+$K$ (Definition~\ref{int:def-budget}) carries a machine account on five
+exhaustively enumerated domains: the atlas of connected graphs on
+$n\in\{4,6\}$ with $m\le13$ together with \texttt{geng -c 8 1:12}, and the
+connected \texttt{geng} censuses \texttt{8/9/10/11/12 1:12} --- in total
+$39{,}027$ graphs, $178{,}860$ even-degree point instances
+(a vertex $x$ of even degree in a graph of the domain), of which $43{,}009$
+have degree $d\ge4$. The boundary of the domain is part of the account: only
+the sparse layers with $m\le12$ are enumerated (at $n=11$ the average degree
+is $\le2.18$); the general-graph domain beyond $m\le12$ is not covered; and
+odd and even $n$ are accounted separately throughout, never pooled (the
+budget ceiling is $\lceil n/2\rceil$ and the analysis differs by parity).
+
+\begin{table}[ht]
+\centering\small
+\caption{The five exhaustively enumerated domains of the budget conjecture.
+Columns: graphs; even-degree point instances; with $d\ge4$; instances dead
+at the first two insertion depths of the degree-insertion tool; instances
+where the tool certifies failure; instances attaining the ceiling
+$\beta=\lceil n/2\rceil$. In every domain: zero violations of
+$\beta(G,x)\le\lceil n/2\rceil$, and zero mismatches of the insertion
+criterion's equivalence against an independent tool-truth oracle.}
+\label{com:tab-kdomains}
+\begin{tabular}{lrrrrrr}
+\hline
+Domain & graphs & instances & $d\ge4$ & two-probe & tool-dead & tight\\
+\hline
+atlas $n\in\{4,6\}$, $m\le13$, $\cup$ \texttt{geng -c 8} & $2{,}933$ &
+$11{,}328$ & $4{,}232$ & $306$ & $136$ & $63$\\
+\texttt{geng -c 9} & $7{,}654$ & $33{,}296$ & $10{,}003$ & $227$ & $12$ &
+$1{,}420$\\
+\texttt{geng -c 10} & $11{,}989$ & $55{,}664$ & $13{,}471$ & $783$ & $60$ &
+$72$\\
+\texttt{geng -c 11} & $10{,}874$ & $52{,}126$ & $10{,}558$ & $1{,}217$ &
+$0$ & $990$\\
+\texttt{geng -c 12} & $5{,}577$ & $26{,}446$ & $4{,}745$ & $1{,}102$ & $0$ &
+$12$\\
+\hline
+total & $39{,}027$ & $178{,}860$ & $43{,}009$ & $3{,}635$ & $208$ &
+$2{,}557$\\
+\hline
+\end{tabular}
+\end{table}
+
+Two readings of Table~\ref{com:tab-kdomains} are fixed by the account.
+First, \emph{tool-dead is not a counterexample}: the degree-insertion
+criterion (Section~\ref{sta:subsec-limitations}) characterizes one
+construction tool, and all $208$ tool-dead instances still satisfy
+$\beta\le\lceil n/2\rceil$ --- indeed the zero-violation verdict of the
+conjecture itself reads on all $178{,}860$ instances. Second, the witness
+certificates attached to the account total $1{,}279$ ($484$ of $500$ in the
+base domain plus $795$ of $800$ across the extended domains, $5$
+tool-dead instances skipped by design, zero failures), each an explicit
+decomposition verified three ways. The residual proof debts of this layer
+are collected in Section~\ref{sta:subsec-limitations}.
+
+\subsection{The Lean development and its trust boundaries}\label{com:subsec-lean}
+
+The Lean development (toolchain \texttt{leanprover/lean4:4.34.0}) certifies
+a precise subset of the paper's statements. We describe what is proved, how
+each class of proof is trusted, and where the boundaries are; the
+itemized list with file anchors is Table~\ref{sta:tab-leanitems} of
+Section~\ref{sec:open}.
+
+\paragraph{What is proved.} Two classification-line theorems are fully
+formalized from first principles: for every odd $n\ge3$,
+$\pn(K_{4,n})=(n+1)/2$ (with numeric corollaries $3,7,10$ at
+$n=5,13,19$ following without independent gaps), and for every $k\ge1$,
+$\pn(K_{2k+1})=k+1$ (via the edge-count lower bound and an explicit
+Walecki-type construction; the endpoint $k=0$, where $\pn(K_1)=0$, is a
+separate fact outside the theorem). Both carry the standard axiom profile
+\texttt{[propext, Classical.choice, Quot.sound]} and no \texttt{sorryAx}.
+On the criterion line, two declarations are formalized without
+\texttt{sorryAx}: the criterion-level bound $g_{13}\le d_2+1$
+(\texttt{thmA2663\_upgraded}, axioms \texttt{[propext, Quot.sound]}), whose
+hypotheses --- the target side has the prescribed size, and
+$\mathrm{val}\le1$ --- are \emph{assumed, not proved} (it is a bound under a
+hypothesis, not a feasibility-existence proof; see no-claim
+\textup{(6)} of Section~\ref{int:subsec-claims}); and the case-$2$
+structural discriminator (\texttt{case2\_struct\_alpha\_iff}, axioms
+\texttt{[propext, Quot.sound]}), an if-and-only-if for the machine
+predicate $C_1((t_1+g)\bmod N)=\texttt{true}$ under six explicit
+hypotheses. Finally, the four-domain witness accounts of the termination
+bound are kernel-checked at the level of the instance counts
+$588/30{,}760/634{,}960/7{,}798{,}903$ and of two fully certified
+five-column global ledgers:
+$\mathrm{ledger}_6=(5{,}724;\,2{,}613;\,190;\,398;\,588)$
+(legal pairs; witnesses; $\min\mathrm{val}=0$ bucket; $\min\mathrm{val}=1$
+bucket; instances) and
+$\mathrm{ledger}_8=(701{,}360;\,285{,}372;\,20{,}308;\,10{,}452;\,30{,}760)$.
+The body of the termination theorem itself is proved on paper, not in Lean;
+the accounts are its machine shadow.
+
+\paragraph{The \texttt{native\_decide} boundary.} The finite certificates
+(including both ledgers and the $N=10$/$N=12$ account modules) are closed by
+\texttt{native\_decide}. Such theorems must be quoted as \emph{machine-checked
+by kernel reduction}: they depend on the instantiation axiom of
+\texttt{Lean.ofReduceBool} (the kernel-reflection axiom of the evaluation
+mechanism), so they are not unproved assertions, but they do not carry the
+trust level of pure term-level proofs. Three facts anchor the boundary. The
+judging-layer semantics (the value functional, the board functionals, the
+admission predicates) are inherited from the base module with zero
+redefinition. The $N=8$ ledger is certified on two mutually pinned routes ---
+whole-domain direct evaluation, and a $56$-bucket aggregation with per-bucket
+certificates --- and cross-pinned against a second, independent Python
+implementation, bucket by bucket. And the trust base is the honesty of the
+Lean~4.34.0 kernel reflector itself.
+
+\paragraph{The axiom audit.} The published declarations carry an axiom audit
+(\texttt{\#print axioms} over the audit's probe file against the built
+library). Re-running the audit against the current sources reproduces the
+archived audit log entry for entry, and the six audited source files are
+byte-identical to the review snapshot, so the log applies to the released
+sources. The audit's complement is equally explicit: the probe covers the
+declarations named in Table~\ref{sta:tab-leanitems} and the five Fan-line
+declarations discussed next; anything outside the probe (the uniqueness
+corollary of the Fan-type chain, the $N=10$/$N=12$ account modules, and the
+auxiliary complete-graph and $K_{4,n}$ modules beyond the two named
+theorems) is \emph{not} claimed fully formalized until individually probed.
+A live comment-stripped scan finds exactly five \texttt{sorry} lines:
+three placeholders of the Fan-type formalization chain
+(\texttt{Astar.lean}, lines 2592, 2849, 2864), one \emph{refuted} research
+lemma kept as a record only (\texttt{Fan.lean}, line 765 --- its statement
+was disproved by a machine counterexample and is never cited; see
+Remark~\ref{rem:claformal}), and one unproved research gap consumed by a
+weakened variant (\texttt{Fan.lean}, line 4487). Accordingly the
+Fan-type theorem chain
+(Theorems~\ref{thm:claAstar} and~\ref{thm:lasep}) is cited as paper proofs
+with formalization in progress, never as machine-verified
+(Remark~\ref{rem:claformal}).
+
+\paragraph{Certificate-grade example: the packing table.} The packing
+residual of Section~\ref{subsubsec:criteria} carries its own Lean
+certificates, which illustrate the certificate tier end to end. The main
+certificate theorem checks, pointwise, all $79{,}200$ points of the table
+domain ($120$ canonical orbits $\times$ $330$ demand vectors $\times$ the
+two board sides): the packing predicate holds exactly when $\Sigma
+d\le|S|-1$, or $\Sigma d=|S|$ with the demand outside the recorded
+top-failure set. It is closed by \texttt{native\_decide} (zero
+\texttt{sorryAx}, with the \texttt{ofReduceBool} disclosure attached), and
+its data anchors are certified alongside it ($330$ demands; $120$ orbits;
+$1{,}761$ top failures $=204+1{,}557$). Nine companion theorems over the
+same table domain record: the downset property on both sides; the uniform
+layer ($\Sigma d\le|S|-1$ implies feasibility on both sides); an explicit
+no-threshold witness (two demands with equal $\Sigma d=4$, one feasible and
+one not --- refuting any proposed threshold law of the form ``feasible
+$\iff f(\Sigma d)$''); the concentration of all $1{,}761$ failures in the
+top layer; the top-failure set being an upset; and the failure-orbit counts
+$110$ and $2$. All are \texttt{native\_decide} certificates. Above them
+sits the paper-level \emph{general} downset theorem
+(\texttt{pkg\_downset}, axioms \texttt{[propext, Classical.choice,
+Quot.sound]}, no \texttt{native\_decide}, no \texttt{sorryAx}), quantified
+over arbitrary inputs under three slot-value hypotheses: if the slot
+relation $\mathrm{slot}(d',i)+1=\mathrm{slot}(d,i)$ holds with all other
+slots equal and $\mathrm{slot}(d,i)\ge1$, then feasibility of $d$ implies
+feasibility of $d'$. Two boundaries travel with it: the hypotheses are
+stated as slot-value relations (the subtraction form is not yet
+formalized; instances are discharged through the slot relations), and the
+Lean reimplementation of the packing predicate is not proven
+program-level identical to the reference Python implementation --- that
+identity rests on three-way machine cross-checks (the $79{,}200$-point
+sweep with zero violations, bit-level reconstruction of the certificate
+data, and a full Lean-side sweep).
+
+\subsection{The key-table ledger for the covering identity}\label{com:subsec-ledger}
+
+The machine account behind Proposition~\ref{prop:clacover} is organized as
+\emph{key tables}: a key is the datum $(N,W,k,\delta_{12},\delta_{13})$ up
+to rotation, and each key summarizes all instances sharing it. Across nine
+domains $N\in\{6,\dots,14\}$ the key tables comprise $2{,}412{,}436$ keys
+covering $98{,}602{,}396$ key-weighted admissible positions (the sum over
+keys of $\binom{|W|}{d_1}$); the per-domain key counts are
+$271/1{,}218/4{,}614/15{,}627/48{,}913/144{,}408/407{,}584/1{,}110{,}057/679{,}744$
+for $N=6,\dots,14$. On every key: family$\setminus$prediction $=$
+prediction$\setminus$family $=0$ (both inclusions of the covering identity
+in key form), and the necessary-side boundary violations are $0$.
+
+Four conventions bind every citation of these numbers; they are stated
+here once and apply paper-wide.
+
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2em]
+\item \emph{Key-weighted versus instance-weighted.} The key tables count
+each key once; instance-weighted accounts (each instance once) exist
+separately for $N=8$ ($28{,}056$ instances, $221{,}480$ positions) and $N=9$
+($128{,}016$ instances, $1{,}328{,}040$ positions) and are listed apart.
+The two accountings are never mixed or compared.
+\item \emph{Two domain conventions.} The domains $N\in\{6,\dots,13\}$ come
+from exhaustive enumeration of the instance space, while $N=14$ comes from
+an affine-normalized domain (orbit representatives under the normalized
+action) whose equivalence to exhaustive enumeration is \emph{unproven}; the
+nine-domain totals are therefore not a union under a single convention.
+\item \emph{The no-$V_7$ superset reading.} All machine checks of the
+covering identity are performed with the $V_7$ branch omitted
+(Remark~\ref{rem:clacoverriders}), a conservative superset reading whose
+zero-counterexample verdict transfers to the true face one-way. The residual
+$V_7$-only mass is nonzero and precisely measured: $340$ positions at $N=8$
+($1{,}266$ superset-uncovered minus $926$ true-face uncovered) and
+$2{,}267{,}655$ instance-weighted at $N=14$.
+\item \emph{No extrapolation.} Nothing in the ledger is extrapolated to
+$N\ge15$, and the normalized domain is never read as the exhaustive domain.
+\end{enumerate}
+
+The ledger itself passed two independent controls: a re-aggregation with a
+separate decoder and an independent combinatorial recomputation of the
+position counts (matching the archived accounts digit for digit), and a
+three-shard fresh replay with digit-identical accounting fields.
+
+\paragraph{The independent audit.} Subsequent to, and separately from, the
+verification passes above, an independent audit re-derived all twelve
+supporting lemmas of the covering identity (the nine assembly lemmas and
+the three micro-lemmas of Remark~\ref{rem:clacoverriders}) from the
+definitional layer rather than by checking the write-up, probed each
+lemma's plausible failure modes (none broke), probed each of the three
+declared assembly gaps (none blocks the assembly), and re-ran the
+domain-consistency check with a \emph{third} independent implementation
+(exhaustive reference-form predicates, tag-level reverse direction) on
+fresh key tables: four full domains ($N=6,7,8,10$; $55{,}016$ keys) plus
+one $N=12$ shard ($50{,}948$ keys) --- $105{,}964$ keys in total, six
+violation classes all zero, with independent aggregation matching the
+headers and archived accounts digit for digit. The randomized machine
+checks of the micro-lemmas were re-run in the audit pass with zero
+violations ($4{,}000/1{,}109/4{,}000$ instances, after the first pass
+$12{,}558/2{,}500/12{,}000$). The audit's verdict upgrades the package to
+``paper candidate that has passed an independent audit'' --- which is
+still not a mechanized or formalized theorem. The audit did \emph{not}
+re-run, and these items are carried as archived accounts: the
+single-swap falsification experiments of Section~\ref{subsubsec:criteria},
+the transcription-fidelity anchor ($240$ instances, $97{,}848$ pairs), the
+per-instance full-domain enumerations at $N=8,9$, and the per-instance
+glue verification (the tool sources of the latter were lost with no
+recoverable copy).
+
+\appendix
+
+\section{Computational anchors}\label{com:app-comp}
+
+This appendix lists, for each theorem of the paper, the verification
+status and the machine anchors. All computations used one pipeline
+(Section~\ref{com:subsec-pipeline}); randomized steps used fixed seeds;
+every number below is reproducible from the archived scripts released
+with the paper. In the table, ``exact'' means computed by an exact
+algorithm (dynamic program or exhaustive cover), ``witness'' means a
+machine-verified decomposition, and ``census'' means all graphs in the
+stated class were processed.
+
+\begingroup\small
+\begin{longtable}{p{4.6cm} p{6.2cm} p{4.2cm}}
+\hline
+Result & Verification & Anchors (script / certificate) \\
+\hline
+\endfirsthead
+\hline
+Result & Verification & Anchors (script / certificate) \\
+\hline
+\endhead
+Theorem~\ref{thm:claAstar}, Theorem~\ref{thm:lasep}: witness instances &
+exact $\pn\le\floor{n/2}$ on $101$ random (A1)--(A2) instances, $50$
+instances with $\Delta(\EV)=5$, $15$ large witnesses; $0$ violations &
+block-reload and witness-upgrade scripts\\
+\hline
+Theorem~\ref{thm:lasep}, Remark~\ref{rem:claCO},
+Proposition~\ref{prop:claresidue}, Proposition~\ref{prop:claodddensity} &
+$413$ p-anchored (A1)--(A2) instances ($13$ structured, $400$ random),
+$0$ violations; exhaustive $n=5$ (all $1024$ graphs) and $n=6$ (all
+$32768$ graphs) degree/triangle-layer checks behind
+Proposition~\ref{prop:claodddensity} & structured-fix scripts\\
+\hline
+Theorem~\ref{thm:clatwohigh}, Corollary~\ref{cor:clatwohigh} (two-high
+layer) & phantom-step audit $4/4$; triangle-forced exits of dirty shared
+neighbours $34/34$; $34$ structured chain certificates; random two-high
+census $144/144$ chains verified; exact DP cross-checks $43/43$; $0$
+violations & two-high-layer scripts\\
+\hline
+Corollary~\ref{cor:clatwohigh}: the dirty corner & $207$ dirty-class
+instances ($154$ legacy: $34$ structured $+\,120$ random; $53$ new), plus
+$16$ LB1-tightness hardening runs and $60$ two-high regression chains; in
+every instance a decomposition of $\tilde G$ into at most
+$\floor{n/2}-1$ paths was produced (constructive refutation of the
+corner); $0$ corner hits, $0$ violations & corner-narrowing scripts\\
+\hline
+Corollary~\ref{cor:clatwohigh}, Remark~\ref{rem:clagap}: band-free
+tightness & $125$ decision-level instances of the constructed family:
+all $66$ band-free instances sealed constructively (paired-decomposition
+constructor output verified to partition the edge set into exactly
+$\mathrm{odd}/2$ simple paths, with per-vertex endpoint assertions); all
+$59$ banded instances rejected with band certificates; constructor
+success $\iff$ band-free reconciled $125/125$; excess
+$\mathrm{excess}\le\lfloor y/2\rfloor$ audited on these $125$ and the
+$110$ earlier band-level instances of the same pipeline ($235$ in all),
+zero violations & band-tightness scripts\\
+\hline
+Remark~\ref{rem:clagap}: the band-free statement beyond the constructed
+family & $71$ decision-level instance runs: the general band-free
+statement refuted by cycle-block instances certified three ways
+(band-free by the criterion, untight by the decision procedure, and an
+exact combinatorial witness at $\pn=\mathrm{odd}/2+1$ for the
+cycle-with-one-pendant block and $\pn=\mathrm{odd}/2+2$ for the
+double-triangle block); $0$ failures & relaxed-domain scripts\\
+\hline
+Proposition~\ref{prop:claWmbound}, Proposition~\ref{prop:claescape}:
+$W(m)$ & parity certificate by hand; decompositions into exactly
+$\floor{n/2}$ paths verified for $m\in\{5,7,9\}$; class memberships
+asserted programmatically & witness-family scripts\\
+\hline
+Proposition~\ref{prop:claoscsharp}: exactness on tested $k$ & DP exact at
+$k=2$; verified $(k+1)$-path witnesses for $k\in\{2,3,4,5,6,8,10\}$ &
+witness-upgrade scripts\\
+\hline
+Theorem~\ref{thm:conk4odd} & structured exact search over $K_{4,n}$,
+$n=3..31$, recovering $(n+1)/2$ independently for every $n$; closed-form
+construction verified for $k=6..301$ ($n=13..603$); witness lists
+machine-verified & $K_{4,n}$ scripts and witness files\\
+\hline
+Proposition~\ref{prop:conk4small} & witness verification (edge-exact
+partition, simplicity) & small-case witness files\\
+\hline
+Even columns of Case~4 (Section~\ref{subsec:columns};
+Theorem~\ref{thm:concapgen}, Theorem~\ref{thm:constructgen},
+Theorem~\ref{thm:conringclosure}, Corollary~\ref{cor:concol6},
+Observation~\ref{obs:concostwall}) & $n_2=6$: witnesses for
+$K_{7,6},K_{9,6},K_{11,6},K_{13,6}$ each verified by two independent
+implementations (pipeline verifier $+$ adjacency-matrix checker); ring
+construction re-derived for $k=7..31$ from the base $k_0=3$, with
+overlapping chains from $k_0=4,5$. $n_2=8$: bases
+$K_{9,8},K_{11,8},K_{13,8}$ found at $5/7/43$ search nodes and verified
+($K_{11,8},K_{13,8}$ re-derived byte-identically); closure sampled at
+$60$ levels $k=9..30$; negatives on $K_{15,8},K_{17,8}$: $>14$M nodes
+over all five deficit multisets, zero exhaustions. $n_2=10$: bases
+$K_{11,10},K_{13,10},K_{15,10}$ found at $6/13/182$ nodes and
+triple-verified; closure sampled $k=11..18$; negatives on
+$K_{17,10},K_{19,10},K_{21,10}$, $\approx0.9$M nodes, zero exhaustions &
+column scripts and witness files\\
+\hline
+Theorem~\ref{thm:conL0} (anchor) & Walecki partition checked edge by edge
+for $j=2..16$; formula verified for all odd $j\le121$ & engine scripts\\
+\hline
+Theorem~\ref{thm:conchain} assembly & $14$ random chains
+($b\in\{2..5\}$) assembled and verified; $b=4,5$ chains attain
+$\sum j_i-1$ & engine scripts\\
+\hline
+Remark~\ref{rem:conchaincomp}(2): three $K_5$'s & the $5$-path
+decomposition printed in the text is hand-checkable; contradicts the
+archived exact value $6$ (re-verification requested) & this paper, project
+archive\\
+\hline
+Conjecture~$K$ (Definition~\ref{int:def-budget}) evidence & the five
+exhaustively enumerated domains of Table~\ref{com:tab-kdomains}; $0$
+violations & domain scripts and certificate files\\
+\hline
+Proposition~\ref{prop:claincomp}: exact values & DP exact:
+$\pn(K_{2,5}+2\ell)=3$, $\pn(G')=4$ (triangle plus two decorated
+bridges), $n=9,11$ & witness-upgrade scripts\\
+\hline
+Lemma~\ref{int:lem-fan6}, both orientations (transcription and
+verification note in Section~\ref{int:subsec-fanlemmas}) &
+direction-corrected scan over both ordered (gains-end, budget-end)
+orientations of every deleted edge: $n\le5$ complete, all $482{,}080$
+ordered instances ($241{,}040$ per orientation), $0$ violations; $n=6$
+complete, all $1{,}701{,}141{,}150$ ordered instances ($850{,}570{,}575$
+per orientation; the fixed-orientation half exactly reproduces the
+historical census) with $0$ violations & direction-scan scripts\\
+\hline
+\end{longtable}
+\endgroup
+
+\section{The corner analysis and the band-free tightness theorem}
+\label{com:app-band}
+
+This appendix records, with complete proofs, the theorem-level material
+behind the band-free tightness statements used in
+Remark~\ref{rem:clagap}, in the proof of Corollary~\ref{cor:clatwohigh},
+and in open problem O2. Throughout the appendix, $G$ is a graph of the
+\emph{dirty class} of Corollary~\ref{cor:clatwohigh}: $G$ is connected
+and satisfies {\rm(A1)}--{\rm(A2)}, has exactly two high vertices $u$ and
+$x$ with $k=\dEV(u)$ and $l=\dEV(x)$ (both odd and $\ge5$ by (A2)),
+$t=t_{ux}\ge1$ common EV-neighbours $v_1,\dots,v_t$, every common
+EV-neighbour of E-degree $3$, and no private EV-neighbour of E-degree $1$
+on either side. We write $z_j$ for the third EV-neighbour of $v_j$, $F$
+for the E-star at $u$, and $\tilde G_j=G-F-\{xv_j\}$, abbreviating
+$\tilde G=\tilde G_1$. By (A1) the common EV-neighbours are pairwise
+non-adjacent inside $\EV(G)$ and each $z_j$ is a \emph{far} even vertex
+of $\tilde G_j$ (an even vertex outside $N_{\EV}(u)\cup N_{\EV}(x)$ that
+is not a common EV-neighbour); also $\dEV(z_j)\le3$, since
+$\dEV(z_j)\ge4$ would make $z_j$ a third high vertex.
+
+\begin{definition}[corridors, terminal units, bands]\label{com:def-band}
+Fix $j$ and write $\tilde G$ for $\tilde G_j$. For an even vertex $f$ of
+$\tilde G$, let $Y(f)$ be its set of \emph{corridor} neighbours: the
+degree-two even vertices $y$ with $N_{\tilde G}(y)=\{x,f\}$, where $N(f)$
+denotes the neighbour set of $f$ in $\tilde G$. The remaining incident
+edges of $f$ are its \emph{terminal units}, numbering $|N(f)|-|Y(f)|$.
+Call $f$ a \emph{deadlock band} if $|Y(f)|>|N(f)|-|Y(f)|$. Let
+$\mathrm{Far}$ be the set of far even vertices of $\tilde G$ and $Y$ the
+total number of corridors (each corridor is a private EV-neighbour of
+$x$, so $Y\le l-t$, with equality in the constructed family below).
+\end{definition}
+
+\begin{definition}[constructed family]\label{com:def-family}
+$G$ belongs to the \emph{constructed family} if it lies in the dirty
+class and: (i) every private vertex of E-degree $2$ (even in $G$, on
+either the $u$- or the $x$-side) has its second EV-neighbour in
+$\mathrm{Far}$, and no EV-edge of $\tilde G_1$ joins two far even
+vertices; (ii) the odd-neighbour block of $u$ --- the substructure hanging
+at $u$'s odd-degree neighbours --- is a set of $s$ pendant leaves at $u$
+with $s$ odd, or a number of gadgets ($u$--$o$, $o$--$a$, $o$--$b$, with
+two pendant leaves on each of $a$ and $b$), possibly mixed; and likewise
+for $x$; (iii) every far vertex $f$ of $\tilde G_1$ has $\dEV(f)\le3$ and
+carries at most one repair leaf, whence $\deg_{\tilde G_1}(f)\in\{2,4\}$;
+and (iv) every common EV-neighbour of $G$ is adjacent to an odd positive
+number of pendant leaves and to no odd-degree vertices other than these
+leaves. (The band condition of Definition~\ref{com:def-band} does not
+depend on $j$: no far--far EV-edge exists by (i), so deleting $xv_j$
+touches no far vertex and none of its neighbours. The machine instances
+of Appendix~\ref{com:app-comp} all lie in the family, with the
+cross-private instances covered by the extension that follows.)
+\emph{Extension.} Cross-private pairs are admitted: a $u$-private vertex
+$w$ may be adjacent to an $x$-private vertex $y$, so that
+$N_{\EV}(w)=\{u,y\}$ and $N_{\EV}(y)=\{x,w\}$; $y$ then acts as a
+terminal corridor with $\phi(y)=w$, and $wy$ is a terminal unit of $w$.
+The band-free tightness theorem below covers this extension by the
+identical step (ii) of its proof; the load account and the counting
+theorem are used only on the family proper, where every private even
+vertex has its second EV-neighbour in $\mathrm{Far}$.
+\end{definition}
+
+\subsection{The counting gap and the counting theorem}
+
+\begin{lemma}[counting-gap ledger]\label{com:lem-gapledger}
+For any $j$, let $\mathrm{odd}:=\mathrm{odd}(\tilde G_j)$ and
+$\mathrm{gap}:=\floor{n/2}-\mathrm{odd}/2$, where $n=|V(G)|$ and
+$\mathrm{odd}_G$ is the number of odd-degree vertices of $G$. Then
+$\mathrm{odd}=k+1+\mathrm{odd}_G$,
+$n=2+t+(k-t)+(l-t)+|\mathrm{Far}|+\mathrm{odd}_G$, and
+\[
+\mathrm{gap}=\frac{l-t+|\mathrm{Far}|+1}{2}\ \ (n\text{ even}),
+\qquad
+\mathrm{gap}=\frac{l-t+|\mathrm{Far}|}{2}\ \ (n\text{ odd});
+\]
+in particular $\mathrm{gap}\ge1$.
+\end{lemma}
+
+\begin{proof}
+The odd-degree vertices of $\tilde G_j$ are: $u$, which loses the $k$
+star edges (an odd number); $x$, which loses $xv_j$; the common
+EV-neighbours $v_i$ with $i\ne j$ ($t-1$ of them, each losing $uv_i$);
+the private EV-neighbours of $u$ ($k-t$ of them, each losing $uw$); and
+all odd-degree vertices of $G$ (untouched, since the star edges all join
+even-degree vertices and $xv_j$ joins two even-degree vertices). Hence
+$\mathrm{odd}=2+(t-1)+(k-t)+\mathrm{odd}_G=k+1+\mathrm{odd}_G$. The
+vertex set splits into $\{u,x\}$, the common EV-neighbours, the private
+EV-neighbours of $u$ and of $x$, the far even vertices (which include the
+$z_i$), and the odd-degree vertices of $G$, giving the displayed count.
+For odd $n$: the remaining terms $2$, $k+l$ and $\mathrm{odd}_G$ are even,
+so $n$ is odd exactly when $t+|\mathrm{Far}|$ is odd, which makes
+$l-t+|\mathrm{Far}|$ even and the second quotient an integer. Finally
+$l\ge t$ and $|\mathrm{Far}|\ge1$ (as $z_j\in\mathrm{Far}$): for even $n$
+the numerator is $\ge2$; for odd $n$ it is a positive even number, hence
+$\ge2$. So $\mathrm{gap}\ge1$.
+\end{proof}
+
+\begin{lemma}[load account]\label{com:lem-load}
+In the family proper (the constructed family without cross-private
+pairs), $\sum_{f\in\mathrm{Far}}\dEV(f)=k+l-t$ (E-degrees read in $G$).
+Consequently $\dEV(f)\le3$ for every $f\in\mathrm{Far}$, and
+$|\mathrm{Far}|\ge2$.
+\end{lemma}
+
+\begin{proof}
+Each common EV-neighbour $v_i$ has EV-neighbours $u$, $x$ and
+$z_i\in\mathrm{Far}$, contributing $t$ EV-edges with one end in
+$\mathrm{Far}$; each private even vertex (of E-degree $2$ in $G$, on
+either side) has its second EV-neighbour in $\mathrm{Far}$ by
+Definition~\ref{com:def-family}(i), contributing the $k-t$ edges at the
+private EV-neighbours of $u$ and the $l-t$ edges at the corridors of $x$.
+By (i) there are no EV-edges between far vertices, and odd-degree
+vertices carry no EV-edges; so every EV-edge counted has exactly one end
+in $\mathrm{Far}$, and summing the E-degrees over $\mathrm{Far}$ gives
+$t+(k-t)+(l-t)=k+l-t$. If some $f$ had $\dEV(f)\ge4$, then $f$ would be a
+third high vertex, impossible; so all E-degrees in $\mathrm{Far}$ are
+$\le3$. If $|\mathrm{Far}|=1$, then $k+l-t\le3$, so
+$t\ge k+l-3\ge5+5-3=7>\min(k,l)\ge t$, a contradiction; hence
+$|\mathrm{Far}|\ge2$.
+\end{proof}
+
+\begin{proposition}[the counting theorem: small gap forces band-free]
+\label{com:prop-gapnoband}
+In the family proper (the constructed family without cross-private
+pairs), if $\mathrm{gap}\le2$, then $\tilde G_j$ has no deadlock band,
+for every $j$.
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{com:def-family} the band condition is
+$j$-independent, so we argue in $\tilde G_1$. Suppose $f$ is a band. Then
+at least two corridors hang at $f$, and every corridor is a private
+EV-neighbour of $x$; write $y:=l-t\ge Y\ge2$.
+If $n$ is even, Lemma~\ref{com:lem-gapledger} gives
+$y+|\mathrm{Far}|\le 2\,\mathrm{gap}-1\le3$, while $y\ge2$ and
+$|\mathrm{Far}|\ge2$ (Lemma~\ref{com:lem-load}) give
+$y+|\mathrm{Far}|\ge4$ --- a contradiction. If $n$ is odd,
+$\mathrm{gap}\le2$ gives $y+|\mathrm{Far}|\le4$, so
+$y\le4-|\mathrm{Far}|\le2$; equality throughout forces $|\mathrm{Far}|=2$
+and $y=2$. The load account gives $k+l-t=k+y=k+2\le3|\mathrm{Far}|=6$, so
+$k\le4$, contradicting $k$ odd and $\ge5$. So $y=2$ is impossible, and
+the bound $y\le2$ then leaves $y\le1$, i.e.\ $l-t\le1$: no band exists (a
+band needs two corridors at one far vertex).
+\end{proof}
+
+\subsection{The pairing framework and the band-free tightness theorem}
+
+\begin{proposition}[pairing schemes produce trail decompositions]
+\label{com:prop-pairframe}
+Let $H$ be a finite simple graph with a local structure on the edges at
+each vertex: if $\deg_H(v)$ is even, its incident edges are partitioned
+into pairs; if $\deg_H(v)$ is odd, exactly one incident edge is marked
+\emph{free} and the rest are paired. Then $E(H)$ decomposes into maximal
+alternating trails --- starting from a free mark, at each internal visit
+leaving through the mate of the arriving edge --- and every edge lies on
+exactly one trail. Each trail either has two free ends or is closed; the
+open trails number $\mathrm{odd}(H)/2$. If moreover no trail repeats a
+vertex, then $H$ has a path decomposition $D$ with
+$|D|=\mathrm{odd}(H)/2$, every odd-degree vertex an endpoint of exactly
+one path of $D$ and no even-degree vertex an endpoint; in particular
+$\pn(H)=\mathrm{odd}(H)/2$.
+\end{proposition}
+
+\begin{proof}
+At each vertex the successor of an arriving edge is uniquely determined
+by the pairing, so the trails are edge-disjoint and exhaust $E(H)$. A
+free mark can occur only at a trail end (a free edge carries at most one
+free mark at each of its ends); an odd vertex has exactly one free mark
+and is therefore the end of exactly one trail; an even vertex has none
+and is internal wherever it occurs. The number of open trails is the
+number of free marks divided by two, i.e.\ $\mathrm{odd}(H)/2$. If all
+trails are paths, they form a decomposition $D$ with $|D|=\mathrm{odd}/2$
+and endpoint set exactly the odd vertices; the odd-degree lower bound of
+Lemma~\ref{int:lem-LB1}(i) gives $\pn(H)\ge\mathrm{odd}/2$, so the value
+is exact.
+\end{proof}
+
+\begin{lemma}[odd-neighbour blocks close by themselves]\label{com:lem-blocks}
+In the constructed family, the odd-neighbour block of $c\in\{u,x\}$ can
+be structured as Proposition~\ref{com:prop-pairframe} requires, with all
+resulting trails staying inside the block, as follows. A leaf block of
+$s$ leaves ($s$ odd): mark $c\ell_1$ free at $c$ (the single-edge path
+$\ell_1$--$c$) and pair $(c\ell_{2i-1},c\ell_{2i})$ for $2\le 2i\le s$,
+giving $(s+1)/2$ paths for the $s+1$ odd vertices involved. A gadget:
+pair $c$--$o$ free at $c$ (path $c$--$o$), $(o$--$a,o$--$b)$ at $o$,
+$(a\ell_1,a o)$ at $a$ with $a\ell_2$ free, and $(b o,b\ell_3)$ at $b$
+with $b\ell_4$ free; the resulting paths $c$--$o$,
+$\ell_1$--$a$--$o$--$b$--$\ell_3$, $\ell_2$--$a$, $\ell_4$--$b$ have
+endpoint multiset covering $\{c,o,a,b,\ell_1,\dots,\ell_4\}$ exactly once
+--- $8$ odd vertices, $4$ paths. A mixed block (gadgets and leaves at the
+same $c$): the block edges at $c$ number odd in total, so exactly one is
+free (chosen canonically, say the first), the rest pair arbitrarily among
+leaf and gadget edges, and a mixed pair $(c\ell,c o)$ forms the legal
+path $\ell$--$c$--$o$. All trails end at free marks inside the block, so
+the block never interacts with the rest of the scheme.
+\end{lemma}
+
+\begin{proof}
+This is a verification of the pairing tables just displayed: within a
+gadget the pairs at $o,a,b$ are fixed as shown; leaves pair among the
+edges at $c$; and in a mixed block the total number of block edges at $c$
+is $s+g$ ($s$ leaves, $g$ gadgets, each gadget contributing a single
+attachment edge $co$), which is odd because $c$ has even degree in $G$
+and an odd number of EV-neighbours, so the free/paired structure exists;
+the endpoint count of each displayed path list matches the odd vertices
+it involves, each exactly once. No trail leaves the block, since free
+marks sit at block vertices only.
+\end{proof}
+
+\begin{lemma}[forced fusions]\label{com:lem-fuse}
+In any decomposition of $\tilde G$ as in the last sentence of
+Proposition~\ref{com:prop-pairframe} (a \emph{paired decomposition}), the
+edges at every even vertex are traversed in internal pairs. Hence a
+corridor $y$ (degree $2$) forces its two edges $xy$ and $y\phi(y)$ into
+one path; and the unit at $v_1$ is forced: $v_1z_1$ pairs with
+$v_1\ell_1$, where $\ell_1$ is the leaf at $v_1$ (any further leaves at
+$v_1$ pair among themselves, their number being even by
+Definition~\ref{com:def-family}(iv)).
+\end{lemma}
+
+\begin{proof}
+At an even vertex $v$ of a paired decomposition, $D(v)=0$, so no path has
+$v$ as an endpoint; each visit is internal and uses exactly two edges, so
+the incident edges split into internal pairs by path. A degree-two vertex
+therefore has its whole edge set as a single pair on a single path.
+\end{proof}
+
+\begin{proposition}[injection at far vertices]\label{com:prop-inject}
+Fix a far vertex $f$ of $\tilde G$ with corridor set $Y(f)$, $c(f):=|Y(f)|$,
+and terminal units $T(f)$, $|T(f)|=\deg(f)-c(f)$. The edges at $f$ can be
+paired so that every corridor edge $fy$ is paired with a \emph{distinct}
+terminal unit if and only if $f$ is not a band, i.e.\ $c(f)\le|T(f)|$ (the
+pairing at $f$ is otherwise unconstrained, so this is a matching condition
+in a complete bipartite graph between $Y(f)$ and $T(f)$). In the
+constructed family $c(f)\le2$.
+\end{proposition}
+
+\begin{proof}
+Only the bound remains: by Definition~\ref{com:def-family}(iii)
+$\dEV(f)\le3$ and $f$ carries at most one repair leaf, so
+$\deg(f)\in\{2,4\}$, and $c(f)\le\deg(f)/2\le2$.
+\end{proof}
+
+\begin{lemma}[sorted offset matching at $x$]\label{com:lem-offset}
+In the constructed family, $x$ is odd in $\tilde G$, with exactly one
+free edge; its non-block edges are the $m$ corridor edges (each labelled
+by the far vertex it hangs at, with multiplicity $c(f)\le2$ per label; a
+cross-private corridor counts as a label of its own, since no two of them
+hang at the same $w$) and the $s=t-1$ bridge edges $xv_i$ ($i\ge2$), with
+$m+s=l-1$ even. There is a pairing of these edges in which no two paired
+corridor edges carry the same label:
+if $m$ is even, sort the corridors $p_1,\dots,p_m$ by (label, index) and
+pair $(p_i,p_{i+m/2})$ for $i=1,\dots,m/2$, pairing the bridges among
+themselves --- if $p_i,p_{i+m/2}$ shared the label $f$, the label $f$
+would occupy at least $m/2+1$ of the sorted positions, so
+$c(f)\ge m/2+1\ge3$ for $m\ge4$, contradicting
+Proposition~\ref{com:prop-inject};
+if $m=2$ with equal labels, pair each of the two corridors with a bridge
+and the remaining bridges among themselves ($s-2$ is even since
+$s\equiv m\pmod2$); the failing configuration $m=2$, equal labels, $s=0$
+is unreachable, since $s=0$ forces $t=1$ and $m=l-1$, i.e.\ $l=3$,
+contradicting $l\ge5$;
+if $m$ is odd (possible only when $t$ is even), extract one corridor of a
+label of maximum multiplicity together with one bridge into a mixed pair,
+and apply the even case to the rest.
+\end{lemma}
+
+\begin{proof}
+The counting arguments displayed are the whole proof: for the even case,
+if both $p_i$ and $p_{i+m/2}$ carried label $f$, then all positions from
+$i$ to $i+m/2$ would carry label $f$ (the sort is by label first), giving
+$m/2+1$ corridors at $f$. For $m=2$ with equal labels and $s\ge2$, the
+corridor--bridge pairs leave $s-2\ge0$ bridges, even in number. For odd
+$m$, extracting one corridor of a maximum-multiplicity label and one
+bridge leaves an even number of each, and the extracted pair mixes a
+corridor with a bridge, so the no-equal-label condition is preserved.
+\end{proof}
+
+\begin{theorem}[band-free tightness in the constructed family]
+\label{com:thm-bandfree}
+Let $G$ belong to the constructed family and fix $j$. If $\tilde G_j$ has
+no deadlock band, then $\tilde G_j$ admits a paired decomposition;
+consequently $\pn(\tilde G_j)=\mathrm{odd}(\tilde G_j)/2$.
+\end{theorem}
+
+\begin{proof}
+We define the local structure of Proposition~\ref{com:prop-pairframe} on
+$\tilde G_j$.
+(i) The odd-neighbour blocks of $u$ and of $x$ are structured as in
+Lemma~\ref{com:lem-blocks}, $x$'s free edge being the canonical first
+edge of its block.
+(ii) The degree-two even vertices are fused as in Lemma~\ref{com:lem-fuse}:
+each corridor $y$ pairs $xy$ with $y\phi(y)$, where
+$\phi(y)\in\mathrm{Far}$ is the far vertex at its other end (for the
+cross-private \emph{extension} of Definition~\ref{com:def-family} the
+same fusion applies with $\phi(y)=w$ a $u$-private vertex, $wy$ being a
+terminal unit of $w$, so the extension is covered by the identical
+argument); the unit at $v_j$ pairs $v_jz_j$ with $v_j\ell_j$. A shared
+vertex $v_i$, $i\ne j$, takes the pair $(v_ix,v_i\ell_i)$, marks $v_iz_i$
+free, and self-pairs its remaining leaf edges.
+(iii) At each far vertex $f$, Proposition~\ref{com:prop-inject} ---
+applicable because $\tilde G_j$ is band-free --- pairs every corridor
+edge $fy$ with a distinct terminal unit; the remaining terminal units
+number $\deg(f)-2c(f)$, which is even, and pair among themselves.
+(iv) At $x$, the free edge is the block edge of (i), and the remaining
+edges pair according to Lemma~\ref{com:lem-offset}.
+(v) Every degree-one vertex carries the free mark at its leaf end. The
+free-mark audit is immediate: each odd vertex of $\tilde G_j$ carries
+exactly one free mark and each even vertex none, by construction.
+
+\emph{No trail closes.} Consider any trail of the resulting scheme. At a
+far vertex a corridor end is always paired with a terminal unit, so a
+trail contains at most two corridors and, having left a far vertex, never
+returns to it; at $x$ each trail passes exactly once (a single pair); the
+fusions at $v_j$ and the bridges at the $v_i$ are one-way terminations.
+Hence every trail has one of the forms
+\[
+\text{terminal}--f--y--x--y'--f'--\text{terminal}',\qquad
+\text{terminal}--f--y--x--v_i--\ell_i,
+\]
+\[
+\ell_i--v_i--x--v_{i'}--\ell_{i'},\qquad
+\text{terminal}--f--\text{terminal}',
+\]
+where in the first form $y$ and $y'$ are corridors of \emph{distinct} far
+vertices $f\ne f'$, by Lemma~\ref{com:lem-offset}; a ``terminal'' means a
+terminal unit followed to its free end --- the whole segment from $f$
+along a repair-leaf edge, along a hook edge to a $u$-private vertex $w$,
+or along the $z$-role edge $v_iz_i$ read from $z_i$ to its free mark at
+$v_i$. When the corridor $y'$ of the first form is cross-private, its
+right-hand segment $y'$--$f'$--terminal$'$ is replaced by $y'$--$w$: the
+trail ends at the free mark of $w$, an odd vertex of $\tilde G$ (so no
+closed trail arises). In each form the vertices are pairwise distinct, so
+every trail is a simple path. Proposition~\ref{com:prop-pairframe} yields
+a paired decomposition, and the value of $\pn$ follows.
+\end{proof}
+
+\begin{lemma}[a band blocks paired decompositions]\label{com:lem-bandblocks}
+If $\tilde G_j$ has a deadlock band $f$, then $\tilde G_j$ admits no
+paired decomposition; consequently
+$\pn(\tilde G_j)\ge\mathrm{odd}(\tilde G_j)/2+1$.
+\end{lemma}
+
+\begin{proof}
+Two corridors $y_1\ne y_2$ of the same band $f$ cannot lie on one path of
+any decomposition: if a path contained both $fy_1$ and $fy_2$, then
+$y_1$, being of degree two and internal (even vertices are never
+endpoints in a paired decomposition), would force $xy_1$ onto the same
+path, likewise $xy_2$, so the path would contain all four edges of the
+cycle $x$--$y_1$--$f$--$y_2$--$x$ --- impossible for a simple path. Now in
+a paired decomposition the $\deg(f)$ edges at $f$ split into
+$\deg(f)/2$ internal pairs. The edge $fy$ of a corridor $y\in Y(f)$
+cannot pair with another corridor edge $fy'$ (previous sentence), so it
+pairs with an edge at a terminal unit; the resulting assignment
+$y\mapsto$ its paired edge is injective, whence
+$c(f)\le|N(f)|-c(f)$, contradicting the band condition. So no paired
+decomposition exists, i.e.\ no decomposition with $\mathrm{odd}/2$ paths
+and endpoint set the odd vertices; with fewer than $\mathrm{odd}/2$ paths
+excluded by Lemma~\ref{int:lem-LB1}(i), this gives
+$\pn\ge\mathrm{odd}/2+1$.
+\end{proof}
+
+\begin{proposition}[one band costs exactly one path]\label{com:prop-patch}
+Let $G$ belong to the constructed family and suppose $\tilde G_j$ carries
+exactly one deadlock band $f$. Then
+$\pn(\tilde G_j)=\mathrm{odd}(\tilde G_j)/2+1$.
+\end{proposition}
+
+\begin{proof}
+For a single band the pair $(c(f),|T(f)|)$ is $(2,0)$ or $(3,1)$: the
+band condition $c(f)>|T(f)|$ with $c(f)+|T(f)|=\deg(f)\in\{2,4\}$ and
+$c(f)\ge2$ leaves exactly these two cases, and in both the surplus of
+corridor ends over terminal units has size $|S(f)|=2$; write
+$S(f)=\{a,a'\}$. Modify the scheme of Theorem~\ref{com:thm-bandfree} in
+three places only:
+(1) at $f$, self-pair the surplus edges $(fa,fa')$ instead of injecting
+them;
+(2) at $x$, spend the free edge on $xa$ rather than on a block edge,
+marking $xa$ free at both ends (the single-edge path $x$--$a$);
+(3) the remaining injections at $f$ continue as before (in the case
+$(3,1)$ the one remaining corridor pairs with the one terminal unit);
+every other edge follows Theorem~\ref{com:thm-bandfree}, whose offset
+matching at $x$ keeps distinct labels apart automatically, including among
+the remaining corridors of the band.
+The resulting trails are $a$--$f$--$a'$--$x$--\dots--terminal (with $a'$
+fused, $x$ passed once, $f$ passed once) and the single edge $x$--$a$;
+all are simple, and the $4$-cycle $x$--$a$--$f$--$a'$--$x$ is cut at both
+$x$ and $a$ by the free marks of $xa$, so it does not arise as a trail.
+The endpoint count: $a$ gains two ends (one on the $x$ side, one on the
+$f$ side) and every other vertex is unchanged, so the number of path-ends
+is $\mathrm{odd}+2$ and the number of paths is $\mathrm{odd}/2+1$. The
+reverse inequality is Lemma~\ref{com:lem-bandblocks}.
+\end{proof}
+
+\begin{proposition}[several bands]\label{com:prop-excb}
+If $\tilde G_j$ carries $B$ deadlock bands, then
+$\pn(\tilde G_j)\le\mathrm{odd}(\tilde G_j)/2+2B-1$; moreover
+$B\le\lfloor Y/2\rfloor$, where $Y$ is the total number of corridors.
+\end{proposition}
+
+\begin{proof}
+Start from the scheme of Theorem~\ref{com:thm-bandfree} and repair the
+bands one at a time. The first band is repaired as in
+Proposition~\ref{com:prop-patch} (cost $+1$, spending $x$'s free edge and
+one ordinary matching partner). Each further band is repaired by the
+double-endpoint modification: self-pair the band's surplus pair at its
+far vertex $f$ and self-pair two $x$-edges at $x$, freeing four ends; the
+two resulting trails $a$--$x$--$a'$ and $a$--$f$--$a'$ add two ends, that
+is, one path, per band --- an exchange costing two endpoint pairs for one
+path, relying on no matching partner. Hence
+$p\le\mathrm{odd}/2+1+2(B-1)=\mathrm{odd}/2+2B-1$. Finally, distinct
+bands have disjoint corridor sets (each corridor hangs at exactly one far
+vertex) and each band has $c\ge2$, so
+$Y=\sum_{f\text{ band}}c(f)\ge2B$.
+\end{proof}
+
+\begin{corollary}[bands are exactly the obstructions]\label{com:cor-bandiff}
+In the constructed family: $\tilde G_j$ has a deadlock band if and only
+if $\pn(\tilde G_j)>\mathrm{odd}(\tilde G_j)/2$. In particular, on the
+family proper (the constructed family without cross-private pairs), if
+the counting gap is at most $2$, then
+$\pn(\tilde G_j)=\mathrm{odd}(\tilde G_j)/2=\floor{n/2}-\mathrm{gap}$ for
+every $j$; the cross-private instances at gap at most $2$ are covered at
+probe level by the machine certificates of Appendix~\ref{com:app-comp}.
+\end{corollary}
+
+\begin{proof}
+One direction is Lemma~\ref{com:lem-bandblocks}, the other
+Theorem~\ref{com:thm-bandfree}. If $\mathrm{gap}\le2$,
+Proposition~\ref{com:prop-gapnoband} gives band-free for every $j$ on the
+family proper, and Theorem~\ref{com:thm-bandfree} with
+Lemma~\ref{com:lem-gapledger} gives
+$\pn=\mathrm{odd}/2=\floor{n/2}-\mathrm{gap}$.
+\end{proof}
+
+\subsection{The five escape routes at a common EV-neighbour}
+
+\begin{theorem}[escape routes]\label{com:thm-escape}
+Let $G$ be a dirty-class graph, fix a common EV-neighbour $v_1$ with
+third EV-neighbour $z_1$, write $B=\floor{n/2}$ and $\tilde G=\tilde G_1$,
+and let $Y$ be the set of private EV-neighbours of $x$. If any of the
+following holds, then $\pn(G)\le B$:
+\begin{enumerate}[label=\rm(\alph*),leftmargin=2em]
+\item $\pn(\tilde G)\le B-1$;
+\item $\tilde G$ has a decomposition $\tilde D$ with $|\tilde D|\le B$ and
+$\tilde D(x)\ge3$;
+\item $\tilde G$ has a decomposition $\tilde D$ with $|\tilde D|\le B$,
+$\tilde D(x)=1$ and $\tilde D(z_1)\ge1$;
+\item $\tilde G$ has a decomposition $\tilde D$ with $|\tilde D|\le B$,
+$\tilde D(v_1)\ge2$ and $\tilde D(v_1)>\#\{y\in Y:\tilde D(y)=0\}$;
+\item $\tilde G$ has at least two components of odd order.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The reinsertion skeleton is that of the proof of
+Theorem~\ref{thm:clatwohigh}. (s1) Reinsert $xv_1$ towards $v_1$ by
+Lemma~\ref{int:lem-fan6}; the condition to check is
+$\tilde D(x)>\#\{w\in N_{\tilde G}(v_1):\tilde D(w)=0\}$. Among the
+neighbours of $v_1$ in $\tilde G$, the only even-degree vertex is $z_1$:
+$x$ is odd in $\tilde G$ (it lost $xv_1$), and every other neighbour of
+$v_1$ is an odd-degree vertex of $G$ (the edge $uv_1$ is deleted, and
+$v_1$ has E-degree $3$ with EV-neighbours $u,x,z_1$). So the passing
+count at $v_1$ is at most $1$. (batch) Lemma~\ref{int:lem-fan7} then
+absorbs the whole star $F$ towards $u$, returning $A\subseteq F$ with
+$|A|\ge\ceil{k/2}$; its hypothesis holds read over $G$ because $v_1$ is
+now active and every other star vertex is odd in $\tilde G$, hence has
+$\tilde D\ge1$ by Lemma~\ref{int:lem-LB1}(ii). (L) Each edge of
+$F\setminus A$, $|F\setminus A|=\floor{k/2}$, is reinserted towards its
+star vertex as in the proof of Theorem~\ref{thm:claAstar}: dead
+candidates are confined to $N_{\EV}(v)\setminus\{u\}$, of size at most
+$\dEV(v)-1\le2$ by (A2), against a budget of at least $3$ at the last
+step.
+
+(b) $\tilde D(x)\ge3>1\ge$ passing$(v_1)$, so (s1) applies and activates
+$v_1$; (batch) and (L) follow.
+
+(a) Let $D^*$ be optimal with $|D^*|\le B-1$. If $D^*(x)\ge3$, route (b)
+applies. Otherwise $D^*(x)=1$ (it is odd by Lemma~\ref{int:lem-LB1}(iii),
+$x$ being odd in $\tilde G$). Now
+$\deg_{\tilde G}(x)=\deg_G(x)-1\ge l+1-1\ge5$ (as $x$ is high,
+$\deg_G(x)\ge l+1$), so $x$ is internal to some path of $D^*$; cutting
+that path at $x$ raises $|D^*|$ by one --- still at most $B$ --- and
+raises the endpoint count at $x$ to $3$: route (b).
+
+(c) $\tilde D(z_1)\ge1$ makes the passing count at $v_1$ equal to $0$, so
+(s1) applies unconditionally; (batch) and (L) as in (b).
+
+(d) Reverse the order of (s1): reinsert $xv_1$ \emph{towards $x$} first.
+The Lemma~\ref{int:lem-fan6} condition is now applied at $v_1$ as the
+donor: $\tilde D(v_1)>\#\{w\in N_{\tilde G}(x):\tilde D(w)=0\}$, and the
+dead candidates at $x$ are precisely the dead private EV-neighbours of
+$x$ (the other neighbours of $x$, namely $v_2,\dots,v_t$ and the
+odd-degree neighbours, all have $\tilde D\ge1$); hypothesis (d) is
+exactly this inequality. Afterwards $v_1$ is still active
+($\tilde D(v_1)-1\ge1$), so Lemma~\ref{int:lem-fan7} absorbs the
+\emph{full} star $F$, including $uv_1$, towards $u$; and the (L) step
+runs as above, $u$'s budget being untouched by the first step. The
+endpoint count at $x$ ends at $\tilde D(x)+1$, which is even, consistent
+with $x$ being even in $G$; all $k+1$ deleted edges are restored and
+$|D|=|\tilde D|\le B$.
+
+(e) Every component of $\tilde G$ lies in the class of
+Theorem~\ref{int:thm-fan}: it is triangle-free (an induced subgraph of
+$\EV(G)$) and every E-degree is at most $3$ (the private EV-neighbours of
+$x$ by (A2) at $x$, the far vertices because $u$ and $x$ are the only
+high vertices, $v_1$ because $\dEV(v_1)=3$). Component-wise
+Theorem~\ref{int:thm-fan} with Lemma~\ref{int:lem-sum} gives
+$\pn(\tilde G)\le\sum_i\floor{n_i/2}=(n-c_{\mathrm{odd}})/2$, where
+$c_{\mathrm{odd}}\ge2$ is the number of odd-order components (it is even
+when $n$ is even, and odd and $\ge3$ when $n$ is odd, giving
+$(n-3)/2=(n-1)/2-1=B-1$). In both cases $\pn(\tilde G)\le B-1$: route
+(a).
+\end{proof}
+
+\begin{corollary}[the corner, formally]\label{com:cor-corner}
+Let $G$ be a dirty-class graph with $\pn(G)>\floor{n/2}$. Then for
+\emph{every} common EV-neighbour $v_j$ (with third EV-neighbour $z_j$ and
+$\tilde G_j=G-F-\{xv_j\}$), all of the following hold:
+$\pn(\tilde G_j)=\floor{n/2}$; $\beta(\tilde G_j,x)=\floor{n/2}+1$; $z_j$
+is buried (endpoint count $0$) in every optimal decomposition of
+$\tilde G_j$; in every optimal decomposition $\tilde D$, either
+$\tilde D(v_j)=0$, or $\tilde D(v_j)\ge2$ and at least $\tilde D(v_j)$
+private EV-neighbours of $x$ have $\tilde D=0$; and $\tilde G_j$ has at
+most one component of odd order.
+\end{corollary}
+
+\begin{proof}
+This is the contrapositive of Theorem~\ref{com:thm-escape}, route by
+route, for each $j$. First $\pn(\tilde G_j)\le\floor{n/2}$ always holds:
+every E-degree in $\tilde G_j$ is at most $3$ (as in the proof of route
+(e)), so component-wise Theorem~\ref{int:thm-fan} with
+Lemma~\ref{int:lem-sum} applies. Route (a) failing then gives
+$\pn(\tilde G_j)=\floor{n/2}$. Route (b) failing, with endpoint counts at
+$x$ odd (Lemma~\ref{int:lem-LB1}(iii), $x$ being odd in $\tilde G_j$),
+gives $\tilde D(x)=1$ in every optimal decomposition; cutting a path of
+an optimal decomposition at the internal vertex $x$ (legal since
+$\deg_{\tilde G_j}(x)=\deg_G(x)-1\ge5$) yields $\floor{n/2}+1$ paths with
+endpoint count $3$ at $x$, so $\beta(\tilde G_j,x)=\floor{n/2}+1$. Route
+(c) failing gives $\tilde D(z_j)=0$ in every optimal decomposition.
+Route (d) failing gives the fourth condition; when $l-t\le1$ it
+degenerates to $\tilde D(v_j)=0$, since at most one private EV-neighbour
+of $x$ can be dead while $\tilde D(v_j)\ge2$ would need at least two.
+Route (e) failing gives at most one odd-order component.
+
+(A note on conventions: the $\beta$ here is the $D(x)\ge2$ variant of
+Definition~\ref{int:def-budget}. The $D(x)\ge3$ variant takes the same
+value $\floor{n/2}+1$: its lower bound comes from route (b) failing
+exactly as above, and its upper bound from the same cutting construction,
+which raises the endpoint count at $x$ to $3$.)
+\end{proof}
+
+% end sec-computation.tex

@@ -1,0 +1,8 @@
+name = "gallai-formalization"
+version = "0.1.0"
+# The released sources form one module chain: Pi3Uni and Pi3Downset import
+# Front583.Pi3L2b. Explicit module targets make `lake build` cover all three.
+defaultTargets = ["Front583.Pi3L2b", "Front583.Pi3Uni", "Front583.Pi3Downset"]
+
+[[lean_lib]]
+name = "Front583"

@@ -1,0 +1,102 @@
+[
+  {
+    "path": "front583/campaign/STATE.md",
+    "bytes": 1466690,
+    "sha256": "2767b50151c33609539f0709fe35b70d221280ceafcbeffc57bf017cf153805c"
+  },
+  {
+    "path": "front583/campaign/FRONTIER.md",
+    "bytes": 6141,
+    "sha256": "0f53f40d5589aafc425da0effe433d39b0c267f9b63dfc2459a253326b582f89"
+  },
+  {
+    "path": "front583/campaign/deep_A164_p5k4.md",
+    "bytes": 18056,
+    "sha256": "1bdcb4c4dc47d8ada4b9e486ad4a2c311b58ea2eb1fe9c00e7cba6916278d052"
+  },
+  {
+    "path": "front583/campaign/deep_E39_chaindist.md",
+    "bytes": 21471,
+    "sha256": "d5f65ca0c736b16e54cb057fc435e792c8756cf2863ebf30026195c703abf277"
+  },
+  {
+    "path": "front583/campaign/deep_A328_knfamily.md",
+    "bytes": 30879,
+    "sha256": "ade76f5d180dd9bacc2cb53abe9ff2bd8a51791217a44c9861ddcadde54393d5"
+  },
+  {
+    "path": "front583/campaign/deep_A329_verify_a328.md",
+    "bytes": 20220,
+    "sha256": "782f629f18263812b308ef5567483103d3974d7b2cfd7aedb3f191af3629518d"
+  },
+  {
+    "path": "front583/campaign/deep_A330_kverify.md",
+    "bytes": 28645,
+    "sha256": "6592a98c383360e9a2beba7adfb997d712f91f812b3b80e3d479e93424091ffb"
+  },
+  {
+    "path": "front583/campaign/deep_A331_verify_a330.md",
+    "bytes": 17911,
+    "sha256": "cf23c783377035a9c98e19c176373802acac1297d31e247d0bb993182b39ba12"
+  },
+  {
+    "path": "front583/campaign/deep_A332_pimap.md",
+    "bytes": 20741,
+    "sha256": "e6dcb62b914fd2292a54ad9d2b210fb6bc0b3880f1839d05f5505122d3c78dcf"
+  },
+  {
+    "path": "front583/campaign/deep_A333_verify_a332.md",
+    "bytes": 16220,
+    "sha256": "813019caf905188c9e0bad83ac865ebb4ea4647647952e34bd5fb1ccab2cf316"
+  },
+  {
+    "path": "front583/paper/sec1-3.tex",
+    "bytes": 69622,
+    "sha256": "85a0fd93156a995c25d9e715ea90f16671f92eb3e7a9e9d8620301561b4444f6"
+  },
+  {
+    "path": "front583/paper/sec4-5.tex",
+    "bytes": 39524,
+    "sha256": "fe50cda941d763c9de9a10d0ddf769354ec86a6bb820fb5a5d374b280145b06c"
+  },
+  {
+    "path": "front583/paper/sec6-10.tex",
+    "bytes": 159840,
+    "sha256": "bc412da4e91048522647bb17488c0806ef5c78342e31d43d0ce8bf49f04d79ed"
+  },
+  {
+    "path": "front583/paper/sec_addendum.tex",
+    "bytes": 93132,
+    "sha256": "44c6fa0087d00a6038416941344018f42588cc10956f32be3c6a12a2698bca91"
+  },
+  {
+    "path": "front583/lean/Front583/Fan.lean",
+    "bytes": 398592,
+    "sha256": "8988828d33a51f792dccc326dffc742088b2a31d3e06c92fbe74902f26629959"
+  },
+  {
+    "path": "front583/lean/Front583/Astar.lean",
+    "bytes": 152185,
+    "sha256": "d90183f034f4f1dd1f4a8ae244a77cd3950d9fde710c8e3c8589e47a32cad8f0"
+  },
+  {
+    "path": "front583/lean/Front583/T273.lean",
+    "bytes": 48522,
+    "sha256": "df8e98703f2d7375817bc2b2f2599e362c2254e37f62cbac509636c06becb27a"
+  },
+  {
+    "path": "front583/lean/Front583/ThmA2663.lean",
+    "bytes": 15281,
+    "sha256": "e242d5c5654edb3a681186458104b3528e08a90a0bacf435b702be07c71f959d"
+  },
+  {
+    "path": "front583/lean/Front583/Cert2663.lean",
+    "bytes": 11215,
+    "sha256": "9314e3486e35535821d58669160d74fbeb5f5baef5d1e803f63447767d15fc8d"
+  },
+  {
+    "path": "front583/lean/Front583/Struct2663.lean",
+    "bytes": 22446,
+    "sha256": "f5efde85f56b129339756f54d3682846a2b5491a533599359eb2f8b96709d239"
+  }
+]

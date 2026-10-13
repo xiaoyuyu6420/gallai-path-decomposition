@@ -1,0 +1,378 @@
+% ============================================================================
+% sec-status.tex — Formalization status, limitations, and open problems.
+% Label prefix: sta: (all labels owned by this file).
+% ============================================================================
+\section{Formalization status, limitations, and open problems}\label{sec:open}
+
+\subsection{The Lean formalization, item by item}\label{sta:subsec-leanitems}
+
+Table~\ref{sta:tab-leanitems} lists every Lean declaration this paper
+cites that is free of \texttt{sorryAx}, with its exact statement, source
+anchor and axiom profile; every entry of the axiom column was audited by
+\texttt{\#print axioms} against the built library, and the audit was
+re-run against the current sources (identical output; the audited files
+byte-identical to the review snapshot; Section~\ref{com:subsec-lean}).
+Declarations whose proofs consume \texttt{native\_decide} carry the
+kernel-reflection axiom \texttt{Lean.ofReduceBool} explicitly and are
+quoted as ``machine-checked by kernel reduction''
+(Section~\ref{com:subsec-lean}); they are not equated with pure proofs.
+
+\begin{table}[ht]
+\centering\small
+\caption{The nine \texttt{sorryAx}-free Lean items cited by this paper.
+Axiom profiles: $[\mathrm{S}]:=$ \texttt{[propext, Classical.choice,
+Quot.sound]} (standard), $[\mathrm{P},\mathrm{Q}]:=$
+\texttt{[propext, Quot.sound]}, and $\mathrm{nd}:=$ the
+\texttt{Lean.ofReduceBool} kernel-reflection axiom instance. Line anchors
+refer to the released sources.}
+\label{sta:tab-leanitems}
+\begin{tabular}{p{3.55cm} p{4.55cm} p{2.7cm} p{2.0cm}}
+\hline
+Declaration & Statement (exactly as proved) & Anchor & Axioms\\
+\hline
+\texttt{pNumK4n\_odd\_all} & for every odd $n\ge3$:
+$\pn(K_{4,n})=(n+1)/2$; hypotheses $3\le n$, $n$ odd & \texttt{T273.lean}
+:976--978 & $[\mathrm{S}]$\\
+\texttt{cor\_pNumK4n\_5/13/19} & $\pn(K_{4,5})=3$,
+$\pn(K_{4,13})=7$, $\pn(K_{4,19})=10$ & \texttt{T273.lean} :981--987 &
+$[\mathrm{S}]$\\
+\texttt{pCompleteOdd} & for $k\ge1$: $\pn(K_{2k+1})=k+1$; hypothesis
+$k\ne0$ & \texttt{CompleteOdd.lean} :1590--1596 & $[\mathrm{S}]$\\
+\texttt{thmA2663\_upgraded} & under hypotheses
+$\mathrm{hd2}$ (target side has the prescribed size) and
+$\mathrm{val}\le1$: $g_{13}\le d_2+1$ --- the $\mathrm{val}\le1$
+hypothesis is \emph{not} proved by the theorem &
+\texttt{ThmA2663.lean} :197--200 & $[\mathrm{P},\mathrm{Q}]$\\
+\texttt{case2\_struct\_alpha\_iff} & under six explicit hypotheses:
+$C_1((t_1+g)\bmod N)=\texttt{true}\iff t_1=s$ & \texttt{Struct2663.lean}
+:260--265 & $[\mathrm{P},\mathrm{Q}]$\\
+\texttt{ledger6\_ok} & $\mathrm{ledger}_6=(5{,}724;\,2{,}613;\,190;\,398;\,588)$
+(N=6 five-column global account) & \texttt{Cert2663.lean} :113 &
+$[\mathrm{P},\mathrm{nd}]$\\
+\texttt{ledger8\_ok} & $\mathrm{ledger}_8=(701{,}360;\,285{,}372;\,20{,}308;\,10{,}452;\,30{,}760)$
+(N=8; dual-route, second Python implementation pinned) &
+\texttt{Cert8.lean} :52 & $[\mathrm{P},\mathrm{nd}]$\\
+\texttt{l2b\_toplevel\_certificate} & the $79{,}200$-point packing-table
+certificate ($120$ orbits $\times$ $330$ demands $\times$ two sides),
+pointwise iff & \texttt{Pi3L2b.lean} :248--249 & $[\mathrm{P},\mathrm{nd}]$\\
+\texttt{Pi3Uni} (nine theorems) & downset tables (both sides); uniform
+layer; the no-threshold witness refuting any ``feasible $\iff
+f(\Sigma d)$'' law; top-only failures ($1{,}761$); top-failure set an
+upset; orbit counts $110/2$ & \texttt{Pi3Uni.lean} :57--115 &
+$[\mathrm{P},\mathrm{nd}]$\\
+\hline
+\end{tabular}
+\end{table}
+
+\emph{Not formalized.} Three boundary entries complete the picture.
+Theorem~\ref{thm:conchain} (odd clique chains) and its engine
+Theorem~\ref{thm:conL0} have \emph{no} Lean statement: they are paper
+proofs, and the machine anchors cover the underlying decompositions, not
+the chaining argument (Section~\ref{subsec:conformal}). The Fan-type chain
+(Theorems~\ref{thm:claAstar},~\ref{thm:lasep}) carries
+\texttt{sorryAx}-dependent declarations --- formalization in progress, and
+never quoted as machine-verified (Remark~\ref{rem:claformal}). The
+research lemma \texttt{fan6\_nf} is never cited: its statement was
+refuted by a machine counterexample and it survives in the sources as a
+record only.
+
+\emph{The four-domain account layer and its honest debt list.} The
+termination bound's four-domain witness accounts
+($588/30{,}760/634{,}960/7{,}798{,}903$ instances at $N=6,8,10,12$;
+Section~\ref{com:subsec-lean}) are kernel-checked equalities at the level
+of the domain counts and of the two certified ledgers; the theorem body
+itself is a paper proof with no Lean statement. Five residuals are
+registered against the account layer, none claimed closed:
+(R1) the fast$\equiv$slow enumeration equivalence has no general-$N$
+theorem (it is pinned by double-scale agreement at the $N=6/8$ anchors and
+across all bucket tables); (R2) the full witness tables at $N=10$
+($12{,}211{,}196$ rows) and $N=12$ ($313{,}315{,}956$ rows) are not
+certified --- bucket-first sampling and the aggregate bucketed ledgers
+cover them; (R3) the trailing four digits of the $N=10$/$N=12$ tuples have
+no kernel-level \emph{third} implementation (the Lean pins and the Python
+second implementation make two); (R4) the $h\bmod 2g$ keys bridge is
+proved at zero axioms for its instances, but its general-$N$ derivation is
+open; (R5) the declaration-listing verifier is a text-level instrument
+whose statement-level boundary is carried as such.
+
+\subsection{Limitations}\label{sta:subsec-limitations}
+
+\subsubsection{The budget-conjecture residuals}\label{sta:subsubsec-kres}
+
+\paragraph{The degree-two cut-vertex branch.} The degree-two layer of the
+budget conjecture assembles through a case analysis whose cut-vertex
+branch ($G-x$ disconnected) is closed at the \emph{computational} level
+only: $1{,}870$ cut-vertex even-degree instances over the base domain of
+Table~\ref{com:tab-kdomains} ($492$ with $d=2$, $1{,}165$ with $d=4$,
+$213$ with $d=6$) show zero violations, and a dedicated connected
+$n\le7$ check covers all $106$ degree-$2$ cut-vertex instances, again
+with zero violations. The theorization is pending, and the drafted
+splicing argument has a genuine gap: its parity arithmetic assumes
+$\lceil n_1/2\rceil+\lceil n_2/2\rceil=n/2$ for the two components of
+$G-x$, which holds only when $n$ is even (components of opposite
+parity). For odd $n$ the components share parity: the same-odd split
+gives $(n+1)/2$ and the same-even split gives $(n-1)/2$, so the drafted
+equality fails by one --- the missing parity case must be supplied
+before the branch is a theorem. The unconditional ceiling survives
+unchanged: $\lceil n_1/2\rceil+\lceil n_2/2\rceil\le\lceil n/2\rceil$
+for all parity splits, verified exhaustively for $n\le30$.
+
+\paragraph{The degree-$\ge4$ layer.} The general degree-$\ge4$ layer of
+the budget conjecture is \emph{not} discharged. The exact criterion
+(Section~\ref{int:subsec-budget}) characterizes one construction tool ---
+the degree-insertion operations --- and the alternative-construction
+theory for the $208$ tool-dead instances of
+Table~\ref{com:tab-kdomains} ($180$ of $208$ cut-vertex; only $7$ with
+the reduced case $\sigma=0$) is not written; the enumeration is confined
+to the $m\le12$ sparse layers. The residual proof obligation is booked,
+and no closure language is used for this layer.
+
+\paragraph{The recorded dead zone.} The $42$ recorded dead-zone instances
+of the base domain are discharged at \emph{witness} level: each admits a
+machine-verified sharp decomposition with $\beta\le\lceil n/2\rceil$
+(equality in $41$ of $42$; the sole strict case has $\beta=3<4$),
+attributed as $13$ two-probe artifacts, $23$ cut-vertex witnesses and $6$
+tight non-cut instances. This is a finite-instance disposition and does
+not eliminate the corresponding premise of the conditional chain, which
+remains open as stated (Section~\ref{int:subsec-conditional}).
+
+\paragraph{Corrected paper-level values of the extended account.} The
+extended-domain verification records corrected values, which supersede the
+first-pass report: $1{,}279$ witness certificates ($484+795$; Section~\ref{com:subsec-kline}); the tight-layer validation
+splits as $147$ even-$n$ instances for the tight-layer corollary proper
+and $2{,}410$ odd-$n$ instances for its companion characterization
+(the literal odd-$n$ proposition has $216$ counterexamples and is
+superseded by the companion form ``success $\iff M(u)=d$ or
+$M(u-1)\ge d-2$''); the insertion-depth account volume is $175{,}244$
+under the corrected depth formula; and in the base domain's $d=6$
+slice, $157$ instances are rescued ($156$ at insertion depth $2$, $1$
+at depth $3$), zero otherwise.
+
+\paragraph{The $K_8@28$ registered prediction.} For the placeability
+programme: the phrase ``surviving regimes only $\{q=0,q=7\}$'' at
+$K_8@28$ is a \emph{registered prediction}, not a measurement
+(Remark~\ref{rem:claregistered}); the actual census found zero surviving
+regimes on every line.
+
+\paragraph{The Lov\'asz 1968 external step.} The all-odd support consumed
+by Theorem~\ref{int:thm-Kgallai} rests on Theorem~\ref{int:thm-lovasz},
+verified at statement level by five concordant published sources and
+carried by the entire subsequent literature. Its offline proof
+reconstruction was, however, judged \emph{not achieved}: the skeleton's
+deletion step inflates the path count and its re-merging is blocked by
+shared internal vertices, a failure pinned mechanically by $22$ witness
+graphs on $n\le5$. Two transcription blemishes are on record alongside
+(the equality reading ``$|D|=\lfloor n/2\rfloor$'' must be ``at
+most''; the ``$\le n-1$ paths'' corollary is loose for even $n$), and
+the consumed upper-bound-inflation line is cited in its corrected
+upper-bound form, not as an identity. Page-by-page reading of the 1968
+original remains mandatory before the external flag is lifted
+(Section~\ref{int:subsec-conditional}).
+
+\subsubsection{The generic-account limitations}\label{sta:subsubsec-genres}
+
+The key-table ledger of Section~\ref{com:subsec-ledger} carries its four
+conventions as limitations: the $N=14$ affine-normalized domain
+equivalence is unproven; key-weighted and instance-weighted accountings
+are separate; the no-$V_7$ reading is a one-way superset; and the
+machine face of the omitted branch is frozen (its legacy
+candidate-generation sources are lost, with the residual mass precisely
+measured at $340$ positions for $N=8$ and $2{,}267{,}655$ at $N=14$).
+Two further accounting rules bind quotations: per-instance accounts at
+$N=8,9$ are listed separately from the key accounts, and the two
+accounting layers of the falsification experiments ($12/900$ failing
+instances versus $54/1{,}501$ failing witnesses;
+Section~\ref{subsubsec:criteria}) are never interchanged. No ledger
+result is extrapolated to $N\ge15$ or read across the two domain
+conventions.
+
+\subsubsection{The classification-programme boundaries}\label{sta:subsubsec-clares}
+
+The placeability classification programme
+(Section~\ref{subsec:echar}) is bounded as follows. The evidence
+structure of the exception-set candidate \eqref{eq:claechar} is closed to
+$k\le16$ on the empty-side and to $n=13$ on the tower side, with the
+$k=17$ full-type sweep at $53{,}394{,}755$ types; the layers $k\ge18$
+and the uniqueness side (closed only at $k=15$, refuted as a literal
+statement at $k=21$) are open (Remark~\ref{rem:claregistry}). The
+prime-family theorem covers the non-infinity regimes only; the infinity
+segment of the prime family is open for every member
+(Remark~\ref{rem:claprimscope}). The corrected Fourier identity
+(Theorem~\ref{thm:clafourier}) is the only form of the character equation
+cited anywhere in this paper, and all machine results of the programme
+are independent of it (Remark~\ref{rem:clafourierfix}).
+
+\subsubsection{The existence half of the criterion}\label{sta:subsubsec-gapex}
+
+The general-$N$ existence half of the valuation criterion in its so1
+form (Conjecture~\ref{int:conj-gapex}) is open: the per-$N$ closures at
+$N\in\{6,8,10,12\}$ are theorem-form, the general statement is not, and
+no sentence of this paper states otherwise. Three empirical obstacles are
+registered against it --- the $\lambda=1$ dead corners ($2{,}528$
+instances at $N=10$ with no one-leak witness), the failed-completion
+triple $31/1{,}094/13{,}488$, and four falsified discriminators --- and
+the candidate mechanisms (near-saturation normal forms; the leak-repair
+channel; per-line board normal forms) each carry its own falsification
+experiment. The associated $\mu$ $k=2$ stratified existence wall is open
+on its paper face (machine face closed on seven domains; no logical
+dependency on the family-image characterization;
+Remark~\ref{rem:clabridge}).
+
+\subsubsection{The GEN existence programme boundary}\label{sta:subsubsec-flicker}
+
+The GEN existence programme carries one further measured boundary. Its
+zero-dodge complete-walk counts on the $w_1=r-5$ flicker line are the
+six exact values
+\[
+158,\;1{,}733,\;11{,}466,\;81{,}660,\;484{,}578,\;3{,}670{,}846
+\]
+for $r=19,21,23,25,27,29$ (the $r=29$ value exact but
+class-bound-conditioned, quoted with that caveat) --- six tiers, not a
+closed sequence. One further exact single point, $23{,}933{,}468$ at
+$r=31$, stands on its own at exhaustive grade; at $r=33$ there is
+\emph{no} count (a quantified hard wall; a segmented long run was started
+and reports none). The even-$r$ blocking companion clears the
+zero-dodge side only: complete walks with a positive zero-defect exist at
+$r=20,22$ in the record and are untouched by it. The existence theorem
+itself (registry grade, $r\ge43$) is supported by paper certificates and
+step-feasibility, with its machine anchors corroborating only.
+
+\subsection{Open problems}\label{sta:subsec-open}
+
+The open problems below supersede the numbering of any earlier working
+list; each is stated with what the present account gives and what it
+withholds.
+
+\begin{enumerate}[label=\textbf{O\arabic*.},leftmargin=2.4em]
+\item \textbf{The remaining even columns of Case~4}
+(Conjecture~\ref{conj:con27A}). Is
+$\pn(K_{n_1,n_2})=\lceil n_1/2\rceil$ for all odd $n_1$ and even $n_2$,
+$2\le n_2<n_1$? The ring-closure theorem
+(Theorem~\ref{thm:conringclosure}) reduces each column to $h+1$ base
+instances; the columns $n_2=2,4,6$ are closed, and five named bases are
+open: $K_{15,8}$, $K_{17,8}$ (column $n_2=8$) and $K_{17,10}$,
+$K_{19,10}$, $K_{21,10}$ (column $n_2=10$). The recorded negatives on
+these bases are truncations, not exclusions
+(Observation~\ref{obs:concostwall}): the decompositions may lie deeper in
+the search tree, or the conjecture may fail. The next methodological step
+suggested by the data is a constraint-propagation search driven by the
+deficit ledger of Theorem~\ref{thm:constructgen} and the endpoint parity,
+rather than deeper node budgets.
+\item \textbf{Removing the structural conditions of the Fan-type
+theorems} (Conjecture~\ref{conj:claAstar}). The alignment and separation
+hypotheses fail exactly at \emph{remote high vertices}; by
+Proposition~\ref{prop:claresidue}, a minimal counterexample must have a
+bad partner at every high vertex. The remaining corner of the two-high
+layer is blocked by the excess bound (zero violations on all $235$
+computed instances), and the residue of the conjecture is that corner
+together with graphs of at least three high vertices that are neither
+separated nor covered by the profile parity. Note that the band-free
+phenomenon is family-specific: outside the constructed family, the
+general band-free statement is refuted by certified counterexamples
+(Section~\ref{subsec:astar}).
+\item \textbf{The even-$j$ Walecki residual.} Theorem~\ref{thm:conL0} is
+for odd $j$; for even $j$ (blocks of order $1\bmod4$), the chain
+construction would extend to all odd-order complete-block chains. In-chain
+existence is machine-verified at the block values $K_5$ and $K_9$, but no
+general construction is known. The natural route is a Hamilton
+decomposition of $K_{2j+1}-C^*$ for a suitable cycle $C^*$ through the
+prescribed path, which touches the Oberwolfach problem for odd orders.
+\item \textbf{The general-$N$ existence half of the criterion}
+(Conjecture~\ref{int:conj-gapex}). For all $N$ and all so1 instances with
+capacity slack $\beta\ge2$, is there an admissible pair with
+$\mathrm{val}\le1$? The $C_1$ side is closed for all $N$ by the
+constructive one-leak theorem; the obstruction is $C_2$-side
+reachability, with the three registered empirical obstacles and the
+candidate mechanisms of Section~\ref{sta:subsubsec-gapex}, each carrying
+its falsification experiment.
+\item \textbf{The $\mu$ $k=2$ stratified existence wall.} The paper core
+is the existence of $C_1$ with $q\le d_3+1$ and realized. The machine
+face is closed on seven domains for the $k=2$ layer (zero violations);
+the paper face has a recorded obstruction (no base-to-step mechanism);
+and the problem has no logical dependency on the family-image
+characterization (Remark~\ref{rem:clabridge}).
+\item \textbf{The degree-$\ge4$ layer of the budget conjecture
+$K$} (Definition~\ref{int:def-budget}). Beyond degree~$2$ the
+deletion--reinsertion scheme meets its true wall; the computational
+record shows the wall is an artefact of the method, not of $K$
+(Section~\ref{sta:subsubsec-kres}). What is needed is a construction that
+produces a $\lceil n/2\rceil$-decomposition with $D(x)\ge2$ directly,
+without deleting $x$.
+\item \textbf{The exception-set programme.} Beyond the closed faces of
+Remark~\ref{rem:claregistry}: the layers $k\ge18$; uniqueness of the
+minimal core for $k\ge21$; the prime-family infinity segment
+(Remark~\ref{rem:claprimscope}); and the counting-side target of the
+$\alpha''$ bridge (one-way and rigidity-free, machine base eight odd
+points, $p\ge19$ unenumerated; Section~\ref{subsec:echar}).
+\item \textbf{The $4$-degenerate residual.} The theorem of
+\cite{ZLH24} covers $3$-degenerate graphs; the class of
+$4$-degenerate graphs is, as far as we know, entirely open.
+$K_{4,n}$ shows the interesting behaviour starts immediately: it is
+$4$-degenerate and, by Theorem~\ref{thm:conk4odd}, beats its published
+bounds by one.
+\end{enumerate}
+
+\subsection{Concluding remarks}\label{sta:subsec-conclusion}
+
+\paragraph{What is proved.} On the constructive side: the exact value
+$\pn(K_{4,n})=(n+1)/2$ for odd $n\ge3$ (two of whose instances are
+formalized circumstances of one Lean theorem), the full $n_2=6$ column
+and the structural reduction of the remaining even columns of Case~4 of
+\cite{CE18}; the odd clique chain theorem
+(Theorem~\ref{thm:conchain}) at its all-odd-$j$ domain; and the Fan-type
+class theorems admitting a block of $\EV(G)$ of maximum degree at
+least~$4$ (Theorems~\ref{thm:claAstar} and~\ref{thm:lasep}), at paper
+level with formalization in progress. On the conditional side: the
+budget framework, the implication $K\Rightarrow$ Gallai
+(Theorem~\ref{int:thm-Kgallai}), the conditional chain, and the
+descriptive registration of the eight-item premise ledger
+(Theorem~\ref{int:thm-ledger}).
+
+\paragraph{What is conditional.} The conditional route is
+restated one last time in its honest form: the criterion's first
+conjunct is a machine-closed candidate on explicitly tested domains with
+a paper status open; every one of the eight premise conjuncts is an open
+conjecture, an unverified external step, or a paper-open item with
+machine backing; and no premise of the ledger is claimed, here or
+elsewhere, to be within reach of the machine layer except as recorded.
+The Lean layer sharpens checkability, not the claim surface: its
+\texttt{sorryAx}-free theorems are those of
+Table~\ref{sta:tab-leanitems}, its \texttt{native\_decide} certificates
+are quoted with the kernel-reduction disclosure, and everything outside
+the axiom probe is explicitly not claimed formalized
+(Section~\ref{com:subsec-lean}).
+
+\paragraph{What is measured.} The measured layer is reported at its
+registered strengths throughout: the five exhaustively enumerated domains
+of the budget conjecture (Table~\ref{com:tab-kdomains}; zero violations,
+$208$ tool-dead instances all satisfying the conjecture); the nine-domain
+key ledger under its four conventions
+(Section~\ref{com:subsec-ledger}); the per-$N$ criterion closures with
+zero residue on $588/30{,}760/634{,}960/7{,}798{,}903$ instances at
+$N=6,8,10,12$; and the classification programme's four complete-graph
+layers at their stated tiers (Section~\ref{subsubsec:firstlayers}). The
+overall conjecture --- Gallai's path decomposition conjecture --- remains
+open. What this paper provides is the verified portion of the landscape
+around it, a conditional route whose every edge is checkable, and a
+measurement apparatus whose every citation carries its reading
+conventions (the four ledger conventions of Section~\ref{com:subsec-ledger}
+and the tier qualifiers of Sections~\ref{sec:computation}
+and~\ref{sta:subsec-leanitems}), so that the paper remains checkable
+against exactly the evidence it quotes.
+
+\paragraph{The no-claim constraints, restated.} The six no-claim
+constraints of Section~\ref{int:subsec-claims} bind this closing section
+as they bind the whole account; in the order stated there, and matching
+the introduction's wording in content: no
+closure at $L\ge13$ (candidate level only); no general-$N$ paper closure
+of the covering identity (the existence half open); no completeness
+claim for the four-piece (E)+(R) landing; no paper closure of the
+general-$L$ uniform-construction account (the capacity-starved branch of
+the channel-or-menu dichotomy); no full closure of that dichotomy
+programme; and no
+unconditional theorem-form statement of the valuation criterion --- its
+Lean formalization is a bound under an unproved hypothesis, and a
+criterion verified over finitely many $N$ is not an existence proof for
+general $N$.
+
+% end sec-status.tex

@@ -1,0 +1,111 @@
+% ============================================================================
+% main.tex — Verified constructions, a classification programme, and
+% conditional reductions for Gallai's path decomposition conjecture.
+% Driver: inputs the five section files; bibliography in refs.bib.
+% ============================================================================
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newcommand{\pn}{p}
+\DeclareMathOperator{\odd}{odd}
+\newcommand{\EV}{\mathcal{E}}   % even-degree subgraph of a graph G
+\newcommand{\ed}{d_{\mathrm{E}}} % E-degree inside EV(G)
+\newcommand{\dEV}{d_{\mathrm{E}}} % E-degree inside EV(G), section-file alias
+
+% Hungarian double-acute accent (\H{o} = U+0151), not predefined in the
+% LaTeX kernel; XeTeX renders the precomposed character natively.
+\providecommand{\H}[1]{ő}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% License note: the paper text is released under CC BY 4.0; the repository
+% code and scripts are released under the MIT License (see LICENSE).
+\newcommand{\licensernote}{The text of this paper is released under the
+Creative Commons Attribution 4.0 International License
+(\url{https://creativecommons.org/licenses/by/4.0/}). The accompanying
+repository code and verification scripts are released under the MIT License.}
+
+% Convention for claim strength, used throughout:
+% "Theorem" = complete proof in this paper; "Proposition/Corollary" likewise.
+% Candidate statements are stated as Conjecture or as clearly flagged
+% candidate Propositions with their tier sentence attached; machine accounts
+% are quoted as accounts, never as theorems.
+%
+
+\title{Verified constructions, a classification programme, and conditional
+reductions for Gallai's path decomposition conjecture}
+
+\author{Independent Researcher\thanks{Contact: 672178818@qq.com. Parts of the
+mathematical and bibliographic work, including automated literature
+cross-checking and machine verification of the computational accounts, were
+carried out with computer assistance; the division of labour is summarised in
+Section~\ref{sec:computation}.}}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}\small\licensernote\end{center}
+
+\begin{abstract}
+Gallai conjectured that the edges of every connected graph on $n$ vertices can
+be decomposed into at most $\lceil n/2\rceil$ paths. We present a self-contained
+study of the conjecture organised around three kinds of results. First, exact
+constructions: we prove that the path number of $K_{4,n}$ equals $(n+1)/2$ for
+every odd $n\ge 3$, develop a structure theory and a ring-closure theorem that
+reduce the remaining even columns of the odd-$n_1$ case of the
+Constantinou--Ellinas problem to finitely many base instances (closing the
+columns $n_2=6$, $8$ and $10$ except five named bases), and prove a chain
+theorem for odd clique chains, giving $p(G)\le\lfloor n/2\rfloor$ for $b\ge2$
+blocks and $p(G)\le\lfloor n/2\rfloor-1$ for $b\ge4$, via a new decomposition
+lemma for complete graphs of odd order minus an arbitrarily prescribed
+Hamilton path. Second, a classification programme for the sharp placement
+problem on complete graphs $K_{2k+1}$: we prove the prime-family theorem that
+for $n=p+1$ with $p\ge7$ a prime congruent to $3$ mod $4$, every non-infinity
+placement regime is dead, together with corrected Fourier identities for the
+infinity branch, and we register the evidence structure of the exception-set
+candidate, whose uniqueness clause is already in tension at $k=21$ with the
+propagation theorem (a withdrawn quantitative registration is corrected to the
+paper-level bound $|\mathcal{E}_{21}|\ge1$). Third, conditional reductions and
+formalisation: an endpoint-budget framework whose budget conjecture $K$ implies
+Gallai's conjecture, a conditional chain registering Gallai against an explicit
+eight-item premise ledger, per-domain theorem-form closure of the aligned
+valuation criterion for $N\in\{6,8,10,12\}$ with the general-$N$ existence half open,
+Lean formalisations of $p(K_{4,n})=(n+1)/2$ (odd $n$), $p(K_{2k+1})=k+1$ and a
+criterion-level termination bound, and a machine-account layer for a six-family
+covering identity, all quoted with explicit one-way (superset) reading
+conventions. Every claim is stated at its verified strength; open problems and
+residual gaps are collected at the end.
+\end{abstract}
+
+\tableofcontents
+
+\input{sec-intro}
+\input{sec-constructions}
+\input{sec-classification}
+\input{sec-computation}
+\input{sec-status}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

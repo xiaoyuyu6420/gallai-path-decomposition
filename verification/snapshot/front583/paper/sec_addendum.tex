@@ -1,0 +1,1487 @@
+% ============================================================================
+% sec_addendum.tex --- v2.4 post-freeze addendum chapter (\S11).
+% Construction batch 3 (deep_P72, 2026-10-06). Sole content source:
+% ADDENDUM_V24_DRAFT.md (63,172 B, md5 2f30f34aff9fd8a35fe91f3386f6a381,
+% REVISE-58 refresh, 2026-10-05, rod E51). \SA-\SF of the draft transcribed
+% section by section; all figures and strength-tier labels carried verbatim
+% (five-tier scheme: theorem / paper candidate / machine universal-closure
+% candidate / machine-check account / profile; [open] marked separately).
+% Errata discipline: every number is cited at its REVISE-58 canonical value;
+% the do-not-cite register of draft \SF is reproduced in
+% subsection~\ref{subsec:add-errata}. STATE anchors are carried in the form
+% "(STATE \SR-5x.y, row(s) \dots)" exactly as registered in the draft.
+% This file is a plain \input satellite of main_submission.tex; main.tex
+% remains FROZEN (md5 8b5323c5f7992e080b8433174c652888) and is untouched.
+% ============================================================================
+% Five strength tiers of the draft, as fixed labels:
+\newcommand{\tierThm}{\emph{[theorem]}}
+\newcommand{\tierPCand}{\emph{[paper candidate]}}
+\newcommand{\tierMUCC}{\emph{[machine universal-closure candidate]}}
+\newcommand{\tierMCA}{\emph{[machine-check account]}}
+\newcommand{\tierProf}{\emph{[profile]}}
+\newcommand{\openlab}{\emph{[open]}}
+% STATE anchor macro: \stanchor{R-52.4}{3737--3738} -> (STATE \SR-52.4, rows 3737--3738)
+\newcommand{\stanchor}[2]{(STATE \S#1, rows~#2)}
+\newcommand{\stanchorone}[2]{(STATE \S#1, row~#2)}
+
+\section{Addendum (v2.4): post-freeze progress, waves REVISE-52 through
+REVISE-58}\label{sec:addendum}
+
+This chapter is the v2.4 addendum to the frozen v2.3 package (131 pages,
+838{,}550 bytes, md5 \texttt{5a61def6}\,\dots). It transcribes, section by
+section, the content of the REVISE-58-refreshed addendum draft (2026-10-05):
+the settlement entries of waves REVISE-52 through REVISE-58, totalling
+$97$ reports (R52$=20$, R53$=36$, R54$=17$, R55$=6$, R56$=8$, R57$=7$,
+R58$=3$, covering A96--A211, together with the re-check rods E41/E43/E45/E48).
+Every item below carries its strength tier from the five-tier scheme and its
+campaign anchor; all numbers are cited at their REVISE-58 canonical values.
+
+\paragraph{The five strength tiers.} Every statement of this chapter stands at
+exactly one of five strictly separated strengths, mirroring the claim-strength
+declaration binding the rest of the paper:
+\begin{enumerate}
+\item \tierThm{} --- fully proved on paper and independently audited;
+\item \tierPCand{} --- theorem-shaped, double-reviewed on paper (independent
+review passed), not promoted to theorem;
+\item \tierMUCC{} --- universally quantified statement with machine closure
+over the full explicit domain (instance-by-instance, zero counterexamples),
+independently audited;
+\item \tierMCA{} --- machine-verified ledger or instance-level evidence
+account;
+\item \tierProf{} --- precise gap location or negative result (a profile, not
+a proof).
+\end{enumerate}
+Statements additionally marked \openlab{} are open. Baseline discipline:
+a \texttt{won} verdict is not a theorem; candidate-, machine-check- and
+profile-level items are never written as proved; every external citation
+carries its verification level.
+
+\subsection{Overview}\label{subsec:add-overview}
+
+\paragraph{The conditional main theorem: status restated.} The two pillars of
+the frozen v2.3 package (131 pages, 838{,}550 bytes, \texttt{5a61def6}\,\dots;
+the six protected files re-measured with zero drift across all waves, STATE
+\S R-55.8) are unchanged:
+\begin{itemize}
+\item \textbf{Tier A (the 266.3 base + the Lean formalization) = delivered.}
+Theorems A/B/C/D fully proved (deep\_01 \S3--\S6, deep\_03 independent
+PASS); the Lean four-domain direct proofs carry zero \texttt{sorryAx};
+the verdict basis is REVISE-37/38 and the FRONTIER register ``A$+$D =
+delivered, cold-review closed'' (deep\_E36 \S0).
+\item \textbf{Tier D (the conditional master theorem Theorem~\ref{thm:gallaimodulo}:
+``266.3(so1) $\wedge$ $\Pi$1--$\Pi$8 $\Rightarrow$ Gallai'') = cold-review
+passed.} Three independent cold-review rounds COLD6/COLD7/COLD8 found zero
+mathematical-layer problems; its strength tier is \emph{paper conditional
+theorem} --- the implication step is proved at proof level, and none of its
+premises is claimed to be attainable (deep\_E36 \S0).
+\end{itemize}
+\textbf{Tier C (unconditional Gallai) = \emph{not achieved}.} All progress
+reported in this addendum belongs to premise discharge and to the expansion of
+the machine-evidence surface; none of it changes the three-tier picture above
+(deep\_E36 \S0, deep\_E39 \S0, STATE \S R-55.7).
+
+\paragraph{What is new in this addendum.} The content is organized in four
+blocks:
+\begin{itemize}
+\item \textbf{\S\ref{subsec:add-accounts} (computational experiments)}: nine
+machine-verified evidence accounts --- the full-type certificate library
+$1{,}004{,}327$ ($m=2k^2$ layers, $k\le14$); the $N=14$ criteria ledger
+$22{,}878{,}742$; the construction side LAN-158 $16{,}954{,}187$; the
+T-A168.0$'$ machine universal closure over $8{,}323{,}012{,}408$ instances; the GEN
+existence evidence over $186$ ranks ($r=15$--$200$); the dense single-cycle
+band $763/763$ machine-level cover; the even-band FAM family closed on the
+$27$ even bands of $\{14,\dots,66\}$ with confidence exclusions at $r=27/28/29$;
+the odd band $m\le121$ closed at instance level; and further machine-check
+surfaces.
+\item \textbf{\S\ref{subsec:add-structural} (structural results)}: five
+proved-level items (Theorem B4, A106.P/L, the $\beta\equiv1$ structure
+theorem, Lemma A108.B); double-review theorem candidates (T-A124.1/2/3,
+A166-Occ, A170.1/2, D.2 and others); the paper theorem candidate T-A168.0$'$
+(transcription version); the A194 three-criteria paper proofs (the BP
+forbidden-point closed form A194.1, the R-preimage lemma A194.1$'$, the
+$\sigma$-chain position criterion A194.2; A198 written and A199 blue-team
+reviewed, promoted to paper theorem candidate); and the $\mu$ criteria-layer
+closure (criterion A206.C at machine precise tier + Proposition A206.1 + the
+joint-satisfiability ontology as machine universal-closure candidate
+$3{,}268/3{,}268$ + the new invariant ``always $J\le4$ realizable'' +
+A210.1/A210.2 paper draft candidates; see \S\ref{subsec:add-mu}).
+\item \textbf{\S\ref{subsec:add-honest} (honest boundaries)}: the un-achieved
+tier C and the minimal premise set; the consolidated \texttt{[GAP]} register;
+and the full disposition record of the two statement-level counterexamples
+(RED), presented as a worked example of the quality-assurance mechanism.
+\item \textbf{\S\ref{subsec:add-lit} (external literature verification)}: the
+source-level verification record for Lov\'{a}sz 1968 / Pyber 1996 / Fan 2005 /
+Botler--Sambinelli 2021, its boundaries, and the literature-scan conclusions.
+\end{itemize}
+
+\subsection{Machine-verified evidence accounts}\label{subsec:add-accounts}
+
+Each item below carries its strength tier and its reproduction pointer (report
+number $+$ STATE anchor). All ledgers were replayed or re-checked by an
+independent audit rod; the audit verdict is noted with the entry.
+
+\subsubsection{The $m=2k^2$ full-type certificate library, $k\le14$:
+$1{,}004{,}327$ certificates \tierMCA}\label{subsubsec:add-certlib}
+
+Full-type sharp coverage for $k=2,\dots,14$ (each type carries a
+column-major canonical-labelling certificate with showg gold standard and
+end-to-end Hamilton decomposition verification):
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+layer & types & source \\
+\hline
+$k\le11$ & $17{,}790$ ($=6{,}868+10{,}922$) & A100/A112/A113
+\stanchor{R-52.4}{3737--3738} \\
+$k=12$ & $52{,}944$ (BS1 conservative layer $12{,}684$, $23.96\%$) & A116
+\stanchorone{R-53.2}{3786} \\
+$k=13$ & $193{,}367$ (BS1 $38{,}935$, $20.14\%$) & A116 (same anchor) \\
+$k=14$ & $740{,}226$ (BS1 $124{,}672$, $16.84\%$) & A116 (same anchor) \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item Total $1{,}004{,}327$; the showg gold-standard promotion for the three
+layers $k=12,\dots,14$ ran over the full volume with
+$986{,}537/986{,}537$ zero mismatches (A117 independent completion and
+re-check, \stanchorone{R-53.2}{3787}); uncovered $=0$ and
+nosol$=$cap$=0$ at every layer; A113 re-verified all $15{,}216$ certificates
+of the $k=11$ layer end-to-end and independently, all PASS (beyond the
+sampling requirement).
+\item The BS1 conservative outer-judgement share declines monotonically with
+$k$, $28.2\%\to16.84\%$; for $k\ge15$ the geng triple wall applies (the hard
+ceiling $n\le32$, slow start with no first row within $\ge25$ min, and for
+$k\ge17$ cores with $v(H)>32$); zero coverage, registered as such
+\openlab.
+\item Conjecture~U evidence now totals $22{,}084$ types at construction level
+with zero counterexamples ($k\le11$; A100, STATE \S R-52.2 row~3721). A
+theorem-level treatment of U remains \openlab.
+\item Strength note: this item is a \emph{construction-level closure candidate
+(machine-check account)}, not a theorem; the layer-shift identity
+$\mathrm{count}(2k+1,k)=\mathrm{count}(2k,k)$ is empirically anchored at
+$k=12$ (A116).
+\end{itemize}
+
+\subsubsection{The $N=14$ criteria ledger, $k=4..13$: $22{,}878{,}742$ total,
+all pass \tierMCA}\label{subsubsec:add-critledger}
+
+\begin{itemize}
+\item \textbf{Ten-band grand total $22{,}878{,}742/22{,}878{,}742$, all pass,
+none$=0$, budget$=0$}, summing $3{,}338{,}289$ ($k=4$, A108)
+$+\,6{,}584{,}941$ ($k=5$) $+\,7{,}030{,}957$ ($k=6$)
+$+\,5{,}924{,}555$ ($k=7..13$ per-band sum, as corrected by A145-F1; A144)
+(STATE \S R-52.3 row~3731, \S R-53.4 row~3804, \S R-53.9 row~3848).
+\item The $k=2/3$ residue $928{,}181$ is carried by the theorem layer
+(A145-F2 correction $962{,}181\to928{,}181$).
+\item \textbf{True tightness rate, ten bands fully enumerated with zero
+sampling}: for $k=4..13$, respectively
+$1.60/2.39/4.48/8.36/15.34/26.85/46.45/72.30/98.11/100\%$; the first-witness
+reading overestimated the $k=7$ band by a factor of $10.4$ ($87.34\%$ must
+not be cited, A144).
+\item First establishment of the criteria language: Lemmas A108.A/B
+(\S\ref{subsec:add-struct1}); the $\beta\equiv1$ structure theorem
+(\S\ref{subsec:add-struct1}); the A108 orientation ledger $86{,}387$
+($=65{,}850+10{,}045+10{,}492$), none$=0$; the $52$ residual budget cases all
+resolved within the $2$M cap.
+\item Independent audit: A109 fully replayed the $k=4$ shards, $834{,}573$
+instances at full scale, plus all-flow zero-violation check of
+$\lambda_{14}$, plus the $\beta\equiv1$ promotion check over the full
+enumeration $k=2..4$, $4{,}266{,}470$ instances, zero violations
+\stanchorone{R-52.3}{3732}.
+\item Significance: the ``$k\ge4$, $96.1\%$ language-level gap'' delimited by
+A108 is closed at criteria level over the whole domain from this account
+onwards (E39 \S1 ring 8); criteria level is not a paper theorem, and a paper
+universal theorem remains \openlab.
+\end{itemize}
+
+\subsubsection{The construction side LAN-158, $k=4..6$ full domain:
+$16{,}954{,}187$ \tierMCA}\label{subsubsec:add-lan158}
+
+\begin{itemize}
+\item First opening on the construction side of the $N=14$, $\beta=1$
+budget-wall: \textbf{the LAN-158 language ladder $k=4..6$ over the full
+domain, $16{,}954{,}187/16{,}954{,}187$ constructions succeeded with
+witness triple-verification, zero fail} (full volume, no down-sampling; A158,
+\stanchorone{R-53.5}{3814}).
+\item A159 corrected reading (mandatory with citation, STATE \S R-53.5
+row~3815, \S R-53.9 row~3852): the illegal share is
+$63.56\%/69.66\%/72.49\%$; for the $k=6$ DFS example, $p14=31/p13=9$; the
+``zero-leak language, at-most-coverage'' reading is downgraded to a
+\emph{proved zero-leak witness-coverage lower bound of about
+$90\%/84\%/75\%$}.
+\item The $k=4$ full-domain double ledger is mutually consistent: criterion U
+$3{,}338{,}289/3{,}338{,}289$, fail$=0$, plus the orbit ledger
+$178{,}348/3{,}338{,}289$ (clusters $12{,}566/236{,}310$, only $7.08\%$ = new
+profile; scattered $165{,}782/3{,}101{,}979$; A174/A180, STATE \S R-54.2
+row~3892, \S R-54.3 row~3900; A175/A181 independent re-checks).
+\item Strength: machine-domain closed (criteria and construction, both
+sides); \textbf{the paper-level universal theorem GL-C (construction
+language) remains unreachable on paper}, and the construction side has not
+been touched for $k\ge7$ \stanchorone{R-53.10}{3867}\openlab.
+\end{itemize}
+
+\subsubsection{T-A168.0$'$ as a machine universal-closure candidate:
+$8{,}323{,}012{,}408$ instances, viol$=0$
+\tierMUCC}\label{subsubsec:add-ta168}
+
+\begin{itemize}
+\item A sound enumerator (P1 pigeonhole / P2 coverage-capacity / P3
+dead-memo, three written arguments, plus per-solution hash identity with an
+unpruned Python over $192$ groups, plus fault-injection testing) covered the
+probe domain $t=17..45$ completely: \textbf{$465$ parameter groups ($223$
+valid $+\,242$ invalid; the identity, as corrected by E41-F1, reads
+$=(163+134)+(60+108)$), zero CAP residue, the $223$ valid groups exhausted,
+$8{,}323{,}012{,}408$ repaired-version instances verified solution by
+solution with viol$=0$} (A178, \stanchorone{R-54.3}{3898}).
+\item The earlier $91$ CAP groups were all exhausted and discharged ($61$
+single-machine $+\,30$ sharded [$29$ one-level $+\,1$ two-level]; total
+$8{,}320{,}398{,}860$; proposed by A172, discharged by A178, booked under the
+A179-F1..F3 corrected reading, STATE \S R-54.3 row~3899, \S R-54.6 row~3923).
+\item The $54/54$ counterexample parameter groups of A169 are all excluded by
+(U1$'$) ($49$ in-domain replays clean$=$False $+\,5$ out-of-domain).
+\item A179 clean-room re-check: an independent enumerator, shard-level hash
+reconciliation over $284$ groups, and direct attack on the audited binary;
+all substantive claims survived, zero math counterexamples; six booking
+errata carried with citation \stanchorone{R-54.3}{3899}.
+\item \texttt{[GAP-A178-1]} semantic downgrade (after the A190 paper
+five-paragraph closure): the machine-domain window $m\in[t,t+12]$ plus
+long-range spot checks is henceforth the theorem's \emph{verification
+surface}, not its \emph{coverage} \stanchorone{R-55.2}{3969}.
+\item Strength: \textbf{machine universal-closure candidate} ($8{,}323{,}012{,}408$-instance level, not a theorem); the paper side is
+\S\ref{subsec:add-ta168paper}.
+\end{itemize}
+
+\subsubsection{GEN existence evidence, $186$ ranks ($r=15..200$
+contiguous) \tierMCA}\label{subsubsec:add-gen186}
+
+\begin{itemize}
+\item \textbf{\texttt{[CONS-A192]} the layered construction gives $86/86$
+ranks over the full segment $r=15..100$}, each rank with an S1--S7
+criterion-satisfying solution (total nodes $391{,}483$, per-rank
+$\le252{,}845$, median $162$; A192, \stanchorone{R-55.3}{3972}).
+\item Evidence-chain synthesis: the FAM $[9,14]$ six-rank calibration face
+$+$ \texttt{[CONS-A186]} $r=15..45$, $31$ ranks (A186, \stanchorone{R-54.4}{3908})
+$+$ \texttt{[CONS-A192]} $86$ ranks $+$ \textbf{the new ranks
+$r=101..200$, $100/100$} (s\_check and tiling all pass; node median $308$,
+hard ranks registered as such: $r=181$ with $16{,}440{,}622$ nodes,
+$r=196$ with $35{,}769{,}021$ nodes; A196, \stanchorone{R-56.2}{4026})
+$\Rightarrow$ \textbf{the machine evidence surface is contiguous over
+$r=9..200$, with $86\to186$ ranks and zero gaps over the full segment}.
+\item Segment genealogy (A196): $15..18=u$-family $\parallel$
+$19..21=$double-family $\parallel 22..42=u{=}12$ greedy-family $\parallel$
+$\mathbf{43..200}=$greedy$+$\texttt{[CONS-A196]} double-family.
+\item Pressurization: the in-domain battery for $r=61..100$ gives
+$0$ violations$/130{,}588$ plus sharpness $40/40$ (A193); $r=46..60$
+dual-implementation anchoring with byte-level determinism $15/15$
+(A192/A193); A193 full-volume replay $86/86$ bitwise; the new-segment battery
+samples $20$ ranks with $0$ violations$/110{,}530$ plus sharpness $20/20$
+(A196).
+\item First out-of-guard-domain example $r=59/60$ at $m=128$, both directions
+fail (measured boundary $r\ge58$) = machine-level demonstration of the
+necessity of the declared guard $m\ge2r+14$ (A192/A193-N9).
+\item \textbf{\texttt{[CONS-A196]} the four-template table family,
+$158/158$} ($r=43..200$, all s\_check and tiling; forced-template walk total
+nodes $3{,}377{,}860$; contrasted with the $16$M$/36$M blow-up of the
+greedy-free family), the double witness of the greedy family for the
+$r\ge43$ segment (A196; A197 independent re-implementation, bitwise
+re-check).
+\item \textbf{L-A192.1$'$ repaired (counterexample absorbed, A196)}: the
+original step (3) ``low-fragment edge $h\ge1$'' is downgraded from claim to
+hypothesis, with (b) a dichotomy making $-1$-edge solutions explicit as the
+non-tiling type (hset$=[-1,r-1]\setminus\{v\}$) --- removing the circularity
+root identified by A193-N1; machine check $=$ solution library $154$
+instances, three decision channels agree $154/154$
+(labA196/labA186/labA193), and the skeleton face (i)/dichotomy/
+tiling$\iff$(ii) $148/148\times3$ (tiling $147$ $+$ non-tiling $1$ = the
+A193 counterexample $v=r-3=19$, $-1$ at edge position $6$); an
+\textbf{unbiased complete enumeration} (enumerator without an $h$ target
+set) over $r=15/16$, all ranks with zero truncation: non-tiling solutions
+occupy ${\sim}96\%$ ($r=15/u=5$: $67{,}566/70{,}664=95.6\%$; $r=16$, each
+$u$, $97.5$--$98.6\%$) $\Rightarrow$ the A193 counterexample is not
+isolated, and the tiling type is a minority of the solution space;
+$(15,11)$ complete with zero solutions; $(15,12)/(16,12)$ zero solutions =
+\textbf{paper-level emptiness} (skeleton mutual-difference must fail:
+link$=r-2$ collisions $[2,0,13,14,13]$/$[2,0,14,15,14]$; must not be
+labelled ``complete enumeration'', A197-N3).
+\item A197 independent audit (PASS-with-notes): fully independent
+re-implementation (\texttt{aud197.py}, zero imports, $18/18$ calibrations
+before load-bearing) --- four channels $154/154$ per-instance agreement;
+family library $19..200$, $182$ ranks all pass; \texttt{[CONS-A196]}
+$158/158$ with walk node total $3{,}377{,}860$ bitwise identical; battery
+$0$ viol$/110{,}530$ bitwise; $(15,5)$ complete enumeration, all four
+numbers identical ($70{,}664/3{,}098/67{,}566/2{,}438{,}744$); four-template
+window endpoints $18/18$ both directions; order-swapped DFS independently
+re-discovered $3$ new non-tiling solutions ($w_1=18$, $-1@20$,
+$v\in\{1,1,4\}$) $\Rightarrow$ the counterexample is confirmed not an
+enumeration artifact.
+\item \textbf{Periodicity, both directions (A196/A197)}: at the
+\textbf{canonical layer, precisely blocked} --- the $86$-rank
+$\Lambda\in2..16$ fits show no period at all (tail-eq max $0.139$ belongs to
+$\Lambda=4$, A197-N2), and the new segment $101..200$ mod-4 sig prefixes
+extend $0/96$; \textbf{intra-family asymptotic mod-4 template periodicity,
+\emph{machine-level candidate}} --- the forced-template walk is
+self-consistent $177/177$, the four common tail-template exact feasible
+windows are $[40,200]/[33,200]/[34,200]/[43,200]$ (with $r_0=43$) and fail
+rank-by-rank below $r_0$ (exact threshold), while the full-segment
+$[22,200]$ observation pool is exhausted with NONE $\Rightarrow$ asymptotic
+but not global; the within-class choice sequences diverge after finitely many
+common-prefix steps $\Rightarrow$ periodicity holds at the existence level,
+not at the canonical-trajectory level (A197-N5: the earlier ``$5..23$
+steps'' has no on-disk record; the independent corroboration is $5..165$).
+\item The deformation operators at three step sizes ($r+1/r+2/r+3$) are
+blocked at the solution-family level; the closed-form third family is
+exhausted and blocked $0/19$ ($r=22..40$) $\Rightarrow$ construction
+complexity lower bound $=$ ``closed-form main chain $+$ $O(1)$ tail''.
+\item \textbf{Wave-69 paper-side of periodicity (A204 partial, A205 review
+sustains it)}: \textbf{(P4) not fully closed but its core narrowed} --- three
+dead routes registered as such (witness-covariant lifting negated by machine
+evidence [common prefix only $0$--$5$ steps] / fixed $e$-prefix certificates
+[the $e$-timetable drifts with $r$] / double-amplitude adjacent switching
+[machine evidence]); \textbf{L1..L7, seven elementary lemmas, are proved}
+(reflection identities / ping-pong collision mechanism / gap patterns /
+lifting lemma / localization theorem [$r\ge65$, $r$-independence] / budget
+accounting correction [sweep $=$ odd-even half-band] / hole parity pairs
+$=$ the mod-4 content) $\Rightarrow$ \textbf{(P4-core)}, the single
+potential-function proposition ``repair cascades do not exhaust'', with
+\texttt{[GAP-A204.1]} erected (the exact successor of \texttt{[GAP-A196.1]};
+exact statement and machine entry on file); \textbf{(P5) conditionally
+closed} (step induction L4$+$L3$+$four base cases $\{43,44,45,46\}$ at
+machine tier); delivered \textbf{T-A204 (conditional paper candidate)}: on
+the premise that (P4-core) holds, (P1)(P2)(P3)$+$new lemmas$+$four base
+cases $\Rightarrow$ intra-family existence for all $r\ge43$
+(T-A204$'$ = the unconditional machine-verified tier); \textbf{$r_0=43$
+remains a machine-level candidate}. The task-book anchor $r=43..60$ is all
+green (fully self-implemented channel, FAM calibration $18/18+18/18$ before
+load-bearing): X1 self-consistency $18/18$; X2 $\Lambda=4$ forward $14/14$
+and backward $14/14$; the four-template within-class windows all true with
+the window lower bounds $36/29/30/39$ false rank-by-rank (both directions
+consistent with the canonical window endpoints); \texttt{[CONS-A196]}
+witness replay $18/18$. Cross-class discovery (candidate tier, A204 \S3.3):
+template-feasibility language is finer than the A196 class assignment ---
+$c\leftrightarrow(h_0,\mathrm{link})$ parity pairs in one-to-one
+correspondence (with the sub-item ``T$_2@c=1$ true from $65$ on'' killed by
+the next entry).
+\item \textbf{The third decision channel, $158/158$ (A204; a single
+$K=12$ reflection-type deterministic construction)}: $r=43..200$, s\_check
+and tiling with zero anomalies (node median $2{,}000$, max $385{,}673$,
+total $5{,}938{,}397$), a double witness together with \texttt{[CONS-A196]}
+(different accounting; do not reconcile the two); the $e$-timetable drift is
+the machine evidence that the ``fixed $e$-certificate'' route cannot work.
+\item \textbf{\texttt{[N-A205.1] erratum, mandatory with citation}}: the
+A204 \S3.3 claims ``T$_2@c=1$ true from $65$ on / suspected universal over
+the class / tested'' are \textbf{exhaustively killed} by the A205 dual code
+(own $(1,0)$ order $+$ audited copy in $(0,1)$ order, cap 30M) ---
+T$_2@65=$False (dual-code nodes $6{,}660{,}768$, bitwise identical),
+T$_2@69=$False ($22{,}994{,}196$), T$_0@65=$False ($6{,}648{,}546$),
+T$_0@69=$False ($22{,}793{,}039$); T$_2@73/77/81$ undecided at 30M (these
+five cells were self-recorded `?` --- the ``undecided-budget cells written
+as true'' slip, do-not-cite register in \S\ref{subsec:add-errata});
+\texttt{[GAP-A204.2]} strong form (single template, cross-class universal)
+is dead, weak form open; \textbf{no impact} on T-A204/T-A204$'$
+/(P4-core)/(P5) or on the A196 canonical layer (A205 fully independent
+replay, zero disturbance).
+\item Strength: \textbf{machine-level existence evidence} (an $186$-rank
+evidence surface; ``$\forall r$ existence'' is unproved); mod-4 asymptotic
+periodicity $=$ \textbf{machine-level candidate (intra-family, exact within
+the observation pool, pool-external templates not exhausted)}; gaps $=$
+\texttt{[GAP-A196.1]} restated and handed over as \texttt{[GAP-A204.1]} ((P4)
+narrowed to the single-point potential-function proposition ``repair
+cascades do not exhaust''; (P5) conditionally closed; see above; the
+single-arrow quantifier reading carried per A193-N2), plus
+\texttt{[GAP-A196.2]} (enumeration boundary $r=16$), $..3$ (battery
+non-tiling ranks), $..4$ (non-tiling family structure $+$ global
+periodicity open) remain open, $..5$ ($r_0$ minimality) carried by
+\texttt{[GAP-A204.3]}\openlab{} (STATE \S R-55.3 rows~3971--3974, \S R-56.8
+row~4061, \S R-57.3 rows~4099--4102, \S R-58.6 row~4175).
+\end{itemize}
+
+\subsubsection{The dense single-cycle band: $763/763$ machine-level cover
+\tierMCA}\label{subsubsec:add-denseband}
+
+\begin{itemize}
+\item The $\alpha$-G gap is covered $763/763=100\%$: the $\alpha$-U2
+construction family (broken-edge sets $+$ joker half-coordinate pin-type
+equations) $\times8$ variants $+$ the A188.P1 matching-equality-band closed
+form (A188, \stanchorone{R-54.4}{3910}).
+\item Synthesized: \textbf{the full-domain $k=5..13$ per-type explicit
+construction coverage over $13{,}863$ types} (each type independently
+verified); the $k=14$ extrapolation non-forest part
+$20{,}560/20{,}560=100\%$ (forest residue $7$ trees,
+\texttt{[GAP-A188.1]}).
+\item R-106 solution swap: failed $\theta$ $13{,}652$ at $k=4..10$, base
+rescues $13{,}104=96.0\%$ (decreasing per $k$; the $k=10$ band reads
+$75.2\%$ in the corrected reading) $+$ the generalization chain
+a2/fx/s rescues $13{,}652/13{,}652=100\%$.
+\item Independent audit A189: all quantitative claims reproduced bitwise
+$+$ R-106 instrumented at $773$ type-level PASS supplementary evidence
+$+$ column-major adjudication $274/274$ \stanchorone{R-54.4}{3911}.
+\item Strength: \textbf{machine-level closed (machine-check account)}; the
+absence of a paper proof of the completeness of the $\alpha$-U2 coverage is
+\texttt{[GAP-A188.2]}\openlab.
+\item Related erratum (reverse direction): the nauty graph6 canonical bit
+order is \textbf{column-major}, not row-major (A188 geng$\times$showg
+measurement $+$ A189 label-level re-check; all type-level ledgers of
+A106/A107 are isomorphism-invariant and immune; STATE \S R-54.6 row~3928).
+\end{itemize}
+
+\subsubsection{The even-band FAM family: closed $\{14..66$ even$\}$, $27$
+bands \emph{[theorem-level candidate + machine-check
+account]}}\label{subsubsec:add-evenband}
+
+\begin{itemize}
+\item Even-band theoremization, $27$ bands: T-A67.1 carried $+$
+T-A92.1..5 $+$ A93 $+$ \textbf{T-A92.6..17, twelve families} (A104, with
+A105 independent replay over $123{,}791$ cells, both directions, zero
+violations, review passed, \stanchor{R-52.3}{3727--3728}) $+$
+T-A122.1..3 ($+56/58/60$, A123 machine-ledger re-check) $+$
+T-A156.1..3 ($+62/64/66$, A157 re-check).
+\item Unified shape: $m$ even $\ge2r+14$ (the FAM24 true domain cited as
+$m\ge62$, A157-N1), clean $\iff k\ge(3m-2r-12)/2$, both directions exact.
+\item Residual band: \textbf{$\{m$ even $\ge68$: $k\in[m+1,(3m-66)/2]\}$,
+$(m-66)/2$ cells per $m$; $406$ for $m\le122$, $3{,}916$ for
+$m\le242$} \emph{[SAT-census inherited ledger, machine-check level]}.
+\item FAM27..30, four bands \openlab: three hunt rounds (A176 with $242$
+flows / A182 with $512$ protocol flows $+\,137$ calibration flows; node
+sub-totals about $2.83\times10^8$, about $3.30\times10^8$ including
+calibration flows) with \textbf{zero hits, zero completeness, non-exhaustive};
+confidence reading (after the A183-E1 correction): a band-level $95\%$
+exclusion needs $K\ge15$ detectable windows (at $u$, $45$ flows) --- only
+broadly distributed families are covered; historical narrow-detectability
+shapes carry less than a quarter of that exclusion strength; existence for
+the four bands is substantively open (STATE \S R-54.2 row~3894, \S R-54.3
+rows~3902--3903, \S R-54.6 row~3925, \S R-54.7 row~3934).
+\item \textbf{The $r=27$ single-band confidence exclusion, done in full
+(A200/A201, wave 66)}: under the A183-E1 reading, the $K=15+$
+detectable-window protocol --- the main grid $r=27$, all $27$ windows
+$\times4$ flows $+$ narrow windows $9$ combinations $\times2$ flows $=$
+\textbf{$126$ flows$/50{,}400{,}126$ nodes at cap $400$k, zero hits, zero
+completeness} ($0/126$ satisfy ``OK $\wedge$ nodes $\le$ cap'';
+$64$ SOFT-OK $+\,62$ CAP, all nodes$=400{,}001$ truncation signature, zero
+exceptions); each flow with its own \texttt{PYTHONHASHSEED} ($126$ distinct
+envs $\to70$ salts, occupancy model); \textbf{the ``$\ge15$-window
+broad-detectability'' exclusion reaches $98.24\%$ at $u$} ($95\%$ target
+met; the $s=3$ reference reads $95.16\%=$ the A183-E1 bitwise
+reproduction); the full grid $K=27$ reads $95.83\%$ at $\hat p$ /
+$97.88\%$ at $u'$ / $99.93\%$ at $u$, all three calibrations $\ge95\%$
+(A201 independent three-item audit holds bitwise; the $K=21$ exact boundary
+is corrected to \textbf{$95.0000\%$}, see \S\ref{subsec:add-errata})
+\stanchorone{R-56.4}{4041}.
+\item \textbf{The $r=28/29$ two-band confidence exclusions replicated in
+full (A208 won $+$ A209 review passed, wave 69)}: under the same protocol as
+A183-E1/A200 --- $r=28$ ($c=66$/mlo$=70$/TH$(70)=71$) and $r=29$
+($c=68$/mlo$=72$/TH$(72)=73$), each with main grid $27$ windows $\times4$
+flows $+$ narrow windows $9$ combinations $\times2$ flows $=126$ flows,
+totalling \textbf{$252$ flows$/100{,}800{,}252$ nodes at cap $400$k, zero
+hits, zero completeness} ($0/252$ satisfy ``OK $\wedge$ nodes $\le$ cap'';
+$143$ SOFT-OK $+\,109$ CAP, all nodes$=400{,}001$ truncation signature, zero
+exceptions, anomalies $=0$); each flow with its own \texttt{PYTHONHASHSEED}
+($252$ distinct envs $\to90$ salts, exact occupancy expectation $89.8773$);
+\textbf{the $95\%$ target is met for each of the two bands} (the confidence
+math recomputed along two independent paths, not transcribed; the protocol
+shape matches A200, so the ladder values coincide): $K=15\to$
+\textbf{$98.24\%$ at $u$}, $K=21\to$ \textbf{$95.0000\%$ at $u'$} (the
+\texttt{[N-A201.1]} corrected reading carried as canonical), $K=27\to$
+$95.83\%$ at $\hat p$ / $97.88\%$ at $u'$ / $99.93\%$ at $u$, all three
+calibrations $\ge95\%$; the A209 independent audit (three-generation
+fingerprint chain / baseline ledger / three-way recount of the $252$-flow
+protocol ledger / salt mechanism replayed in $252$ subprocesses / exact
+Fraction binomial-tail ladder over $36$ cells $+$ the four A183-E1 numbers
+bitwise) passes in full; the A209-N1 per-phase-row $8$-cell erratum carried
+in \S\ref{subsec:add-errata} \stanchor{R-57.4}{4105--4106}.
+\item Strength discipline ($r=27/28/29$): \textbf{confidence-level
+exclusion} (under model $+$ calibration conditions) --- \textbf{neither
+exhaustion nor closure}: narrow-detectability $K\le3$ (historical shapes)
+exclusion is only $11.1$--$55.4\%$, and \textbf{all three bands remain open
+each on its own} (\texttt{[GAP-A200.1]} $=$ the $r=27$ continuation entry
+$=$ single combination $45$--$102$ flows, expectation $\ge18{,}000{,}000$
+nodes per combination, or narrow-window cap $\ge5$M completeness;
+\texttt{[GAP-A208.1]} $=$ the same-type narrow domain for $r=28/29$, open,
+$r=30$ untouched [$c=70$/mlo$=74$/TH$(74)=75$, one more run under the same
+protocol suffices; the \texttt{[GAP-A182.1]} ladder's $r=28/29$
+broad-detectability domain is dissolved]); the closed $\{14..66$ even$\}$
+$27$ bands and the residuals $406/3{,}916$ re-measured bitwise unchanged
+before writing (A200/A201/A208, repeated); three unclosed band-heads: $m=68$
+residual $k=[69]$, $m=70$ residual $[71,72]$, $m=72$ residual $[73,74,75]$
+(STATE \S R-56.4 rows~4041--4043, \S R-56.8 row~4061, \S R-57.4 row~4105,
+\S R-58.6 row~4175).
+\item Methodological corrections (mandatory with citation): \textbf{the
+three paths of false-OK semantics} --- entry raise / checkpoint return /
+max\_sols early stop; true completeness $\iff$ OK $\wedge$ nodes $\le$ cap
+(a solution-set claim additionally needs sols $<$ max\_sols); hunt hit rates
+carry the \texttt{PYTHONHASHSEED} restriction (the A156 figures do not
+transfer); `?' (undecided budget) must never be written as true or false
+(STATE \S R-54.2 row~3894, \S R-54.3 row~3902, FRONTIER (REVISE-58) row~38).
+\end{itemize}
+
+\subsubsection{The odd band $m\le121$: instance-level universal existence
+\emph{[instance-level machine-check account $+$ per-band theorem
+candidates]}}\label{subsubsec:add-oddband}
+
+\begin{itemize}
+\item \textbf{The odd-band $m\le121$ coverage ledger closed at instance
+level, $862\to0$}: the six exact-window bands T-A102.1..6
+($t=17/19/21/23/25/29$; A103 survived the full-domain attack, review
+passed) $+$ the four bands T-A118.1..4 ($t=31/33/35/37$; A119 review
+passed) $+$ the new bands T-A168.1/2/3 $+$ the GEN37c breach of the single
+cell $m=39,k=40$ $+$ the A168 tiling solutions over $53$ bands
+($t=17..121$, zero gaps); band $m=31..121$ universal existence $46/46$
+(STATE \S R-52.2 rows~3723--3724, \S R-53.2 rows~3788--3789, \S R-53.7
+row~3828, \S R-53.10 row~3863).
+\item Unified template layer: after T-A168.0$'$ (\S\ref{subsec:add-ta168paper})
+is promoted to paper theorem candidate, the odd-band closure also has a
+theorem-candidate carrier at the universal layer (the earlier template
+reconstruction debt is discharged; the $+1$ paper debt of deep\_E39 \S1
+ring 5 was closed in REVISE-55, \stanchorone{R-55.2}{3969}).
+\item Corrected reading: the odd residual band reads $(m-31)/2$ per $m$,
+total $1{,}035$ ($m=33..121$; ``(m$-$29)/2'' and ``2{,}160'' must not be
+cited); the A102 claim ``$t=31$ run-type nonexistence'' is void $=$ a cap
+artifact (A118-E1) (STATE \S R-52.9 row~3746, \S R-53.9 row~3841).
+\end{itemize}
+
+\subsubsection{Further machine-check surfaces (citation index)
+\tierMCA}\label{subsubsec:add-others}
+
+\begin{itemize}
+\item \textbf{The so0 hole domain}: the double-corridor brute attribution is
+a full-domain closure candidate with $43{,}848/43{,}848$ zero neither
+(overlap $35{,}985=82.1\%$; the ``mutually exclusive narrative'' reading is
+void per the A97 erratum; decomposition $20{,}204=17{,}352+2{,}852$); the
+$\beta\ge2$ true-hole domain first ledger $32/810/19{,}362$; the $N=10$
+all-$d$ bands $143{,}920$, miss $2{,}892=2.01\%$; RepC at the legal reading
+$87.5\%/69.9\%/77.8\%$ (the $1{,}694$-case re-adjudication residue); the
+A-class dead corners $24/228/3{,}016$; the L150 construction-language dead
+corners, three bands $100\%$ covered; jclosed $3{,}268$ cross-checked with
+zero mismatches (A96/A97/A120/A121/A170/A171; STATE \S R-52.2
+rows~3717--3718, \S R-53.2 rows~3790--3791, \S R-52.9 row~3743, \S R-53.9
+row~3843, \S R-53.7 rows~3830--3831).
+\item \textbf{The pool-depth law, corrected form} (A138.C$'$): the
+clean-room decision tool over four domains, $7{,}304{,}616$ instances,
+viol$=0$ (A142/A143; STATE \S R-53.4 rows~3802--3803).
+\item \textbf{The JC coset criterion}: JC$\otimes$brute $367{,}628$
+instances with zero divergence; dead-corner three bands, false positives
+$0\%$, kill coverage $100\%$, alive coverage $100\%$; the applicability
+domain honestly narrowed (A154/A155; STATE \S R-53.5 rows~3810--3811).
+\item \textbf{Combinatorial algebra}: T-A162.1/2/3 (witness-space graph
+embedding restatement, intra-layer closure O2 conditional version, stable
+lifting lemma; cross-layer graft-lift empirically $171/187=91.4\%$; cited
+under the four A163 corrections) (A162/A163; STATE \S R-53.6
+rows~3820--3821, \S R-53.9 row~3854).
+\item \textbf{\texttt{[GAP-$\mu$]} carrier machine checks}: A184.2 the
+no-forbidden-point version, $168{,}528$ predicates zero mismatches
+(quantifier domain per the A185-F2 correction $[1,|Q|]$); A184.3 the
+forbidden-point counterexample delimitation $4{,}218/84{,}498=4.99\%$;
+A184.4 three bands (with the later-added C0 band, the four-band canonical)
+(A184/A185/A194; STATE \S R-54.4 rows~3906--3907, \S R-55.4 row~3977).
+\item \textbf{The $\mu$ criteria / ontology machine checks (waves 69/70,
+A206/A210; the criteria layer and the ontology layer are detailed in
+\S\ref{subsec:add-mu})}: criterion A206.C --- the two gap bands covered
+instance by instance $959/959$ ($p=N$ band $6/43/345$ $+$ $p=N-1$ band
+$16/549$) $+$ full-domain regression $3{,}268/3{,}268$ (minJ histograms
+$\{1{:}18,\,2{:}6\}$/$\{1{:}167,\,2{:}61\}$/$\{1{:}1{,}736,\,2{:}1{,}176,\,3{:}104\}$,
+maxJ$=3$) $+$ an independent second path over $3{,}268$ witnesses with
+bad$=0$; Proposition A206.1 formula cross-check $2{,}456{,}960$ instances
+of C$_1$ with zero mismatches; the ontology-layer witness grand ledger
+$3{,}268/3{,}268$ with min val $\le1$ (per-instance explicit $(a)+(b)$
+witnesses $+$ six-item ledger on disk; independent second path sampled
+$200/200$) $+$ the joint chain ($\beta$) $3{,}212/3{,}268=98.29\%$ ($56$
+failures, mutually exclusive) $+$ realization-rank histogram
+$\{1{:}675,\ 2{:}1{,}907,\ 3{:}630,\ 4{:}56\}$; $\sigma$-chain
+$2{,}828/$\textbf{2,804} (corrected)$/24$, must $3{,}159$, sufAny $3{,}268$
+carried alongside; domain $=N\in\{6,8,10\}$ so0 $\beta=1$, \textbf{$N\ge12$
+not run} (${\sim}4{,}120{,}000$-instance night window) (A206/A207/A210/A211;
+STATE \S R-57.2 rows~4089--4094, \S R-58.2 rows~4149--4156).
+\end{itemize}
+% ==== PART 2: \SC-\SF of the draft ====
+
+\subsection{Structural results}\label{subsec:add-structural}
+
+\subsubsection{Proved items (independent audit passed) --- theorem level
+\tierThm}\label{subsec:add-struct1}
+
+\begin{center}
+\begin{tabular}{p{0.20\textwidth}p{0.40\textwidth}p{0.20\textwidth}p{0.12\textwidth}}
+\hline
+result & statement (gist) & machine check & anchor \\
+\hline
+\textbf{Theorem B4} & the star$+$matching interpolation family
+$K_{1,d}\sqcup(k-d)K_2$ is sharp for every $(k,d)$ --- an explicit
+three-branch closed form ($d=0$ antipodal, $d=k$ star-$\infty$, interior
+parity split $+$ alternating half-selection with unit difference) &
+$432$ cells zero failures ($k=2..28$) $+$ A101 independent replay & STATE
+\S R-52.2 row~3721 \\
+\textbf{A106.P} (path closed-form theorem) & the
+$\theta=(\mathrm{Inf},0,3,2,5,4,\dots)$ class attains exactly
+$\{0..k-2\}$ & $k=4..25$ & STATE \S R-52.3 row~3729 \\
+\textbf{A106.L} (rigidity) & ($\beta_2$) $L\le2$ failures are unrelated to
+$D$-legal permutations & A107 independent confirmation & STATE \S R-52.3
+rows~3729--3730 \\
+\textbf{$\beta\equiv1$ structure theorem} & under the maximal-$d$ filtration
+of the $N=14$ abstract domain, all bands $k\ge4$ have $\beta=1$ (A109
+suggests stating it at $k\ge2$) & $2\times10^5+$ instances; A109 promotion
+check over the full enumeration $k=2..4$, $4{,}266{,}470$ instances, zero
+violations & STATE \S R-52.3 rows~3731--3732 \\
+\textbf{Lemmas A108.A/B (criteria language)} & the $k$-generalization of the
+260.A terminal criteria; the budget identity
+$\lvert\mathrm{avail}\rvert=d_k+\beta-\mathrm{val}_k$ & A109 mathematical
+item-by-item attack passed & STATE \S R-52.3 row~3731 \\
+\textbf{A188.P1} & matching-equality-band closed form (one paper line $+$
+machine corroboration) & $763$ gaps, instance by instance & STATE \S R-54.4
+row~3910 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Errata carried with citation (mandatory for this group).} The
+``equivalently, min val$_k\le\beta$ (nested absorption form)'' direction of
+A108.A is \textbf{withdrawn} (explicit counterexample $P=15871$,
+$T=\{1,4,9,12\}$, $d=(1,2,3,6)$); \textbf{the criteria equivalence is cited
+from the A108.B closed form} (A165-F1, \stanchorone{R-53.9}{3855}); the
+A106.S claim ``at most one cyclic component'' is a false theorem, corrected
+(counterexample $C_3\cup C_3\cup K_2$ at $k=8$; the correct characterization
+is $c_t\ge1+\Sigma_{\mathrm{cyc}}(e_i-q_i)$; the machine ledgers are
+unaffected, A107-N1, \stanchorone{R-52.9}{3748}).
+
+\subsubsection{Double-review theorem candidates (theorem-candidate,
+double-review passed) \tierPCand}\label{subsec:add-dblrev}
+
+\begin{itemize}
+\item \textbf{T-A124.1/2/3} (the 270.C/270.D paper backbone rewritten in the
+270.A$'$/276.A language): the mirror-gap condition $\Rightarrow$ translation
+closure (eight-line proof); the 276.A absorption $+$ the criterion
+$g_{13}=0\iff d_1\in J_k$; the 270.D$'$ so1 backbone five-step bookkeeping
+--- \textbf{zero references to 270.A/270.C anywhere} (the original hole is
+eradicated by the language replacement); the eight machine anchors all hit
+(A124/A125; STATE \S R-53.3 rows~3796--3797). Carried notes:
+\texttt{[N1-A124]} (the $\langle k\delta_{12}\rangle$-subchain, whole or
+discarded), \texttt{[N2-A124]} (the $q_{12}=0$ clause, one line).
+\item \textbf{A166-Occ, the occupancy $j$-set structure theorem} (banded
+corrected version): the general band $2{,}592$-cell predicate equivalence
+with zero fail $+$ the $79{,}908$-snapshot four-band decomposition set
+equalities with zero fail $+$ the single interval $940/940$ $+$
+$\max\lvert W\rvert=5$; the R$^*$ assembly (paper draft candidate tier) ---
+\texttt{[GAP-$\alpha'$-C-paper]} narrowed to three paper transcriptions
+(hole-chain closed form / reflection-band depth bound / exceptional band
+$f>60$); \textbf{cited under the A167 F1--F9 corrections} (A166/A167; STATE
+\S R-53.7 rows~3826--3827, \S R-53.9 row~3856). Related: the A146 general
+band main-chain lemmas L1--L4 all proved ($2{,}592$ cells) $+$ the backtrack
+band delimitation back$>0\Rightarrow d\le\lceil f/2\rceil+1$ ($f\le20$,
+exactly $9$ cells; $f\le60$, $340$ cells) (STATE \S R-53.4 row~3806); the
+literal Occ$_c$ conjecture is refuted (the $38$ violating pairs are a
+reproducible full-volume value, A147-N4/A166).
+\item \textbf{Lemmas A170.1/A170.2} (the so0 absorption-corridor paper
+transcription): the six-item legal-pair absorption bookkeeping identity
+(dead-corner three bands, $360{,}771$ legal pairs, zero mismatches); the
+board-suffix capacity criterion
+$h(d,s)=\min(d,s)-\max(0,d+s-N)$ ($1{,}408$ examples cross-checked, zero
+mismatches) --- cited under the three A171 corrections (bucket-table totals
+$120/3{,}808/137{,}040$; A170.4$'$ coverage determination restated; moduli
+$42\to40$, $677\to659$) (A170/A171; STATE \S R-53.7 rows~3830--3831, \S
+R-53.9 row~3858).
+\item \textbf{The residual-form lemma D.2} (the $\Pi$3 $k=4$ paper draft
+base): $\mathrm{val}_4=\lvert R\cap(\cup F\cup E_4)\rvert$,
+feasible $\iff$ there exists a legal triple with val $\le1$; end-to-end
+machine anchors $200/200$ (A164/A165; STATE \S R-53.6 rows~3822--3823).
+\item \textbf{T-A102.1..6 / T-A118.1..4} (odd-band per-band exact windows,
+see \S\ref{subsubsec:add-oddband}); \textbf{T-A92.6..17} (even-band twelve
+families, see \S\ref{subsubsec:add-evenband}).
+\item \textbf{\texttt{[TH-GEN-RED]} the convention theorem} (paper draft
+candidate): the GEN-schema five criteria S1/S2/S3/C3$'$/S7 $\Rightarrow$
+T-GEN$_r$ exact in both directions over the domain (the three conditions of
+Lemma A92.9 hold automatically under the criteria; existence is the only gap,
+\texttt{[GAP-GEN.1]}; cited under the two mandatory A161 corrections ---
+``$t=-1/-2$ auto-excluded'' withdrawn, fold-phase $=\rho$) (A160/A161; STATE
+\S R-53.6 rows~3818--3819, \S R-53.9 row~3853).
+\end{itemize}
+
+\subsubsection{The paper theorem candidate T-A168.0$'$ (transcription
+version; registered as canonical in STATE \S R-55.2)
+\tierPCand}\label{subsec:add-ta168paper}
+
+\begin{theorem}[T-A168.0$'$: the GEN$(t)$ exact-window template, repaired
+version; paper candidate --- double review (A190 audit $+$ A191 re-review)
+$+$ machine universal-closure candidate (A178 $+$ A179) as double
+base]\label{thm:ta168}
+Let $t\ge17$ be odd, and let $L,x,y\in\mathbb{Z}$ satisfy $x+y=t-2$,
+$1\le x\le L-1$, $y\le2L$, together with: \textbf{(P)} $L\le t-1$;
+\textbf{(U1$'$)} $u=(u_1,\dots,u_{L-2})\in\mathbb{Z}^{L-2}$ with all entries
+pairwise distinct, $u_j\ne-x$ for all $j$, $u_j\ge-(L-1)$ for all $j$, and
+$\max_j u_j\le x+1$; \textbf{(U2)}
+$\{\lceil(-L+u_1)/2\rceil\}\cup\{\lceil(u_j+u_{j+1})/2\rceil : 1\le j\le
+L-3\}\cup\{\lceil(u_{L-2}-x)/2\rceil\}\cup\{-\lfloor(y-1)/2\rfloor\}
+=\{-L+1,\dots,0\}$ (the $L$ terms pairwise distinct). For odd $m\ge t$ write
+$\mathrm{GEN}(t)(m)=(1,2,\dots,m-L,\ m+u_1,\dots,m+u_{L-2},\ m-x,\ 2m-y)$
+--- (P) guarantees that this is always a well-defined cyclic sequence of $m$
+elements; let $k_0=(3m-t)/2$. Then for every odd $m\ge t$ and every
+\textbf{$k\ge1$}: $\mathrm{GEN}(t)(m)$ is clean at $(m,k)$ $\iff$
+$k\ge k_0$ (clean $\iff$ the sequence elements are pairwise distinct and all
+lie in $[1,2k-1]$, and the cyclic $m$-edge phases
+$p_i=\lceil((j_i+j_{i+1}) \bmod 2k)/2\rceil \bmod k$ are pairwise
+distinct).
+\end{theorem}
+
+\noindent\emph{Proof structure.} $=$ (R0) the role-distinctness lemma (five
+steps; the unique use of $\max(u)\le x+1$ is in step 4) $+$ (a) the
+$k<k_0$ triple death $+$ collision dichotomy $+$ (b) the two sub-cases of
+$k=k_0$ $+$ (c) $k=k_0+1$ $+$ (d) $k>k_0+1$.
+
+\begin{itemize}
+\item Audit chain: the five-paragraph skeleton re-derived independently,
+paragraph by paragraph, all holding (with the endpoint/parity/equality/domain
+four attack faces); (R0) holds over the general domain $m\ge t$ (the five
+steps use only $m\ge t$); the four focal points closed item by item; the
+three machine anchors $+$ far domain $+$ active probes all green (A190 won,
+\texttt{[GAP-A172-1]} closed; A191 re-review with four notes).
+\item \textbf{Five carried corrections} (bundled with this transcription,
+mandatory with citation): \texttt{[N1]} the $f=k$ special case jointly solves
+to $m=2-t$ (the A191-F1 algebra-misstep corrected version); \texttt{[N2]}
+$y\ge1$ is derived explicitly from (U2); \texttt{[N3]} the quantifier made
+explicit, $k\ge1$; \texttt{[F2]} the draft (A1) antecedent ``$y$ even'' is
+inaccurate (the true condition is $m\ge x+4$; the in-domain conclusion is
+unchanged); \texttt{[F3]} the false-equivalence in step 5 of (R0) (in-domain
+always true, $2m-y\ge m+3>m-x$).
+\item Strength discipline: \textbf{candidate level, not a theorem; the
+decision to register anything in the paper rests with the paper rod alone}
+(STATE \S R-55.2 rows~3963--3969, \S R-55.9 row~4012).
+\end{itemize}
+
+\subsubsection{The A194 three criteria: machine-precise tier promoted to
+paper theorem candidate (A198 written $+$ A199 blue-team review passed)
+\tierPCand}\label{subsec:add-a194}
+
+\paragraph{Machine base (A194/A195, machine-check account \tierMCA).}
+
+\begin{lemma}[A194.1: the BP forbidden-point closed form]\label{lem:a1941}
+For BP with $\varepsilon\in\{0,1\}$, the attainable size set is the
+fragment-level union-of-intervals convolution closed form (single-must and
+multi-must versions) --- against the full brute enumeration,
+$1{,}393{,}016+403{,}548=1{,}796{,}564$ predicates with zero mismatches
+(including correct adjudication of the two A184.3 counterexamples).
+\end{lemma}
+
+\begin{corollary}[A194.1$'$: the sufficient criterion for real families,
+band B]\label{cor:a1941p}
+$\lvert P_2\setminus R\rvert\ge d_2$ and, for all $r\in R$,
+$r-\delta_{23}\in P_2$ ($R$ entirely not pressing arc heads $=$
+offheads) $\Rightarrow$ BP is solvable --- \textbf{cap$\wedge$off
+$203{,}428$ pairs with zero counterexamples}; on the failure side ($N=10$),
+$18{,}750$ pairs fall $100\%$ into capacity-type $\vee$ arc-head-pressing;
+the abstract-domain failure is registered as such (the $N=6$ full-board
+counterexample face $540/1{,}554$).
+\end{corollary}
+
+\begin{lemma}[A194.2: the $\sigma$-chain position criterion,
+$\iff$]\label{lem:a1942}
+A dead-corner instance has a pure-position witness $\iff$ there exists a
+doubly-bad $C_1$ passing the three conditions $(\sigma1)|(\sigma2)|(\sigma3)$
+--- \textbf{$3{,}268/3{,}268$, zero mismatches}.
+\end{lemma}
+
+\paragraph{The paper-proof layer (A198 \S3/\S4/\S5 written; A199 blue-team
+review attacked without breach).}
+\begin{itemize}
+\item \textbf{The five-step paper proof of Lemma~\ref{lem:a1941}}:
+fragment localization (Lemma 1) $\to$ arc/whole-track shape classification
+(Lemmas 2/2$'$) $\to$ fragment size set $=$ semantically reachable set
+(Lemma 3) $\to$ assembly convolution ($\Leftarrow$ reliable $+$
+$\Rightarrow$ complete) $\to$ \textbf{the complete proof of Corollary
+A184.2$'$ (the no-forbidden-point single-break lemma)}; the two skeleton
+compressions of A194 (arc-fragmentation merged corner; cyclic run endpoint
+counting) are closed dead by the \textbf{L3$'$ corner-domination lemma};
+only definitions and elementary interval arithmetic are used.
+\item \textbf{The three-line closed proof of Corollary~\ref{cor:a1941p}
+$=$ the new Lemma A198.R (the R-preimage lemma)}: for any legal $C_1$ (no
+(i) needed), \textbf{for all $r\in R(C_1)$: $r-\delta_{23}\in
+B_{12}\cup\{t_2\}$, and $B_{12}^+\cup\{t_2\}\subseteq P\setminus P_2$} (the
+statement line ``\dots$=P\setminus P_2$'' is a typo --- in fact
+$P\setminus P_2=C_1\cup B_{12}^+\cup(\{t_2\}\cap P)\supsetneq
+B_{12}^+\cup\{t_2\}$, the identity fails; the proof body and all uses only
+need $\subseteq$, and the canonical transcription is written as a
+$\subseteq$-chain, with zero impact on the lemma conclusion, N-A199.1)
+$\Rightarrow$ \textbf{Corollary A198.R$'$: within a family, offheads
+$\iff R=\varnothing$} (structural reading: within a family, every element
+of $R$ necessarily presses on an arc head of $P_2$ --- its
+$\delta_{23}$-preimage lies in $P\setminus P_2$, the ``inside $P$ but off
+the board'' position) $\Rightarrow$ BP degenerates to the
+no-forbidden-point case, closed by A184.2$'$. \textbf{The closure
+difficulty, honestly carried}: the ``$R$-shifted-image structure'' argument,
+which A194 itself left open, is hereby closed dead, but the boundary must be
+carried --- (1) the machine-check domain is layered: the $322{,}568$ pairs
+with zero violations for offheads$\iff R=\varnothing$ lie in the (i)$\cap$
+band-B$_\mathrm{can}$ subdomain, narrower than the lemma's stated domain
+(any legal $C_1$); A199-P1 completes the legal domain $N=6/8$ with
+$160{,}420$ further zero-violation pairs (canonical citations carry the
+domain annotation, N-A199.2); (2) all $203{,}428$ $R=\varnothing$ pairs are
+fully brute-solvable with zero failures ($N=6/8/10$ full volume, no
+sampling; $N=6/8$ simultaneously fill the A194 M10 inline-item gap); (3)
+the failure taxonomy is promoted to identity level (unsolvable $\Rightarrow
+R\ne\varnothing\Rightarrow\neg$offheads; ``$478/478$ offheads$=$False'' is
+promoted from spot-check to necessity).
+\item \textbf{The full both-directions ($\iff$) proof of
+Lemma~\ref{lem:a1942}}: the $\Leftarrow$ construction direction (six items
+verified item by item $+$ nonzero items
+$\subseteq\{l1,l5\}$) $+$ the $\Rightarrow$ reverse reading; the A170.1
+six-item identity embedded self-containedly (\S5.1) $+$ the counting lemma
+paperized (\S5.2); the machine check $\iff$ \textbf{$3{,}268/3{,}268$, zero
+mismatches} $+$ a new construction-direction anchor \textbf{$13{,}855/
+13{,}855$} (every brute $C_2$ through a chain doubly-bad $C_1$ becomes a
+pure-position witness).
+\item \textbf{The A199 blue-team review (attack without breach)}: ten-anchor
+replay (R1--R7$+$N1--N3) bitwise $+$ five independent added probe groups all
+green --- P1 the R-preimage lemma made domain-general; P2 new domain points
+$N=7/9$ ($R=\varnothing$ at $1{,}434/46{,}200$, brute zero failures); P3
+the A194 abstract counterexamples independently confirmed (the real-family
+restriction cannot be dropped); P4 the first example a194d recomputed field
+by field; P5 the L3$'$ fragment-level $52{,}079$ configurations, both
+directions, zero mismatches.
+\end{itemize}
+
+\paragraph{Adjudication and residual debts.}
+\begin{itemize}
+\item \textbf{GAP-A120-1 adjudication updated}: of the three conditions,
+\textbf{(2) (the R-avoidance $+$ musts mixed capacity
+criterion $=$ A194.1$+$A194.1$'$) and (\,3\,) (the spend-position
+schedulability $=$ A194.2 $\iff$ criterion) are promoted to paper tier}
+(A198$+$A199; carried unchanged); \textbf{(\,1\,) (the doubly-bad $C_1$
+explicit existence criterion $=$ GAP-A120-2) and the joint-satisfiability
+ontology} --- refreshed after waves 69/70: (1) closes at the criteria level
+at machine-precise tier (criterion A206.C), and the ontology $=$ machine
+universal-closure candidate (witnesses $3{,}268/3{,}268$); the $\mu$
+paper-side existence remains open --- see \S\ref{subsec:add-mu} (STATE \S
+R-55.4 row~3980; updated in \S R-57.2 rows~4089--4094, \S R-58.2
+rows~4149--4156).
+\item \textbf{\texttt{[GAP-A184-1]}/\texttt{[GAP-A184-2]}: all paper-side
+residuals closed} (at both the machine-precise and paper-proof layers);
+\texttt{[GAP-A198-1]} (the layered independent-second-path machine backing
+of A194.1: to $N=7$, family level to $N=8$ over the full legal domain)
+open; \texttt{[GAP-A198-2]} (the A184.2$'$ proof replacement plan)
+\textbf{settled $=$ deep\_A198 \S3.4 governs} (replacing the A184 \S3.2
+draft 256.G fallback step).
+\item \textbf{The four-band canonical of theorem A184.4} (after the C0 band
+was added): $422=129+166+45+82$;
+$31{,}828=12{,}660+12{,}014+2{,}608+4{,}546$;
+$825{,}586=374{,}172+310{,}388+44{,}760+96{,}266$.
+\item \textbf{Errata carried with citation}: the canonical reading of
+$\delta_{23}$ is \textbf{$t_2-t_3$} (the full-text rewrite branch is
+settled; do not cite the ``$\delta_{23}=t_3-t_2$'' reading, A185-F1/A195-N6);
+must-carrying $=$ (ii-b) full obligation $t_3\in C_1\cup C_2$ (two-sided
+absorption; do not mix the one-sided reading ledger $1{,}988/1{,}280$,
+F-A195-1); the divergence-direction universal sentence withdrawn (reverse
+divergence $q$ at $29/852/20{,}342$ on file, F-A195-2); ``36-714'' citation
+forbidden (F-A195-4).
+\item Strength: \textbf{paper theorem candidate tier} (A198's
+self-contained proof written $+$ A199 blue-team review attack without
+breach) standing on the \textbf{machine-precise tier} base (A194/A195);
+\textbf{candidate level, not a theorem; the registration decision rests with
+the paper rod} (A194/A195/A198/A199; STATE \S R-55.4 rows~3976--3982, \S
+R-55.6 rows~3993--3994, \S R-56.3 rows~4033--4039).
+\end{itemize}
+
+\subsubsection{The $\mu$ criteria-layer closure and the
+joint-satisfiability ontology: the three conditions complete at the criteria
+layer (waves 69/70, A206/A207/A210/A211)}\label{subsec:add-mu}
+
+\paragraph{Criterion A206.C (the doubly-bad $C_1$ explicit existence
+criterion; \texttt{[GAP-A120-2]} $=$ condition (1))
+\emph{[machine-precise-tier candidate; A206 won $+$ A207 review passed]}.}
+\begin{itemize}
+\item \textbf{Statement}: every dead-corner instance (so0 $\beta=1$) has a
+doubly-bad $C_1$ ($g_{13}\le d_2+1$ and $q\le d_3+1$) realized as a union of
+\textbf{at most $3$ $+1$-arcs} (a $J\le3$ multi-arc union). The machine
+check has three layers: the two gap bands covered instance by instance
+\textbf{$959/959$} ($p=N$ band $6/43/345$ $+$ $p=N-1$ band $16/549$) $+$
+full-domain regression \textbf{$3{,}268/3{,}268=100\%$} $+$ an independent
+second path over $3{,}268$ minJ-witnesses with bad$=0$ (pure cyclic
+definition $+$ formula, two paths; the named-instance witness is
+\textbf{$[1,2,3,5]$} with $(q_{12},q,g_{13})=(1,2,2)$ --- the value after
+the N-A207.2 correction). The four named checks of A207 replayed
+independently, all passing (gap-band replay / criterion verified both
+directions [the $959$ witnesses verified one by one $+$ an independent
+enumeration of all $C_1$ with no missed adjudication $+$ the formula
+cross-checked both directions over $2{,}456{,}960$] / full-domain
+regression bitwise / the three-condition layering correct --- no
+over-claiming of joint satisfiability).
+\end{itemize}
+
+\begin{proposition}[A206.1: the multi-arc union counting formula, general
+$p$]\label{prop:a2061}
+$q_{12}=\Sigma_i h(\lambda_i,c_{12})-X_{12}-\lvert C_1\setminus
+(P+\delta_{12})\rvert$, and $g_{13}$ is isomorphic
+($h(d,s)=\min(d,s)-\max(0,d+s-N)$, carried from A170.4) --- A170.4 extended
+from the $p=N$ single interval to arbitrary $p$ and arbitrary $C_1$, the
+$C_1$-side counterpart of the A194.1 form; full-domain cross-check
+\textbf{$2{,}456{,}960$ instances of $C_1$, zero mismatches}
+($1{,}480+63{,}280+2{,}392{,}200$). Gap-profile typing: the $959$ minJ
+values all lie in $\{2,3\}$ ($878$ cases suffice with $J=2$ $+$ $81$ cases
+need $J=3$, all $N=10$); the jclosed gap choice $q_{12}=0$ has $20$
+chains, at most one level closed $160$ chains; co-run $9/16$ and
+$191/549$; the minJ$=3$ signature is $d_3=1$ with large $d_1$ ($104$
+full-domain cases).
+\end{proposition}
+
+\begin{itemize}
+\item \textbf{Domain restriction (A207-N3 note)}: the machine-precise domain
+is \textbf{$N\in\{6,8,10\}$ so0 $\beta=1$}; $N\ge12$ not run, and ``$J\le3$
+expected to persist'' is an unverified extrapolation --- canonical citations
+keep the domain restriction.
+\end{itemize}
+
+\paragraph{The ontology layer (joint satisfiability: every dead-corner
+instance realizes A170.3(a)$+$(b)) \tierMUCC{} (A210 won $+$ A211 review
+passed).}
+\begin{itemize}
+\item All $3{,}268$ dead-corner instances, each with all $C_1\times$all
+$C_2$ exhausted to take min val, explicit canonical witnesses constructed
+$+$ six-item ledger on disk: \textbf{min val $\le1$ over the full domain
+$3{,}268/3{,}268=100\%$} (same direction as A194 M9); independent second
+path sampled $200/200$ with val equal instance by instance; the
+nine-canonical-anchor replay bitwise (domain ledger / dead-corner ledger /
+gate-death ledger / named instances / minJ histograms / $\sigma$-chain /
+must / suffix form / $\Sigma$fam $+$ lemma sweep $2{,}456{,}960$).
+\textbf{Strength: machine universal-closure candidate (domain
+$N\in\{6,8,10\}$ so0 $\beta=1$), not a paper theorem --- the $\mu$
+paper-side existence remains open.}
+\item \textbf{The criteria-chain layer, $56$ cases precisely blocked (an
+honest presentation: neither a counterexample to a registered proposition
+nor a RED)}: the joint chain ($\beta$) $=$ ``there is $C_1\in\mathcal{M}_3$
+in the doubly-bad family with $\min_{C_2}\mathrm{val}\le1$'' reads
+\textbf{$3{,}212/3{,}268=98.29\%$} ($24/24$, $228/228$, $2{,}960/3{,}016$);
+the \textbf{$56$ failures} (all $N=10$; $p=N$ $24$ $+$ $p=N-1$ $32$) are
+\textbf{precisely mutually exclusive} --- \textbf{realization rank exactly
+$4$} (all $J\le3$ doubly-bad $C_1$ exhaust all $C_2$ with min val $\ge2$,
+and a $J=4$ doubly-bad realization exists; independent second path $56/56$
+five-point re-verification); \textbf{blocking distance $=2$} (min val
+histogram $\{2{:}56\}$, over budget by one; $8$ rank-4 realizations with
+val$=0$); \textbf{jclosed disjoint} (family-level $q_{12}=0$ family members
+$0/56$); profile: already-covered band $41$ $+$ the $959$ gap band $15$
+(minJ $2{:}8/3{:}7$), $\sigma@J\ge4$ $24$ $+$ $\sigma$-empty $32$, gate
+death $28/56$ (after the A211-F7 correction), $d_3=1$ in $47$ cases (after
+the A211-F1 correction) with $d_1\ge4$ dense type, rank-4 spend positions
+$l2{:}23$/zero$:8$/l1$:4$/l6$:10$/l3$:11$. \textbf{Closure meaning}: the
+chained reading ``(A206.C) $\to$ (A194.1/1$'$) $\to$ scheduling'' breaks at
+(1), the language, in these $56$ cases --- ``always $J\le3$ doubly-bad'',
+even if proved on paper, gives existence only, not realizable carriers.
+\item \textbf{The new invariant ``always $J\le4$ realizable''
+($\mathcal{M}_4$ always contains a realizable doubly-bad member)
+\emph{[machine universal candidate, $3{,}268/3{,}268$]}}: the
+realization-rank minJreal histogram is \textbf{$\{1{:}675,\ 2{:}1{,}907,\
+3{:}630,\ 4{:}56\}$} ($J=4$ load-bearing in exactly $56$ cases); one notch
+away from A206.C's ``always $J\le3$ doubly-bad existence'' (the existence
+language $\ne$ the realization language, minJ histogram max $=3$).
+\item \textbf{The structural synthesis (route ii), two lemmas
+\emph{[paper draft candidates]}}: \textbf{A210.1} (doubly-bad
+$q\le d_3+1\Rightarrow\lvert P_2\rvert=d_2+d_3+1-q\ge d_2$ --- the second
+inequality of condition (1) is exactly the on-board capacity antecedent of
+(2); ``$(1)\wedge(2)$ simultaneously satisfied'' has the doubly-bad property
+itself as a sufficient condition; A211 completes the hidden step
+$t_2\notin B_{12}^+$ (since $t_1\notin C_1$) and the attack fails) $+$
+\textbf{A210.2} ($q_{12}=0\Rightarrow B_{12}=\varnothing\Rightarrow
+D=\varnothing$ and $R_\mathrm{exact}\subseteq\{t_2+\delta_{23}\}\cap P_2$
+up to one point --- under the jclosed language the (2)-avoidance set
+collapses to the lightest band); full domain $2{,}456{,}960$ instances of
+$C_1$ with zero violations; the jclosed sufficiency is \textbf{a
+three-ledger joint note}: \textbf{$1{,}114/1{,}114$ family-level (coverage
+$34.1\%$) / $642$ realization-level / the $q_{12}\le1$ chain
+$2{,}013/3{,}268=61.6\%$ realization-level --- do not mix the levels when
+citing} (A211-F3). Honest boundary: (3) (BP solvability $+$ scheduling)
+still needs the per-instance adjudication of A194.1/A194.2; the
+``for every dead-corner instance'' existence is not derived from this.
+\item \textbf{Three layered ledgers}: sufJ3 $\iff$ chainJ3 instance by
+instance identical (zero mismatches, the A170.3 suffix-form bridge);
+must-$J\le3$ restricted $3{,}111/3{,}268$ ($157$ failures $=56$ blockers
+$\cup$ $101$ in-chain non-must realizations; $8/56$ fall in the canonical
+$109$ must-failure class); the $\sigma$-chain $2{,}828/$\textbf{2,804}
+(after the N-A207.1 correction)$/24$ and must $3{,}159$ independently
+reproduced.
+\end{itemize}
+
+\paragraph{GAP-A120-1 adjudication (R-58 canonical).} \textbf{The three
+conditions are complete at the criteria layer} --- condition (1) $=$
+criterion A206.C at machine-precise tier ($=$ \texttt{[GAP-A120-2]}
+criteria-level closure); (2) $=$ A194.1$+$A194.1$'$; (3) $=$ A194.2 (paper
+theorem tier unchanged); \textbf{the joint-satisfiability ontology $=$
+machine universal-closure candidate} (completed on the machine side) ---
+\textbf{the $\mu$ paper-side existence remains open}; the two paper-closure
+options are \textbf{($\alpha$) paperizing the ``always $J\le4$ realizable''
+criterion} and \textbf{($\beta$) (2)$+$(3) guiding the $C_1$ choice} (the
+$l2/l3/l6$ three-position quantitative entries) $+$ scheduling synthesis per
+the original meaning of (a)$+$(b) (A206/A207/A210/A211; STATE \S R-57.2
+rows~4089--4094, \S R-57.8 row~4124, \S R-58.2 rows~4149--4156, \S R-58.6
+row~4174). \textbf{Candidate level, not a theorem; the registration
+decision rests with the paper rod.}
+
+\subsubsection{The candidate-level / machine-check-level list (not yet
+reviewed or machine level, each with anchor) \tierMCA}\label{subsec:add-candlist}
+
+\begin{itemize}
+\item CF-ABD/CF-C closed-form candidates $+$ the single-slot induction
+extension theorem (exception set $=\varnothing$; A99 independent replay
+strengthened; STATE \S R-52.2 row~3719, \S R-52.9 row~3744);
+\item the CF-f6C closed-form candidate (legal ledger \textbf{$155{,}331$};
+$463{,}478$ must not be cited; STATE \S R-53.3 rows~3798--3799);
+\item Lemma Z$(s,L)$ (zigzag; parity, read forward: $L$ even
+$\Rightarrow\{s\}\cup[s+2,k]$, $L$ odd
+$\Rightarrow\{s\}\cup[s+2,k-1]\cup\{k+1\}$; A111-N1 correction; STATE \S
+R-52.4 row~3736, \S R-52.9 row~3750);
+\item the $f=5$, $k=7$ cell repair (triple re-check PASS, restored to
+closure candidate; STATE \S R-53.3 row~3798);
+\item T-A122.1..3 / T-A156.1..3 (machine-ledger re-check level, promotion
+review awaiting a dedicated process; STATE \S R-53.12 row~3878);
+\item the THM-cluster draft (the $\Pi$3 $k=4$ cluster band; the L2(b)
+table $4{,}480/120/330/39{,}600$ machine-checked; STATE \S R-54.2
+row~3892);
+\item T-A180.1 (machine-level candidate) / T-A180.2 (the necessary layer;
+the sufficient direction is precisely blocked --- the $349$ split all
+coupled-dead $+$ the $p'=4$ minimal counterexample $238$ hit$/120$
+distinct; cited under the A181 corrections; STATE \S R-54.3
+rows~3900--3901);
+\item FAM24b ($r=24$, second shape $\beta=50$; $c=58$ leaves the coverage
+ledger unchanged; STATE \S R-54.3 row~3902);
+\item L-A186.x/L-A192.1$'$/L-A192.2/L-A192.3 (the GEN induction chain;
+L-A192.1$'$ $=$ the counterexample-absorbing repair, paper candidate tier,
+each step elementary $+$ the A197 triple verification; cited under the
+A187/A193/A197 corrections; STATE \S R-55.3 rows~3972--3973, \S R-56.2
+row~4026, \S R-56.10 row~4073);
+\item \texttt{[CONS-A186]}/\texttt{[CONS-A192]}/\texttt{[CONS-A196]}
+(machine-level construction skeletons; \texttt{[CONS-A196]} four-template
+table family $158/158$, see \S\ref{subsubsec:add-gen186}; STATE \S R-54.4
+row~3908, \S R-55.3 row~3972, \S R-56.2 row~4026).
+\end{itemize}
+
+\subsection{Honest boundaries}\label{subsec:add-honest}
+
+\subsubsection{Tier C unachieved, and the distance structure
+\tierProf}\label{subsubsec:add-tierc}
+
+\begin{itemize}
+\item \textbf{Tier C (unconditional Gallai) is not achieved.} All $8$
+implication-step rings stand at zero open (deep\_E36 \S0, deep\_E39 \S0) ---
+every gap is concentrated in \textbf{premise discharge}, not in the
+implication layer.
+\item The minimal premise set (the $\Pi6\wedge\Pi7$ route):
+\textbf{$\{\Pi1,\Pi3,\Pi6,\Pi7\}$} ($\Pi5$ removed by name after its
+$42/42$ dead-zone discharge, deep\_E39 \S0); the bridge route is
+$\{\Pi1,\Pi3,$ 266.3(so1)-universal, $\Pi8\}$; the two routes are
+alternatives (deep\_E36 \S3, deep\_E39 \S4). The route comparison is
+\emph{not} a ``bypassing the base'' claim --- the 266.3 base remains the
+tier-A deliverable and the ontological core of the tier-D premise.
+\item Distance readings (deep\_E39 \S4): the $\Pi6$ machine-check residue is
+odd band instance-level $0$ $+$ even band $406$ cells (at $m\le122$; at
+$m\le242$, $3{,}916$); the bridge route has two mountains --- the $\mu$
+\textbf{paper} step remains open (the machine side is closed: the three
+conditions complete at the criteria layer $+$ the ontology $=$ machine
+universal-closure candidate, see \S\ref{subsec:add-mu}; the two paper
+synthesis options ($\alpha$)/($\beta$) on file), and GL-C untouched.
+\end{itemize}
+
+\subsubsection{The minimal core ($\Pi$ minimal core)}\label{subsubsec:add-mincore}
+
+\begin{center}
+\small
+\begin{tabular}{p{0.16\textwidth}p{0.44\textwidth}p{0.20\textwidth}p{0.14\textwidth}}
+\hline
+premise & status & tier & anchor \\
+\hline
+\textbf{$\Pi$1} (Lov\'{a}sz 1968, all-odd support) & verification record exists
+(statement level, \S\ref{subsec:add-litlovasz}); the page-by-page reading of
+the original remains a mandatory final-review item & externally verified
+(secondary source) & STATE \S R-53.10 row~3869; deep\_LOVASZ\_VERIFY.md \\
+\textbf{$\Pi$3} ($N(k\ge4)$) & $k\le3$ theorem layer; $k=4$ carries two
+paper-side gaps: \texttt{[GAP-A174.1]} (cluster-band L2(b) hand
+transcription / Lean handover) $+$ \texttt{[GAP-A180.1]} (scattered-band
+key$\times$cell coupling uniformity $+$ the LAN-158 language paper
+transcription); the remaining core $=178{,}348$ affine orbits $+$ the
+cluster-T key-Hall wall ($\lvert N(X)\rvert=6<7$ still exhibitable); $k\ge6$
+universal open (the no-channel adjudication stands; $k\ge15$ geng triple
+wall) & $k=4$: criteria $+$ construction, both machine ledgers; paper side
+\openlab & STATE \S R-54.2 row~3892, \S R-54.7 row~3933 \\
+\textbf{$\Pi$5} ($d\ge4$ dead zone) & \textbf{discharged}: $42/42$
+instance-by-instance machine-verified sharp witnesses $+$
+$\beta\le\lceil n/2\rceil$ passing $41/42$ with equality in all but one
+(A-class $13=$ deleted-point closure artifact / B-class $23=$ witnesses
+disposed directly / C-class $6=$ tight non-cut $\sigma=0$); the $d\ge4$
+general-layer residual debt \texttt{[GAP-$\Pi$5-res]} booked & witness-level
+discharge (machine check), not a paper theorem & STATE \S R-53.6
+rows~3822--3823 \\
+\textbf{$\Pi$6} (the $(E)$ domain) & odd band instance-level closure $+$
+T-A168.0$'$ paper candidate; even band closed $27$ bands $+$
+residuals $406/3{,}916$ \emph{[SAT inherited ledger]} $+$ FAM27..30 open
+$+$ the $r=27/28/29$ three-band confidence exclusions (all three bands open
+on their own); GAP-102a (general forest $3f+c>2k+2$) $+$
+\texttt{[GAP-96a]} (general solvability, $k\le7$ all $188$ types zero
+counterexamples) on file & mixed: theorem candidates $+$ machine checks $+$
+\openlab & STATE \S R-54.7 row~3934, \S R-55.7 row~4002, \S R-57.4 row~4105 \\
+\textbf{$\Pi$7} (the $(R)$ domain, GAP-96b$'$) & ($\alpha$) side: dense
+single-cycle machine-level closed ($13{,}863$ types), paper side not
+erected \texttt{[GAP-A188.2]}; ($\beta_2$) side: the $q\ge k+1$ closed form
+\openlab{} $+$ the R-106 final segment (machine level $100\%$ rescued,
+paper side not erected) & machine level $+$ \openlab & STATE \S R-54.7
+row~3937 \\
+\textbf{$\Pi$8} (geometric leaf allocation) & bridge-route premise; idle
+for the implication while $\Pi$6 is in place (COLD8-A2) & \openlab &
+deep\_E36 \S3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{The consolidated \texttt{[GAP]} register (load-bearing
+items)}\label{subsubsec:add-gapreg}
+
+\small
+\begin{longtable}{p{0.22\textwidth}p{0.46\textwidth}p{0.24\textwidth}}
+\hline
+GAP & content & status \\
+\hline
+\endhead
+\hline
+\endfoot
+\texttt{[GAP-A172-1]} & the T-A168.0$'$ paper audit & \textbf{closed}
+(A190$+$A191, STATE \S R-55.2 row~3963) \\
+\texttt{[GAP-A178-1]} & the machine-domain window boundary & semantic
+downgrade $=$ verification surface, not coverage surface (STATE \S R-55.2
+row~3969) \\
+\texttt{[GAP-A172-2]} & the $t\ge47$ tiling-solution existence search & orthogonal
+to the universal statement (same anchor) \\
+\texttt{[GAP-A116.1]} & the $k\ge15$ geng triple wall & open (STATE \S
+R-53.2 row~3786) \\
+\texttt{[GAP-A120-1..3]} & so0 absorption: (2) (R-avoidance $+$ musts mixed
+capacity criterion) and (3) (spend-position schedulability)
+\textbf{promoted to paper tier} (A194.1/A194.1$'$/A194.2 paper proofs,
+A198$+$A199); \textbf{(1) $=$ \texttt{[GAP-A120-2]} closed at the criteria
+level at machine-precise tier} (criterion A206.C, A206$+$A207); \textbf{the
+joint-satisfiability ontology $=$ machine universal-closure candidate}
+(A210$+$A211, witnesses $3{,}268/3{,}268$) $+$ the criteria-chain layer
+$56$-case exclusive blocking $+$ the ``always $J\le4$ realizable'' machine
+universal candidate $+$ A210.1/A210.2 paper draft candidates (see
+\S\ref{subsec:add-mu}) & \textbf{the three conditions complete at the
+criteria layer; the ontology a machine universal candidate; the $\mu$
+paper-side existence remains open} (STATE \S R-55.4 row~3980, \S R-56.3
+rows~4033--4039, \S R-57.2 rows~4089--4094, \S R-58.2 rows~4149--4156, \S
+R-58.6 row~4174) \\
+\texttt{[GAP-A174.1/.2/.3]} & the $\Pi$3 $k=4$ cluster band / scattered
+band / the rest & open (STATE \S R-54.2 row~3892) \\
+\texttt{[GAP-A180.1/2/3]} & the $\Pi$3 $k=4$ scattered-band paper-side two
+gaps etc. & open (STATE \S R-54.3 row~3900) \\
+\texttt{[GAP-A184-1]}/\texttt{[GAP-A184-2]} & the two $\mu$ openings &
+\textbf{all closed} (machine-precise $+$ paper-proof layers, A198$+$A199;
+STATE \S R-56.3 row~4033) \\
+\texttt{[GAP-A188.1/.2]} & the forest residue $7$ trees / the
+$\alpha$-U2 coverage completeness & open (STATE \S R-54.4 row~3910) \\
+\texttt{[GAP-A192.1]} $\to$ \texttt{[GAP-A196.1]} $\to$
+\textbf{\texttt{[GAP-A204.1]}} & the GEN asymptotic-periodicity
+\textbf{paperization}: (P1)(P2)(P3) the proved skeleton; (P4) narrowed to
+\textbf{(P4-core)}, the single-point potential-function proposition ``repair
+cascades do not exhaust'' (L1..L7 lemmas $+$ three dead routes on record);
+(P5) conditionally closed (step induction $+$ four base cases
+$\{43,44,45,46\}$); T-A204 (conditional paper candidate) delivered;
+intra-family mod-4 asymptotic periodicity $r_0=43$ remains a machine-level
+candidate $+$ the third channel $158/158$ double witness (see
+\S\ref{subsubsec:add-gen186}) & \textbf{restated, handed over to
+\texttt{[GAP-A204.1]}; open} (STATE \S R-55.3 row~3973, \S R-56.8 row~4061,
+\S R-57.3 row~4099, \S R-58.6 row~4175) \\
+\texttt{[GAP-A196.2/.3/.4/.5]} & the enumeration boundary $r=16$ / battery
+non-tiling ranks / the non-tiling family structure $+$ global periodicity
+open / $r_0$ minimality & .2/.3/.4 remain open; \textbf{.5 carried by
+\texttt{[GAP-A204.3]}} (STATE \S R-56.8 row~4061, \S R-57.8 row~4125) \\
+\texttt{[GAP-A204.1]} & the (P4-core) single-point potential-function
+proposition ``repair cascades do not exhaust'' ($=$ the exact successor of
+\texttt{[GAP-A196.1]}; exact statement and machine entry on file, deep\_A204
+\S4) & newly erected, open (STATE \S R-57.3 row~4099, \S R-57.8 row~4125) \\
+\texttt{[GAP-A204.2]} & single-template cross-class universality:
+\textbf{strong form dead} (T$_2$/T$_0@c=1@65/69$ exhaustively infeasible,
+the A205 dual-code kill), weak form open (T$_2@73/77/81$ undecided at 30M) &
+strong form dead, weak form open (STATE \S R-57.3 row~4102, \S R-57.7
+row~4117) \\
+\texttt{[GAP-A204.3]} & $r_0=43$ minimality (carrying
+\texttt{[GAP-A196.5]}) & open (STATE \S R-57.8 row~4125, \S R-58.6
+row~4175) \\
+\texttt{[GAP-A198-1]}/\texttt{[GAP-A198-2]} & the layered
+independent-second-path machine backing of A194.1 (to $N=7$, family level to
+$N=8$ over the full legal domain) / the A184.2$'$ proof replacement plan &
+layered open / settled (deep\_A198 \S3.4 governs; STATE \S R-56.3 row~4033) \\
+\texttt{[GAP-A200.1]} & the $r=27$ narrow-detectability domain ($K\le3$
+historical shapes excluded at only $11.1$--$55.4\%$) & newly opened;
+continuation entry $=$ single combination $45$--$102$ flows, or
+narrow-window cap $\ge5$M completeness (STATE \S R-56.4 row~4041) \\
+\texttt{[GAP-A208.1]} & the $r=28/29$ narrow-detectability domain ($K\le3$
+historical shapes excluded at only $11.1$--$55.4\%$; the two bands'
+broad-detectability $K\ge15@u$ at $98.24\%$ achieved $=$ the
+\texttt{[GAP-A182.1]} ladder's $r=28/29$ broad-detectability domain
+dissolved) & newly erected, open; continuation $=$ $r=30$ under the same
+protocol ($c=70$/mlo$=74$/TH$(74)=75$) (STATE \S R-57.4 row~4105, \S R-58.6
+row~4175) \\
+\texttt{[GAP-A192.2/.3]} & the deformation-exhaustion negation / the farther
+band & maintained / narrowed (STATE \S R-55.7 row~4000) \\
+\texttt{[GAP-$\mu$]} (four missing pieces) & T4$'$ closure / JC /
+LANG-RECT2 / the corridor criterion & all candidate level, maintained;
+after waves 69/70 the $\mu$ criteria layer has its three conditions complete
+$+$ the ontology $=$ machine universal-closure candidate (see
+\S\ref{subsec:add-mu}); the $\mu$ \textbf{paper} step remains open (synthesis
+per the original (a)$+$(b) route; both options ($\alpha$)/($\beta$) on
+file) (STATE \S R-53.10 row~3868, \S R-55.4 row~3982, \S R-57.8 row~4124,
+\S R-58.6 row~4174) \\
+\texttt{[GAP-$\alpha'$-f5-0]}/\texttt{[GAP-$\alpha'$-f6-1]}/
+\texttt{[GAP-$\alpha'$-C-paper]} & the $f=5$ repair second review
+(substantively satisfied) / $f=6$ C (to be refined once CF-f6C lands) / the
+$f\ge7$ paper transcription, three items & advancing (STATE \S R-53.10
+row~3862) \\
+\texttt{[GAP-$\Pi$1-origread]}\slash\texttt{[GAP-$\Pi$3]}\slash
+\texttt{[GAP-$\Pi$5-res]}\slash\texttt{[GAP-$\Pi$6]}\slash\texttt{[GAP-$\Pi$7]} &
+the minimal-core residual debts & see \S\ref{subsubsec:add-mincore} \\
+\texttt{[GAP-96a]}\slash\texttt{[GAP-96b$'$]}\slash\texttt{[GAP-102a]} & the
+$(E)$/$ (R)$ ontological residual debts & open (deep\_E36 \S1 ring 5) \\
+\texttt{[GAP-N7-$\alpha$/$\beta$/$\gamma$]} & $N(k\ge6)$: carrier
+non-stationarity / the B4 corner closed / the U domain boundary & open
+(STATE \S R-52.2 row~3721) \\
+\texttt{[GAP-T4$'$-1/2/3]} & the T4$'$ repair residual debts (the $-3$
+obligation delimited by A194) & advancing (STATE \S R-55.4 row~3982) \\
+\texttt{[GAP-GEN.1/GEN.1$'$]} & GEN existence / the low-fragment filling
+closed form & open (STATE \S R-53.6 row~3818, \S R-54.4 row~3908) \\
+\texttt{[GAP-A176.2]} & the third path of false OK (max\_sols early stop) &
+entered into the methodological corrections (STATE \S R-54.7 row~3934) \\
+\texttt{[GAP-EXT]} & the B-S/Fan/Pyber original-text final adjudication &
+not adjudicated (\S\ref{subsec:add-litsum}) \\
+\texttt{[GAP-EX]}/GL-C & the external-premise citation boundary / the GL-C
+paper chain & unreachable, maintained (content in
+\S\ref{subsubsec:add-lan158}, \S\ref{subsubsec:add-tierc}) \\
+\end{longtable}
+
+\subsubsection{The two statement-level counterexamples (RED): disposition
+records --- a worked example of the quality-assurance mechanism
+\tierProf}\label{subsubsec:add-red}
+
+Two statement-level counterexamples (RED) were triggered during this
+verification campaign, both on the statement-and-repair chain of the same
+template theorem (T-A168.0). The full disposition (wording kept neutral;
+the permanent record $=$ STATE \S R-53.8 rows~3833--3837, \S R-54.5
+rows~3913--3915, \S R-55.5 rows~3984--3986, deep\_A169\_verify\_a168.md,
+deep\_A172\_fix.md):
+\begin{enumerate}
+\item \textbf{The first (A169, 2026-10-04)}: the independent audit found a
+counterexample to the original universal statement of T-A168.0 (the
+GEN$(t)$ template theorem) --- the minimal example $t=17$, $L=7$, $x=1$,
+$y=14$, $us=(-4,-2,-6,3,-3)$ satisfies all explicit hypotheses but has a
+role collision at $m^*=17=t$. Root cause $=$ hypothesis (U1) fails to
+exclude the role collision $u_j=m-y$ (equivalently, missing
+$\max_j u_j\le x+1$); the proof skeleton proved the value range but not
+role distinctness. \textbf{Disposition}: the original statement was
+immediately citation-forbidden and registered domain-wide; the blast radius
+was delimited and verified $=$ the statement layer only, and all of A168's
+instance-level deliverables (the $53$-band grid with zero violations, the
+$m=39,k=40$ closure, the coverage ledger $862\to0$, band $46/46$) survived
+item-by-item re-verification by an independent implementation.
+\item \textbf{The second (A172)}: the first repair reading --- ``adding
+$\max_j u_j\le x+1$ to (U1) alone is sufficient'' --- was refuted by a
+$30$-example counterexample family ($L\in\{t+1,t+2\}$, $t=17..45$; minimal
+example $t=17$, $L=19$, $x=1$, $y=14$). \textbf{Disposition}: that repair
+reading was citation-forbidden; the correct repair $=$ the triple
+\textbf{(P) $L\le t-1$ $+$ (U1$'$) $+$ (U2)} (the T-A168.0$'$ candidate
+built).
+\item \textbf{Terminal state}: the blast radius of both counterexamples is
+fully covered by the T-A168.0$'$ \textbf{double base} --- the machine
+universal-closure candidate (A178 with $8{,}323{,}012{,}408$ instances
+viol$=0$ $+$ the A179 clean-room re-check) and the paper theorem candidate
+(the A190 five-paragraph audit $+$ the A191 re-review;
+\texttt{[GAP-A172-1]} closed). The interruption marker (STOP) was cleared
+after verification by the main session (the E42-period find shows zero
+traces domain-wide, three time points consistent). Zero new triggers for
+the rest of the campaign (the A193 counterexample to L-A192.1 was
+disposited per precedent as a mandatory-fix erratum --- a candidate-tier
+self-flagged to-be-verified step, not a breach of a registered theorem);
+wave 66 also had zero new triggers (the A196 periodicity negative result
+struck a candidate object and a suggestion sentence of A192 \S6 $=$ an
+honest block, not a counterexample to a registered theorem; the A197/A199/
+A201 adversarial audits found zero math counterexamples; STATE \S R-56.6
+row~4050); \textbf{waves 69/70 also zero new triggers} (the A205 cross-class
+counterexample struck a candidate-tier machine-evidence discovery in A204
+\S3.3 $=$ disposited as an erratum under the R-56 reading, no STOP written;
+the A206 decision chain has zero counterexamples across five layers;
+A207/A209/A211 zero math-layer counterexamples; the $56$ cases of A210 $=$
+a criteria-chain-layer refinement block [an in-domain delimitation of an
+open obligation], not a counterexample to a registered proposition; the
+$\mu$ ontology has zero counterexamples; STOP remains absent from the
+board; STATE \S R-57.6 row~4112, \S R-58.4 row~4161).
+\item \textbf{Mechanism note}: the process above (counterexample trigger
+$\to$ domain-wide citation ban and registration $\to$ independent blast-radius
+delimitation $\to$ repair-candidate reconstruction $\to$ machine$+$paper
+double-base closure $\to$ case closure and permanent record) is the
+campaign's filed quality-assurance mechanism; the append-only erratum
+culture guarantees that historical text is never rewritten and every
+disposition is traceable.
+\end{enumerate}
+
+\subsection{External literature verification}\label{subsec:add-lit}
+
+All verification below is online secondary-source verification (tools
+tavily/WebSearch); except where noted, no journal original was read
+page by page.
+
+\subsubsection{Lov\'{a}sz 1968 (\emph{On covering of graphs}; the Tihany 1966
+conference mention precedes, published 1968)}\label{subsec:add-litlovasz}
+
+\begin{itemize}
+\item The usage verified: T11.2 (the all-odd-support case of
+K $\Rightarrow$ Gallai) cites the bound ``a graph on $n$ vertices
+decomposes into at most $\floor{n/2}$ paths and cycles'', combined with the
+LB1 mod-2 argument (internal item) to force $p=n/2$, $c=0$
+(deep\_LOVASZ\_VERIFY.md).
+\item Verdict: \textbf{holds (direct quotation level from authoritative
+secondary sources)} --- a Bordeaux University doctoral thesis (Blanche
+manuscript) quotes Theorem 2.2.6 sentence by sentence $+$ a ProofAtlas
+entry note (that theorem implies the Gallai statement for the odd class but
+is \textbf{not} the Gallai conjecture itself --- an exact fit with this
+project's usage; the project never claimed otherwise).
+\item Boundary: not a page-by-page reading of the original; the exclusion of
+cycle parts depends on LB1 (an internally verified item, not covered by the
+external verification). The $\Pi$1 flag is raised to \textbf{externally
+verified (secondary source, statement level)}; the original-text reading
+remains a mandatory final-review item.
+\end{itemize}
+
+\subsubsection{Botler--Sambinelli 2021 (JGT)}\label{subsec:add-litbs}
+
+\begin{itemize}
+\item Theorem form confirmed (the Bordeaux thesis \S2.4.3, quoted sentence
+by sentence): ``$G_\mathrm{even}$ is a subgraph of some $G\in\mathcal{G}$
+$\Rightarrow$ Gallai'', where $\mathcal{G}$ $=$ every block $\Delta\le3$
+\textbf{and} every component either $\Delta\le3$ or with at most one block
+containing a triangle.
+\item \textbf{Key boundary}: that definition contains the ``every block
+$\Delta\le3$'' conjunct. Under this reading, CP$(k)$ (the $G_e$ of
+$K_{2k+1}-kK_2$: one block, vertex degrees $\ge2k-2$) falls neither in
+$\mathcal{G}$ nor can it be a subgraph of a member --- the earlier working
+report's looser reading (the matching subfamily closing for free as an
+infinite family; the $k=11$ layer $15{,}202/15{,}216$ falling into BST) is
+\textbf{negated}; the contemporaneous conservative warning (the $k=11$
+collapse to $4{,}294$) is confirmed as the correct prediction
+(deep\_LIT\_VERIFY\_BS.md).
+\item Citation rule: \textbf{until the JGT original (10.1002/jgt.22647) is
+obtained and finally adjudicated, the loose BST/BSD layers are
+citation-forbidden across the board}; the conservative layer stands.
+\end{itemize}
+
+\subsubsection{Pyber 1996 / Fan 2005 (JCTB)}\label{subsec:add-litpf}
+
+\begin{itemize}
+\item \textbf{Pyber 1996}: ``$G_\mathrm{even}$ a forest $\Rightarrow$
+Gallai'' --- confirmed verbatim by two independent sources (the DMTCS 2023
+arXiv:2211.07159 introduction; Bonamy--Perrett arXiv:1609.06257 Theorem 1.2,
+whose form gives the stronger bound of $\floor{n/2}$ paths).
+\item \textbf{Fan 2005}: ``$G_\mathrm{even}$ every block triangle-free and
+$\Delta\le3$ $\Rightarrow$ Gallai'' --- likewise confirmed verbatim.
+\item \textbf{The conservative-layer inclusion checks (the $k=11$ layer
+$4{,}294/15{,}216$, etc.) remain valid} (STATE \S R-52.7 row~3774,
+deep\_E36 \S4).
+\end{itemize}
+
+\subsubsection{Literature scan (arXiv:2210.16406 etc.)}\label{subsec:add-litscan}
+
+\begin{itemize}
+\item \textbf{The Gallai conjecture itself remains open} (the ProofAtlas
+2026-08 snapshot $+$ the 2023--2025 partial-results papers confirm) --- no
+ready-made global shortcut (deep\_LIT\_SCAN\_2210.md).
+\item arXiv:2210.16406 proves: complete graphs at all ranks (the Walecki
+explicit construction), $K_n$ minus a star ($\le n-2$ edges), $K_n$ minus a
+tadpole $T_{m,1}$; \textbf{it does not cover this project's $N(k)$ family}
+(the $m=2k^2$ layers $=$ $K_{2k+1}-kF$ matching-type deletions $=$ that
+paper's own left-open direction). Its ``path-ends removal'' principle is
+isomorphic to this project's Walecki-sharp / endpoint-budget method (a
+methodological cross-validation).
+\item The external partial-results class list (Pyber forest / Fan blocks /
+B-S blocks / $\Delta\le5$ (2019) / $\Delta=6$ except exceptions (2021) /
+treewidth$\le3$ / block graphs (2025) / 2-degenerate (2023) /
+triangle-free planar, etc.) has been delivered through the inclusion-check
+process; the Kotzig/PPDC line ($d$-regular length-$d$ path decompositions)
+stays arithmetically negated.
+\end{itemize}
+
+\subsubsection{Boundary summary}\label{subsec:add-litsum}
+
+\begin{itemize}
+\item All external verification levels $=$ statement-level secondary
+sources; \texttt{[GAP-EXT]} (the B-S/Fan/Pyber original-text final
+adjudication) \textbf{not adjudicated}, a matter not derivable in an
+offline environment;
+\item The citation rule in one sentence: \textbf{the conservative layer
+(Pyber/Fan/the conservative B-S reading) remains usable; the loose layer
+(BST/BSD) is citation-forbidden before final adjudication; the Lov\'{a}sz
+citation carries the secondary-source statement-level label}.
+\end{itemize}
+
+\subsection{The numerical erratum register (citation discipline;
+REVISE-58 canonical)}\label{subsec:add-errata}
+
+The do-not-cite register below carries STATE \S R-52.9/\S R-53.9/\S
+R-54.6/\S R-55.6/\S R-56.7/\S R-57.7/\S R-58.5 (the append-only erratum
+full texts are in STATE); every number cited in the text uses the corrected
+value.
+
+\small
+\begin{longtable}{p{0.30\textwidth}p{0.46\textwidth}p{0.16\textwidth}}
+\hline
+do not cite & canonical value / reading & anchor \\
+\hline
+\endhead
+\hline
+\endfoot
+$5{,}921{,}555$ & \textbf{$5{,}924{,}555$} (the $k=7..13$ per-band sum) & \S R-53.9 row~3848 \\
+$852$ & \textbf{$778$} (the $q^*\ge2\cup g^*\ge2$ union) & \S R-52.9 row~3751 \\
+$97.2\%$ & \textbf{$75.2\%$ at $k=10$, decreasing} (the R-106 rescue rate) & \S R-52.9 row~3748 \\
+$463{,}478$ & \textbf{$155{,}331$} (the CF-f6C legal ledger) & \S R-53.9 row~3846 \\
+$962{,}181$ & \textbf{$928{,}181$} (the $k=2/3$ residue) & \S R-53.9 row~3848 \\
+$87.34\%$ & \textbf{$8.36\%$} (the $k=7$ true tightness rate) & \S R-52.3 row~3732, \S R-53.4 row~3804 \\
+$67{,}114{,}566$ & \textbf{$67{,}111{,}566$} & \S R-53.9 row~3847 \\
+$36$ (as a full volume) & \textbf{$38$} (the Occ$_c$ violating pairs, the reproducible full volume) & \S R-53.9 row~3849 \\
+$(m-29)/2$, $2{,}160$ & \textbf{$(m-31)/2$, $1{,}035$} (the odd residual band) & \S R-52.9 row~3746 \\
+$59.6/69.9/72.5$ & \textbf{$63.56\%/69.66\%/72.49\%$} (the LAN-158 illegal share) & \S R-53.9 row~3852 \\
+$3{,}270/6{,}540$ & \textbf{$3{,}268/6{,}536$} & \S R-53.9 row~3843 \\
+nauty row-major & \textbf{column-major} (the graph6 canonical bit order; the A106/A107 type-level ledgers immune) & \S R-54.6 row~3928 \\
+$369{,}712$ & \textbf{$370{,}319$} (the A195 extrapolation total, per the \S2 sub-items) & \S R-55.6 row~3996 \\
+$53+1$ & \textbf{$49+5$} (the A169 probe groups) & \S R-54.6 row~3919 \\
+$297=223+134$ & \textbf{$465=(163+134)+(60+108)$} & \S R-55.6 row~3995 \\
+the ``$\delta_{23}=t_3-t_2$'' reading & \textbf{$\delta_{23}:=t_2-t_3$} (the full-text rewrite branch) & \S R-55.6 row~3994 \\
+the one-sided must-carrying ``$+t_3\in C_2$'' & \textbf{(ii-b) full obligation $t_3\in C_1\cup C_2$} (do not mix the one-sided $1{,}988/1{,}280$) & \S R-55.6 row~3994 \\
+``36-714'' & citation forbidden (domain undeclared; the abstract-counterexample boundary stone $=N=6$ full board $540/1{,}554$) & \S R-55.6 row~3994 \\
+the T-A168.0 original / ``$\le500$k yields solutions'' & citation forbidden (RED disposition) & \S R-53.8, \S R-54.6 \\
+``$\max(u)\le x+1$ alone suffices as repair'' & citation forbidden (the correct repair $=$ the triple (P)$+$(U1$'$)$+$(U2)) & \S R-54.5 row~3914 \\
+besides $53+1\to$``$49+5$'': the A108.A nested form & withdrawn; \textbf{cite the A108.B closed form} & \S R-53.9 row~3855 \\
+A106.S & a false theorem; \textbf{cite the post-erratum characterization} $c_t\ge1+\Sigma_\mathrm{cyc}(e_i-q_i)$ & \S R-52.9 row~3748 \\
+``theorem A110-f6 domain-wide'' & \textbf{do not cite as domain-wide} ($=$ the A/B/D drafts $+$ the C certificate level $+$ the $k=8$ witness) & \S R-52.9 row~3750 \\
+the three CF-ABD exception-table entries & withdrawn; \textbf{exception set $=\varnothing$} & \S R-52.9 row~3744 \\
+GEN ``$t=-1/-2$ auto-excluded'' & withdrawn (explicit witnesses on file; the true criterion $h\in[-1,L-1]$) & \S R-53.9 row~3853 \\
+fold-phase $\rho+1$ & \textbf{$\rho$} (the off-by-one correction) & \S R-53.9 row~3853 \\
+the FAM24 true domain $2r+12$ & \textbf{$m\ge62$} (the guard $2r+14$ and the coverage ledger unaffected) & \S R-53.9 row~3851 \\
+the L-A192.1 universal form & downgraded $=$ an intra-family characterization of the tiling-type search family (the $r=22/u=12$ counterexample) & \S R-55.6 row~3992 \\
+\texttt{[GAP-A192.1]} ``existence $\iff$'' & \textbf{single arrow} ($\mathcal{L}$ nonempty $\Rightarrow$ existence, sufficient only) & \S R-55.6 row~3992 \\
+bucket-table totals $264/5{,}488/129{,}040$ & \textbf{$120/3{,}808/137{,}040$} & \S R-53.9 row~3858 \\
+$90$ groups (the A178 main ledger) & \textbf{$91$ groups} (including the two-level terminal state of $(45,17,9)$; the total $8{,}323{,}012{,}408$ is correct) & \S R-54.6 row~3923 \\
+``zero/completeness adjudication with dfs\_tiling'' & forbidden (the Hall pruning unsound; hard example $t=17,L=18,x=1$: hall$=$True nodes$=1$ zero solutions vs hall$=$False $8{,}912$ solutions) & \S R-55.6 row~3991 \\
+``the node ledger $r=22..27/51$ matches the A192 esigs band by band ($167/26/71/278/211/3{,}970/5{,}422$)'' & do not cite (A197-N1 mandatory fix: those are seg$=10$ reading values; the seg$=12$ actuals are $r=24=$\textbf{$459$}, $r=31=$\textbf{$79$}, $r=51=$\textbf{$1{,}790$}) & \S R-56.7 row~4055 \\
+``$0.139@\Lambda=12$'' & $0.139$ belongs to \textbf{$\Lambda=4$} ($\Lambda=12$ only $0.025$; do not confuse with the sig-prefix extension rate) & \S R-56.7 row~4055 \\
+``$13.8\%$'' (the old-segment tail-eq) & do not cite the seg$=10$ reading; the own seg$=12$ reads \textbf{$467/3{,}397=13.7\%$} (conclusion unchanged) & \S R-56.7 row~4055 \\
+``(15,12)/(16,12) complete-enumeration zero solutions'' & relabelled \textbf{paper-level emptiness} (skeleton mutual difference must fail: link$=r-2$ collisions $[2,0,13,14,13]$/$[2,0,14,15,14]$) & \S R-56.7 row~4055 \\
+``link$=\lfloor(r+12)/2\rfloor\ge25$'' & a slip ($r=37$ has link$=$\textbf{$24$}; the needed inequality is in fact link$>12$, always true; the $r\ge37$ threshold unchanged) & \S R-56.7 row~4055 \\
+``$94.996\%$'' (the A200 \S4 $K=21$ exact boundary) & \textbf{$95.0000\%$} (the exact identity $(1-u')^{84}$; conservative direction, the $K=22$ stable-crossing registration unchanged) & \S R-56.7 row~4057 \\
+``occupancy expectation $70.5$'' & a Poisson approximation; exact \textbf{$70.7150$} (the observation $70$ consistent with both) & \S R-56.7 row~4057 \\
+``$95.24\%$'' (the R-56.9 accounting) & \textbf{$98.24\%$} ($K=15@u$; a transcription slip, none of the $38$ ladder items equals $95.24$) & \S R-57.7 row~4121 \\
+``T$_2@c=1$ true from $65$ / suspected class-universal / tested / a second independent path (threshold $65$)'' & \textbf{T$_2$/T$_0@65/69$ exhaustively dead} (the A205 dual code at cap 30M: $6{,}660{,}768/22{,}994{,}196/6{,}648{,}546/22{,}793{,}039$ nodes; T$_2@73/77/81$ undecided at 30M); `?' (undecided budget) must never be written true/false & \S R-57.7 row~4117 \\
+``$13$ pairs $(r,r+4)$'' & \textbf{$14$ class-base comparisons} (the pair type $(r_0,r)$, not $(r,r+4)$) & \S R-57.7 row~4117 \\
+``cascade measured lengths $1..5$'' & full-segment max $=$\textbf{$15$} ($c=1$, $r=53$), $7$ ($c=3$, $r=51$); $1..5$ only over the $r\ge55$ segment & \S R-57.7 row~4117 \\
+``$2{,}824$ ($4$ cases need $J\ge4$)'' & \textbf{$2{,}804$} ($12+168+2{,}624$) / needing $J\ge4=$\textbf{$24$ cases} (all $N=10$; the $\sigma$-insufficiency a fortiori unchanged) & \S R-57.7 row~4118 \\
+the named minJ-witness ``$[1,2,5,6]$'' & \textbf{$[1,2,3,5]$} ($(1,2,2)$; $[1,2,5,6]$ is a same-family $q_{12}=0$ member, its \S4 jclosed usage correct) & \S R-57.7 row~4118 \\
+the A209 \S2 table per-phase rows SOFT-OK/CAP ($36/72$, $6/12$, $39/69$, $4/14$) & \textbf{$61/47$, $9/9$, $64/44$, $9/9$} (the per-phase rows are a misprint; the per-band rows govern; zero conclusion flips) & \S R-57.7 row~4120 \\
+``$z\approx+0.08$'' & \textbf{$+0.054$} (the exact occupancy variance, sd$=2.2903$; the expectation $89.8773$ and the ``consistent'' conclusion unaffected) & \S R-57.7 row~4120 \\
+the A199 source-report summary ``four groups'' & \textbf{five groups} (P1..P5; E44 took the five-group count correctly) & \S R-57.7 row~4121 \\
+``$d_3=1$ counts $52$'' & \textbf{$47$} (the $d$ histogram gains $(4,4,1){:}1$; $d_3=2$ counts $9$) & \S R-58.5 row~4166 \\
+``the $p=N-1$ band $2{,}396/2{,}428$'' & a band-label error: the true $p=N-1$ band (all $N$ merged) $=$ \textbf{$1{,}232/1{,}264$} ($N=10$ single band $1{,}176/1{,}208$; $2{,}396/2{,}428=$ the full domain non-$p=N$ bands); $98.29\%$ and $56=24+32$ unchanged & \S R-58.5 row~4167 \\
+the jclosed sufficiency ``$1{,}114/1{,}114$'' cited alone & \textbf{a three-ledger joint note: $1{,}114$ family-level / $642$, $2{,}013$ realization-level; do not mix the levels when citing} & \S R-58.5 row~4168 \\
+``gate $28/28$'' & \textbf{$28/56$} (of the $56$ blocked cases, $28$ gate-dead) & \S R-58.5 row~4169 \\
+blocking distance ``$1$ budget slot'' & labels unified; the canonical takes \textbf{``$=2$''} (synonymous) & \S R-58.5 row~4169 \\
+the E47 report ``re-verification row $233$B segment'' & \textbf{$232$B} ($987{,}284-987{,}052$; $233$B is the E44 re-verification row carried over) & \S R-58.5 row~4170 \\
+\end{longtable}
+
+\noindent\emph{End of the v2.4 addendum (draft refreshed at REVISE-58,
+2026-10-05, rod E51; transcribed for the paper window of 2026-10-06). All
+strength tiers follow the STATE/FRONTIER canon; the registration decision
+for the paper rests with the paper rod.}

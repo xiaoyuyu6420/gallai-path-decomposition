@@ -1,0 +1,704 @@
+% ============================================================================
+% sec4-5.tex — satellite of main_submission.tex (§4 K_{4,n} odd column,
+% §5 odd clique chains). VERBATIM TRANSPLANT landed by deep_P16 (build 3b):
+% §4 = ledger main.tex :1021-1471, §5 = :1472-1695, of the frozen ledger
+% state md5 8b5323c5f7992e080b8433174c652888 / 505,634 B / 8,425 lines
+% (boundary lines :1018-1023 and :1692-1697 re-read at transplant time;
+% both section headers byte-identical to the batch-1 shells they replace).
+% P-ARCH migration rows: "§4 (1021-1471) 保留 → 新 §4 原文不动" and
+% "§5 (1472-1695) 保留 → 新 §5 原文不动" — bodies untouched, zero redrafting.
+% Cross-references consumed here and their homes: lem:LB1 / lem:LB2 /
+% thm:pyber / lem:walecki (sec1-3.tex, §2); app:comp (appendix.tex A.1);
+% sec:open (sec6-10.tex §10); citations CE18, Pyb96, Fan05, LY24, ZLH24,
+% CW25, LP92, Alspach08 (appendix.tex bibliography). All inner labels listed
+% in the trailing anchor comments.
+% ============================================================================
+\section{The exact path number of \texorpdfstring{$K_{4,n}$}{K(4,n)} for odd
+\texorpdfstring{$n$}{n}}\label{sec:k4odd}
+
+Let $K_{4,n}$ have bipartition $A=\{a_0,a_1,a_2,a_3\}$ and $B=\{b_0,\dots,b_{n-1}\}$.
+For $n$ odd, $n=2k+1$, the four vertices of $A$ have odd degree and the vertices of $B$ have
+degree $4$, so $\mathrm{odd}(K_{4,n})=4$ and Lemma~\ref{lem:LB1} gives only $\pn\ge2$: the odd
+case is genuinely harder than the even one, where the edge bound alone is tight. Write
+$n'=n+4=2k+5$ for the total order; Gallai's target is $\ceil{n'/2}=k+3$, and the best published
+bound is $k+2$, since $\EV(K_{4,n})$ is the independent set $B$, a forest, so
+Theorem~\ref{thm:pyber} applies, and the same bound follows from \cite{Fan05} and from
+\cite{LY24}, as $\mathrm{tw}(K_{4,n})=4$. Note that \cite{ZLH24} does not apply:
+$K_{4,n}$ has minimum degree $4$ and is not $3$-degenerate.
+
+For context, Constantinou and Ellinas \cite{CE18} partition the parameter pairs $(n_1,n_2)$ of
+$K_{n_1,n_2}$ into four cases and give minimal-decomposition algorithms for three of them; in
+their Case~2 (even $n_1$, $1\le n_2\le n_1-1$) the minimum is $n_1/2$. Their Case~4 (odd $n_1$,
+$1\le n_2\le n_1-1$) is left open, with the explicit request that its ``exact characteristics
+need to be first understood''. Our main theorem settles the $n_2=4$ column of Case~4;
+Section~\ref{subsec:27a} settles the $n_2=6$ column, proves a general structure theorem and a
+ring-closure theorem for all even columns, and reduces the remaining columns to finitely many
+base instances.
+
+\subsection{Lower bound}
+
+\begin{lemma}\label{lem:cap}
+Every path in $K_{4,n}$ uses at most $8$ edges if $n\ge5$, at most $6$ edges if $n=3$, and at
+most $2$ edges if $n=1$. Consequently, for odd $n\ge3$,
+$\pn(K_{4,n})\ge(n+1)/2$, and $\pn(K_{4,1})\ge2$.
+\end{lemma}
+
+\begin{proof}
+Paths in a bipartite graph alternate between $A$ and $B$. A path containing $\alpha$
+vertices of $A$ and $\beta$ of $B$ has $e=\alpha+\beta-1$ edges with $|\alpha-\beta|\le1$.
+Since $|A|=4$ we have $\alpha\le4$ and $\beta\le\alpha+1\le5$, so $e\le8$ for $n\ge5$ (where
+$|B|\ge5$); for $n=3$, $\beta\le3$ gives $e\le6$. With $m=4n$ edges partitioned into $p$ paths,
+$8p\ge4n$ gives $p\ge n/2$, i.e.\ $p\ge(n+1)/2$ for odd $n\ge5$; and $6p\ge12$ gives
+$p\ge2=(3+1)/2$ for $n=3$. For $n=1$ the graph is a $4$-star and every path through the centre
+uses at most two edges, so $p\ge\ceil{4/2}=2$.
+\end{proof}
+
+\subsection{Structure of optimal decompositions}
+
+\begin{theorem}\label{thm:k4struct}
+Let $n=2k+1\ge3$ and let $D=\{P_1,\dots,P_{k+1}\}$ be a path decomposition of $K_{4,n}$ with
+$k+1$ paths. Then:
+\begin{enumerate}[label={\rm(\arabic*)},leftmargin=2em]
+\item every path of $D$ contains all four vertices of $A$; each $a\in A$ is an endpoint of
+exactly one path of $D$ and an internal vertex of exactly $k$ paths;
+\item the multiset of path lengths (edge counts) is one of
+$[7,7,7,7,\,8^{k-3}]$ ($k\ge3$), $[6,7,7,\,8^{k-2}]$ ($k\ge2$), or $[6,6,\,8^{k-1}]$
+($k\ge1$; for $k=1$ this reads $[6,6]$);
+\item a $6$-edge path has vertex type $4A3B$ (both endpoints in $A$), a $7$-edge path has type
+$4A4B$ (one endpoint in each class), and an $8$-edge path has type $4A5B$ (both endpoints in
+$B$).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Fix $a\in A$, of degree $2k+1$. Let $r_a$ be the number of paths of $D$ in which $a$ is an
+endpoint and $s_a$ the number in which $a$ is internal. Counting the degree of $a$ path by path,
+$r_a+2s_a=2k+1$, so $r_a$ is odd, $r_a\ge1$, and
+$r_a+s_a=(2k+1+r_a)/2\le k+1$ (there are only $k+1$ paths) forces $r_a\le1$. Hence $r_a=1$ and
+$s_a=k$. So each $a\in A$ is an endpoint of exactly one path and internal in exactly $k$ paths,
+i.e.\ $a$ occurs in all $k+1$ paths.
+
+(2)+(3) Assume first $n\ge5$. By Lemma~\ref{lem:cap} each path has $e_i\le8$ edges, and
+$\sum_ie_i=4n=8k+4$, while $(k+1)\cdot8=8k+8$; hence the deficits $\delta_i=8-e_i$ sum to
+$4$. A path with $\alpha$ vertices of $A$ and $\beta$ of $B$, $\alpha+\beta=e+1$ and
+$|\alpha-\beta|\le1$, has an endpoint in $A$ exactly when $\alpha=\beta+1$. Enumerating the
+possibilities with $\alpha\le4$: an $8$-edge path ($\delta=0$) has type $(\alpha,\beta)=(4,5)$
+and $0$ endpoints in $A$; a $7$-edge path ($\delta=1$) has type $(4,4)$ and exactly $1$; a
+$6$-edge path ($\delta=2$) has type $(4,3)$ or $(3,4)$, so at most $2$; a $5$-edge path
+($\delta=3$) has type $(3,3)$, exactly $1$; a $4$-edge path ($\delta=4$) has type $(3,2)$ or
+$(2,3)$, at most $2$. (Larger deficits cannot occur since $\sum\delta_i=4$.) Let $f(\delta)$
+denote these maxima $0,1,2,1,2$. By (1) the total number of endpoints lying in $A$ is exactly
+$\sum_{a}r_a=4$, while it is at most $\sum_if(\delta_i)$; over all partitions of
+$\sum\delta_i=4$ the maximum of $\sum_if(\delta_i)$ is $4$, attained exactly at the profiles
+$(2,2)$, $(2,1,1)$, $(1,1,1,1)$ (all other partitions give $\le2$). Hence equality holds
+throughout: the deficit multiset is one of the three listed, and each path attains its
+$f(\delta_i)$, which for $\delta=2$ forces the type $(4,3)$; this gives (2) and (3). For $n=3$
+the cap is $6$: two paths with $\sum e_i=12$ force both to be $6$-edge paths of type $(4,3)$
+with $2+2=4$ endpoints in $A$, consistent with all three claims.
+\end{proof}
+
+In particular, in any minimal decomposition each $a\in A$ has its $2k+1$ incident edges
+partitioned into $k$ ``pairs'' (the two $B$-edges flanking $a$ inside a path) plus one
+``single'' (the edge of the path on which $a$ is an endpoint), and the four resulting pair-plus-
+single systems each partition $B$. This is the language in which we audit the constructions
+below, and it answers, for the column $n_2=4$, the request of \cite{CE18} for the exact
+characteristics of Case~4.
+
+\subsection{Upper bound: a closed-form construction for large \texorpdfstring{$n$}{n}}
+
+\begin{proposition}\label{prop:k4large}
+For every $k\ge6$, writing $n=2k+1$, the graph $K_{4,n}$ has a path decomposition into $k+1$
+paths.
+\end{proposition}
+
+\begin{proof}
+Split $B$ into a \emph{core} $S=\{s_0,\dots,s_6\}$ of size $7$ and a \emph{rim}
+$R=\{r_0,\dots,r_{m-1}\}$ of size $m=2k-6$ (even, and $m\ge6$); $|S|+|R|=2k+1=n$. We use four
+\emph{gadget paths} of $7$ edges each, on $S$ only:
+\begin{align*}
+G_1&=a_0\,s_0\,a_1\,s_1\,a_2\,s_2\,a_3\,s_3, &
+G_2&=a_1\,s_2\,a_0\,s_3\,a_2\,s_0\,a_3\,s_1,\\
+G_3&=a_2\,s_4\,a_1\,s_5\,a_3\,s_6\,a_0\,s_1, &
+G_4&=a_3\,s_4\,a_0\,s_5\,a_2\,s_6\,a_1\,s_3,
+\end{align*}
+and $k-3$ \emph{cyclic paths} of $8$ edges each, on $R$ only, with indices mod $m$:
+\[
+Q_t \;=\; b_{r(2t)}\,a_0\,b_{r(2t+1)}\,a_1\,b_{r(2t+2)}\,a_2\,b_{r(2t+3)}\,a_3\,b_{r(2t+4)},
+\qquad t=0,\dots,k-4 .
+\]
+\emph{The paths are legal.} Each $G_i$ is an alternating sequence of $4$ distinct $A$-vertices
+and $4$ distinct elements of $S$, hence a simple path of $7$ edges. Each $Q_t$ uses five
+consecutive indices $2t,\dots,2t+4$ mod $m$; since $m=2k-6\ge6>5$ these are distinct, so $Q_t$
+is a simple path of $8$ edges.
+
+\emph{The gadget paths partition $A\times S$.}
+For each $a\in A$, list the pairs of $S$-edges flanking $a$ (or the single edge, when $a$ is an
+endpoint) in each of the four $G_i$:
+\begin{align*}
+a_0&:\ \{s_0\};\ \{s_2,s_3\};\ \{s_6,s_1\};\ \{s_4,s_5\} &
+&\text{partition } S;\\
+a_1&:\ \{s_0,s_1\};\ \{s_2\};\ \{s_4,s_5\};\ \{s_6,s_3\} &&
+\text{partition } S;\\
+a_2&:\ \{s_1,s_2\};\ \{s_3,s_0\};\ \{s_4\};\ \{s_5,s_6\} &&
+\text{partition } S;\\
+a_3&:\ \{s_2,s_3\};\ \{s_0,s_1\};\ \{s_5,s_6\};\ \{s_4\} &&
+\text{partition } S.
+\end{align*}
+Each pair $\{s',s''\}$ corresponds to the two edges $as'$, $as''$ used by that path at the
+internal position of $a$, and each singleton to the endpoint edge. Since the four groups
+partition $S$ for every $a$, every edge of $A\times S$ is used by exactly one $G_i$.
+
+\emph{The cyclic paths partition $A\times R$.}
+For fixed $a_c$, $c\in\{0,1,2,3\}$, the path $Q_t$ uses at $a_c$ the pair of edges
+$\{a_cr(2t+c),\,a_cr(2t+c+1)\}$ (indices mod $m$). As $t$ runs over $0,\dots,k-4$, the even
+residues $2t$ cover all $k-3$ even elements of $\mathbb{Z}_m$ and the odd residues $2t+1$ cover
+all $k-3$ odd elements; shifting by $c$, each element of $\mathbb{Z}_m$ occurs exactly once,
+in exactly one pair, across the $k-3$ paths. Hence the $m=2(k-3)$ edges $a_cR$ are partitioned,
+for each $c$ independently.
+
+\emph{Count.} $4+(k-3)=k+1$ paths, as claimed.
+\end{proof}
+
+\subsection{Small cases}
+
+\begin{proposition}\label{prop:k4small}
+Explicit decompositions into $k+1$ paths exist for $n=3,5,7,9,11$ ($k=1,\dots,5$). The path
+lists below are machine-verified to partition $E(K_{4,n})$; write $b_j$ for the $j$-th vertex
+of $B$.
+% [deep_P17 presentation fix: sloppy group around the k=1..5 chain lists; the
+% $b\dots a\dots$ display items have no interword breakpoints and ran up to
+% ~30pt over. Item contents untouched.]
+\begingroup\sloppy
+\begin{itemize}[leftmargin=1.5em]
+\item[{$k=1$ ($n=3$; lengths $[6,6]$):}]
+$a_0b_0a_1b_1a_2b_2a_3$;\quad
+$a_1b_2a_0b_1a_3b_0a_2$.
+\item[{$k=2$ ($n=5$; $[6,7,7]$):}]
+$a_0b_0a_1b_1a_2b_2a_3b_3$;\quad
+$a_1b_2a_0b_4a_3b_0a_2b_3$;\quad
+$a_2b_4a_1b_3a_0b_1a_3$.
+\item[{$k=3$ ($n=7$; $[7,7,7,7]$):}]
+$a_0b_0a_1b_1a_2b_2a_3b_3$;\quad
+$a_1b_2a_0b_3a_2b_0a_3b_1$;\quad
+$a_2b_4a_1b_5a_3b_6a_0b_1$;\quad
+$a_3b_4a_0b_5a_2b_6a_1b_3$.
+\item[{$k=4$ ($n=9$; $[7,7,7,7,8]$):}]
+$b_0a_0b_1a_1b_2a_2b_3a_3b_4$;\quad
+$a_0b_3a_1b_0a_2b_1a_3b_2$;\quad
+$a_1b_4a_0b_5a_2b_6a_3b_0$;\quad
+$a_2b_7a_1b_5a_3b_8a_0b_2$;\quad
+$a_3b_7a_0b_6a_1b_8a_2b_4$.
+\item[{$k=5$ ($n=11$; $[7,7,7,7,8,8]$):}]
+$b_0a_0b_1a_1b_2a_2b_3a_3b_4$;\quad
+$b_2a_0b_3a_1b_0a_2b_1a_3b_5$;\quad
+$a_0b_4a_1b_5a_2b_6a_3b_0$;\quad
+$a_1b_6a_0b_7a_2b_8a_3b_2$;\quad
+$a_2b_9a_1b_7a_3b_{10}a_0b_5$;\quad
+$a_3b_9a_0b_8a_1b_{10}a_2b_4$.
+\end{itemize}
+\endgroup
+The reason $k=4,5$ are listed separately is that the rim $R$ of
+Proposition~\ref{prop:k4large} is too small there; the single $8$-edge paths absorb the
+shortfall. All lists conform to the length profiles of Theorem~\ref{thm:k4struct}.
+\end{proposition}
+
+\subsection{The main theorem and its corollaries}
+
+\begin{theorem}\label{thm:k4odd}
+For every odd $n\ge3$, $\pn(K_{4,n})=(n+1)/2=\ceil{n/2}$. Also $\pn(K_{4,1})=2$.
+\end{theorem}
+
+\begin{proof}
+Combine the lower bound of Lemma~\ref{lem:cap} with the upper bounds of
+Proposition~\ref{prop:k4large} ($k\ge6$) and Proposition~\ref{prop:k4small} ($k\le5$).
+For $n=1$, the lower bound of Lemma~\ref{lem:cap} matches the two-path decomposition
+$a_0b_0a_1 \mid a_2b_0a_3$.
+\end{proof}
+
+\begin{corollary}[Gallai comparison]\label{cor:k4gallai}
+For odd $n\ge3$, $K_{4,n}$ has $n+4=2k+5$ vertices and Gallai's conjecture demands
+$\pn\le k+3$; in fact $\pn=k+1$, with slack $2$. There is no counterexample here.
+\end{corollary}
+
+\begin{proof}
+Immediate from Theorem~\ref{thm:k4odd}: the value $(n+1)/2=k+1$ is two fewer than the
+$k+3$ paths the conjecture allows.
+\end{proof}
+
+\begin{corollary}[comparison with published bounds]\label{cor:k4compare}
+The best published bound for this family was $k+2$: it follows from Pyber's theorem
+\cite{Pyb96} (equally from \cite{Fan05}, and from \cite{LY24} since $\mathrm{tw}(K_{4,n})=4$).
+Theorem~\ref{thm:k4odd} improves it by one and shows that the $\floor{n'/2}$ bound of the
+treewidth-$4$ theorem \cite{LY24} is not tight on this family.
+\end{corollary}
+
+\begin{proof}
+Immediate: Theorem~\ref{thm:pyber} (equally \cite{Fan05,LY24}) gives $k+2$ for the family,
+while Theorem~\ref{thm:k4odd} attains $k+1$; the $\floor{n'/2}=k+3$ bound of \cite{LY24}
+exceeds the exact value by $2$.
+\end{proof}
+
+\begin{remark}[unified formula for the whole family]\label{rem:k4all}
+Combining Theorem~\ref{thm:k4odd} with the known even-case values (Case~2 of \cite{CE18} for
+even $n\ge6$, and the small values $\pn(K_{4,2})=2$, $\pn(K_{4,4})=3$, which we also re-verified
+by machine), the path number of $K_{4,n}$ is
+\[
+\pn(K_{4,n})=\ceil{n/2}+[n\le 4]\quad\text{for all } n\ge1,
+\]
+i.e.\ $\ceil{n/2}$ except for the three small values $\pn(K_{4,1})=\pn(K_{4,2})=2$ and
+$\pn(K_{4,4})=3$.
+\end{remark}
+
+\subsection{The remaining columns of Case 4}
+
+For odd $n_1$, Case~4 of \cite{CE18} is the range $1\le n_2\le n_1-1$. The state of affairs by
+column:
+\begin{center}\small
+\begin{tabular}{c l l}
+\hline
+$n_2$ & $\pn(K_{n_1,n_2})$, $n_1$ odd & status \\
+\hline
+$1$ & $\ceil{n_1/2}$ & star decomposition, classical\\
+$2$ & $(n_1+1)/2$ & counting cap (as in Lemma~\ref{lem:cap}) $+$ \cite{Pyb96}\\
+$3$ & $(n_1+3)/2$ & Lemma~\ref{lem:LB1} $+$ \cite{Pyb96}\\
+$4$ & $(n_1+1)/2=\ceil{n_1/2}$ & Theorem~\ref{thm:k4odd} (this paper)\\
+$6$ & $(n_1+1)/2$ for $n_1\ge7$ & Corollary~\ref{cor:col6} (Sec.~\ref{subsec:27a})\\
+even $\ge8$ & $\ceil{n_1/2}\ \le\ \pn\ \le\ \floor{(n_1+n_2)/2}$ & bases settled for
+$n_2=8,10$; rest open (Sec.~\ref{subsec:27a})\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{conjecture}\label{conj:27A}
+For all odd $n_1$ and even $n_2$ with $2\le n_2<n_1$:
+$\pn(K_{n_1,n_2})=\ceil{n_1/2}$.
+\end{conjecture}
+
+The evidence: the universal counting cap gives $\pn\ge\ceil{n_1/2}$ in the whole even range
+(Theorem~\ref{thm:capgen} below; each path uses at most $2n_2$ edges, and $m=n_1n_2$); the even
+analogue (Case~2 of \cite{CE18}) has exactly the value $n_1/2=\ceil{n_1/2}$; and
+$\pn(K_{5,2})=\pn(K_{5,4})=3=\ceil{5/2}$ by exact computation. The structural tools developed in
+the next subsection reduce the conjecture to finitely many instances per column, of which all
+but five named ones are now settled.
+
+\subsection{Beyond the fourth column: ring closure and the state of
+Conjecture~\ref{conj:27A}}\label{subsec:27a}
+
+In this subsection $n_1=2k+1$ is odd and $n_2=2h$ is even with $k\ge h\ge1$ --- exactly the
+range of Conjecture~\ref{conj:27A}. We write $A=\{a_0,\dots,a_{2h-1}\}$ for the side of size
+$n_2$ (each of its vertices has degree $2k+1$, odd) and $B=\{b_0,\dots,b_{2k}\}$ for the side
+of size $n_1$ (each of degree $2h$, even); note that this swaps the roles of $A$ and $B$
+relative to the earlier parts of this section, where the $4$-vertex side was called $A$.
+Conjecture~\ref{conj:27A} predicts $\pn(K_{2k+1,2h})=k+1$.
+
+\begin{theorem}[general counting cap]\label{thm:capgen}
+For all $k\ge h\ge1$, $\pn(K_{2k+1,2h})\ge k+1$.
+\end{theorem}
+
+\begin{proof}
+Paths in a bipartite graph alternate between the two sides. A path containing $\alpha$ vertices
+of $A$ and $\beta$ vertices of $B$ has $\alpha+\beta-1$ edges with $|\alpha-\beta|\le1$; since
+$\alpha\le2h$ we get $\beta\le\alpha+1\le2h+1$, so every path has at most
+$2h+(2h+1)-1=4h$ edges. If $p$ paths partition the $m=(2k+1)\cdot2h$ edges, then
+$4hp\ge2h(2k+1)$, i.e.\ $p\ge\ceil{(2k+1)/2}=k+1$.
+\end{proof}
+
+\begin{theorem}[structure of optimal decompositions, general $h$]\label{thm:structgen}
+Let $k\ge h\ge1$ and let $D$ be a path decomposition of $K_{2k+1,2h}$ with exactly $k+1$ paths.
+Then:
+\begin{enumerate}[label={\rm(\arabic*)},leftmargin=2em]
+\item every path of $D$ contains all $2h$ vertices of $A$; each $a\in A$ is an endpoint of
+exactly one path of $D$ and an internal vertex of exactly $k$ paths;
+\item every path has $e\in\{4h-2,4h-1,4h\}$ edges, and writing $\delta=4h-e\in\{2,1,0\}$,
+$\delta$ equals the number of endpoints of the path lying in $A$;
+\item with $x,y,z$ the numbers of paths of deficit $\delta=2,1,0$, respectively, we have
+$x+y+z=k+1$ and $2x+y=2h$; the total number of path-ends lying in $B$ equals $2z+y=2(k-h+1)$;
+\item every $b\in B$ is an endpoint of an even number of paths of $D$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Fix $a\in A$, of degree $2k+1$; let $r_a$ be the number of paths of $D$ ending at $a$ and
+$s_a$ the number having $a$ as an internal vertex. Counting the degree of $a$ path by path
+gives $r_a+2s_a=2k+1$, so $r_a$ is odd and $r_a\ge1$; since $a$ occurs in $r_a+s_a$ of the
+$k+1$ paths, $r_a+s_a\le k+1$, i.e.\ $(2k+1+r_a)/2\le k+1$, forcing $r_a=1$ and $s_a=k$. So $a$
+occurs in all $k+1$ paths, and $\sum_{a\in A}r_a=2h$.
+
+(2)+(3) Every path contains all $2h$ vertices of $A$ and alternates, so if it contains $\beta$
+vertices of $B$ then $|\beta-2h|\le1$; accordingly its two endpoints lie both in $A$ (when
+$\beta=2h-1$), one in each class ($\beta=2h$), or both in $B$ ($\beta=2h+1$), and
+$e=2h+\beta-1\in\{4h-2,4h-1,4h\}$ with $\delta=4h-e$ equal to the number of $A$-endpoints.
+Summing over $D$, $\sum e=|E|=2h(2k+1)$, so
+$\sum\delta=4h(k+1)-2h(2k+1)=2h$. Counting $A$-endpoints two ways gives
+$2x+y=\sum_{a\in A}r_a=2h$; combined with $x+y+z=k+1$ this yields $z=k+1+x-2h$ and
+$2z+y=2(k+1)-2h=2(k-h+1)$.
+
+(4) For $b\in B$, of degree $2h$, the count of (1) reads $r_b+2s_b=2h$, so $r_b$ is even.
+\end{proof}
+
+\begin{theorem}[ring closure]\label{thm:ringclosure}
+Let $h\ge1$ and suppose that for some $k_0\ge h$ the graph $K_{2k_0+1,2h}$ has a path
+decomposition $D_0$ into $k_0+1$ paths. Then for every $k\ge k_0+h+1$ the graph $K_{2k+1,2h}$
+has a path decomposition into $k+1$ paths; consequently $\pn(K_{2k+1,2h})=k+1$ for all
+$k\ge k_0+h+1$, by Theorem~\ref{thm:capgen}.
+\end{theorem}
+
+\begin{proof}
+Write $m=2(k-k_0)$, an even number satisfying $m\ge2h+2$, in particular $2h+1<m$. Split the
+$B$-side of $K_{2k+1,2h}$ into $B_0=\{b_0,\dots,b_{2k_0}\}$, of size $2k_0+1$, which carries
+$D_0$, and $m$ \emph{fresh} ring vertices $b_{2k_0+1},\dots,b_{2k}$; write
+$r(i)=2k_0+1+(i\bmod m)$, so that the ring vertices are
+$\{b_{r(i)} : i\in\mathbb{Z}_m\}$. The new decomposition consists of the paths of $D_0$
+unchanged (they use only edges into $B_0$) and $k-k_0=m/2$ \emph{ring paths}, one for each
+$t\in\{0,\dots,m/2-1\}$:
+\[
+Q_t\;=\;b_{r(2t)}\,a_0\,b_{r(2t+1)}\,a_1\,b_{r(2t+2)}\,a_2\,\cdots\,a_{2h-1}\,b_{r(2t+2h)}
+\qquad(\text{all ring indices mod } m).
+\]
+\emph{The paths are legal.} $Q_t$ uses the $2h+1$ consecutive ring indices
+$2t,\dots,2t+2h$; since $2h+1<m$ these are distinct, so $Q_t$ is a simple path with $4h$ edges,
+all of them edges between $A$ and the ring.
+
+\emph{The ring paths partition $A\times R$, where $R$ is the ring.} Fix $a_c$,
+$c\in\{0,\dots,2h-1\}$. The path $Q_t$ uses at $a_c$ the pair of edges
+$\{a_cb_{r(2t+c)},\,a_cb_{r(2t+c+1)}\}$. As $t$ runs over $0,\dots,m/2-1$, the index $2t+c$
+runs over all elements of $\mathbb{Z}_m$ congruent to $c$ modulo $2$, and $2t+c+1$ over the
+complementary class (the two parity classes are well defined because $m$ is even); hence the
+$m/2$ pairs are pairwise disjoint with union $\mathbb{Z}_m$, i.e.\ each of the $m$ edges from
+$a_c$ to the ring is used exactly once, and this for each $c$ independently.
+
+\emph{Ring degrees.} A ring vertex $b_{r(j)}$ occurs at $a_c$ exactly when
+$j\in\{2t+c,\,2t+c+1\}$ for some $t$, and for each fixed $c$ there is exactly one such $t$; so
+each ring vertex occurs once at each $a_c$, i.e.\ exactly $2h$ times in all --- its degree ---
+each time through a different edge.
+
+\emph{Count.} The edges used by $D_0$ lie in $A\times B_0$ and those of the ring paths in
+$A\times R$, disjoint sets; $D_0$ partitions $A\times B_0$, of size $2h(2k_0+1)$, by
+hypothesis, and the ring paths partition $A\times R$, of size $2hm$, by the paragraph above.
+The total number of paths is $(k_0+1)+(k-k_0)=k+1$, so this is a decomposition of
+$K_{2k+1,2h}$ into $k+1$ paths, and Theorem~\ref{thm:capgen} makes the value exact.
+\end{proof}
+
+\begin{corollary}[the $n_2=6$ column]\label{cor:col6}
+For every odd $n_1\ge7$, $\pn(K_{n_1,6})=(n_1+1)/2$; equivalently, $\pn(K_{2k+1,6})=k+1$ for
+all $k\ge3$.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:capgen} it suffices to exhibit $(k+1)$-path decompositions for the four
+bases $k=3,4,5,6$. For $k=3$ ($K_{7,6}$, with $A=\{a_0,\dots,a_5\}$,
+$B=\{b_0,\dots,b_6\}$) the following four paths, of deficits $[2,2,1,1]$ in the sense of
+Theorem~\ref{thm:structgen}, are machine-verified to partition the $42$ edges
+(Appendix~\ref{app:comp}):
+\begin{center}\small
+$a_0b_0a_1b_1a_2b_2a_3b_3a_4b_4a_5$;\quad
+$a_1b_2a_0b_3a_2b_0a_3b_5a_5b_6a_4$;\\
+$a_2b_4a_0b_5a_1b_6a_3b_1a_4b_0a_5b_2$;\quad
+$a_3b_4a_1b_3a_5b_1a_0b_6a_2b_5a_4b_2$.
+\end{center}
+For $k=4,5,6$ ($K_{9,6}$, $K_{11,6}$, $K_{13,6}$) machine-verified $(k+1)$-path witnesses are
+archived, each with the length profile forced by the ledger of
+Theorem~\ref{thm:structgen}(3) ($\sum\delta=6$), and each checked by two independent
+implementations. The base $k_0=3$, fed into Theorem~\ref{thm:ringclosure}, covers every
+$k\ge7$; the pipeline additionally re-derived the ring construction explicitly for
+$k=7,\dots,31$ and obtained overlapping closure chains from the bases $k_0=4,5$
+(Appendix~\ref{app:comp}).
+\end{proof}
+
+\paragraph{The state of Conjecture~\ref{conj:27A}.}
+Theorem~\ref{thm:ringclosure} upgrades Conjecture~\ref{conj:27A} from a statement about
+infinitely many graphs to a \emph{column-by-column decision procedure}: in the column
+$n_2=2h$, Theorem~\ref{thm:capgen} shows that it suffices to exhibit, for each of the $h+1$
+\emph{base} values $k\in[h,2h]$, one explicit $(k+1)$-path decomposition of $K_{2k+1,2h}$; the
+base $k_0=h$ then closes the whole tail $k\ge2h+1$ for free, and every further base lowers the
+closure line. Applying the procedure as far as the current machine pipeline reaches gives:
+
+\begin{center}\small
+\begin{tabular}{c p{6.4cm} p{3.2cm}}
+\hline
+$n_2$ & status of $\pn(K_{n_1,n_2})$, $n_1$ odd & remaining bases \\
+\hline
+$2$ & $(n_1+1)/2$; proved (counting cap $+$ \cite{Pyb96}; the pipeline also holds a
+constructive closure chain from the base $k_0=1$) & none \\
+$4$ & $(n_1+1)/2$; Theorem~\ref{thm:k4odd} & none \\
+$6$ & $(n_1+1)/2$ for $n_1\ge7$; Corollary~\ref{cor:col6} & none \\
+$8$ & bases $k=4,5,6$ exact: $\pn(K_{9,8})=5$, $\pn(K_{11,8})=6$, $\pn(K_{13,8})=7$; tail
+$k\ge9$ closed by ring closure & $k=7,8$ \\
+$10$ & bases $k=5,6,7$ exact: $\pn(K_{11,10})=6$, $\pn(K_{13,10})=7$, $\pn(K_{15,10})=8$; tail
+$k\ge11$ closed & $k=8,9,10$ \\
+even $\ge12$ & open; reduced to $h+1$ bases per column & $k\in[h,2h]$ \\
+\hline
+\end{tabular}
+\end{center}
+
+In total this adds ten exact values beyond Theorem~\ref{thm:k4odd} (four in the column
+$n_2=6$, three in the column $n_2=8$, three in the column $n_2=10$), every one attained by an
+explicitly archived and independently verified witness, and two constructively closed tails
+($k\ge9$ for $n_2=8$ from the base $K_{9,8}$, $k\ge11$ for $n_2=10$ from the base $K_{11,10}$).
+No instance in the range is known to violate Conjecture~\ref{conj:27A}.
+
+What remains open are exactly the five middle-window bases $K_{15,8}$, $K_{17,8}$,
+$K_{17,10}$, $K_{19,10}$, $K_{21,10}$. On these the deterministic search pipeline has burnt
+more than $14$ million search nodes (for the $n_2=8$ pair) and about $0.9$ million nodes (for
+the $n_2=10$ triple), over every ledger-feasible deficit multiset of
+Theorem~\ref{thm:structgen}(3), without a hit and without exhausting a single schedule; these
+negatives are truncations, not exclusions. The following observation records the data-level
+regularities; it is a \emph{computational observation}, not a theorem.
+
+\begin{observation}[middle-window cost wall; computational]\label{obs:costwall}
+The following regularities of the deterministic, fixed-seed search pipeline are data, not
+proved statements.
+(1)~\emph{Hit-cost trajectory.} Within a column, the first hit at level $k$ is cheap for
+$k\le 2h-3$ --- $5,7,43$ nodes at $k=4,5,6$ in the column $n_2=8$, and $6,13,182$ nodes at
+$k=5,6,7$ in the column $n_2=10$ --- and then jumps off a cliff inside the \emph{middle
+window} $k\in[2h-2,2h]$: at $k=2h-1$ in the column $n_2=8$ (i.e.\ $K_{15,8}$) the strongest
+schedule burnt more than $4.8\times10^6$ nodes without a hit, and at $k=2h-2$ in the column
+$n_2=10$ (i.e.\ $K_{17,10}$) more than $1.19\times10^5$ nodes; no schedule was run to
+exhaustion. The two columns share the same cost anatomy --- cheap head bases, a free tail by
+Theorem~\ref{thm:ringclosure}, a hard middle window --- with the cliff at $k=2h-1$ for
+$n_2=8$ and, on current evidence one notch earlier, at $k=2h-2$ for $n_2=10$.
+(2)~\emph{Deficit-multiset signal.} Every hit at $k\le 2h-3$ lies in a $z=0$ multiset of
+Theorem~\ref{thm:structgen}(3), at the first schedule tried; the unique $z=0$ multisets of the
+window --- $(x,y,z)=(0,8,0)$ at $K_{15,8}$ and $(1,8,0)$ at $K_{17,10}$ --- are precisely the
+types that resisted the largest search effort, which makes them the strongest current
+candidates for non-realizable ledgers in the finitary question ``which ledger-feasible
+multisets $(x,y,z)$ occur in some $(k+1)$-path decomposition?''. The only proved
+non-realizable multiset so far is $(x,y,z)=(3,0,1)$, i.e.\ deficit list $[2,2,2,0]$, at
+$K_{7,6}$: a single $BB$-type path has two distinct $B$-endpoints $u\ne v$, each forced to be
+an endpoint of an even, hence at least $2$, number of paths
+(Theorem~\ref{thm:structgen}(4)), contradicting $2z+y=2$.
+\end{observation}
+
+\section{Odd clique chains: refinements beyond block graphs}\label{sec:chains}
+
+A \emph{block graph} is a graph whose blocks are complete graphs. Chen and Wu \cite{CW25} proved
+Gallai's conjecture for all block graphs. Here we study \emph{odd clique chains}: block graphs
+whose blocks are $B_i\cong K_{2j_i+1}$ with $j_i$ odd, and whose block tree is a path (every
+block has at most two cut vertices). We write $b$ for the number of blocks and
+$n=2\sum_ij_i+1$ for the order; note $n$ is odd and $\floor{n/2}=\sum_ij_i$. Blocks that are
+$K_3$ ($j_i=1$) are allowed.
+
+The engine is the following statement about complete graphs of odd order minus a Hamilton path.
+
+\begin{theorem}\label{thm:L0}
+Let $j\ge1$ be odd and let $P_0$ be any Hamilton path of $K_{2j+1}$. Then $K_{2j+1}-P_0$ has a
+path decomposition into $j$ paths, each with exactly $2j-1$ edges. Consequently
+$\pn(K_{2j+1}-P_0)=j$, the value of Lemma~\ref{lem:LB2}.
+\end{theorem}
+
+\begin{proof}
+For $j=1$ the graph $K_3-P_0$ is a single edge, a decomposition into $j=1$ paths, and the
+value $j$ matches Lemma~\ref{lem:LB2}; so assume $j\ge3$ odd. The automorphism group of
+$K_{2j+1}$ is transitive on Hamilton paths, so it suffices to
+exhibit one Hamilton path $P^*$ such that $K_{2j+1}-P^*$ decomposes into $j$ paths; a general
+$P_0$ is then the image of $P^*$ under a permutation of vertices, which transports the
+decomposition.
+
+Write $V=\{\infty\}\cup\mathbb{Z}_{2j}$, $\beta=(j+1)/2$. Let $C_0,\dots,C_{j-1}$ be the
+Walecki cycles of Lemma~\ref{lem:walecki}. For a vertex $v=k+t$ of $\mathbb{Z}_{2j}$, its two
+neighbours inside $C_k$ are read off from the sequence: they are $\{\infty,k+1\}$ if $t=0$;
+$\{k+j+1,\infty\}$ if $t=j$; and $\{k-t+1,\,k-t\}$ otherwise. The two \emph{corners} at a
+designated \emph{centre} $c$ of $C_k$ are the two edges of $C_k$ incident to $c$.
+
+We designate one centre in each cycle and one arm-pair $\{y_i,y_i+1\}$ per corner, as follows
+(all arithmetic mod $2j$):
+\begin{enumerate}[label=\arabic*.,leftmargin=2em]
+\item in $C_{j-1}$: centre $c_1=2j-1$ (a vertex of type $t=j$ there), arm-pair
+$\{0,\infty\}$ via the reading above: the neighbours of $2j-1$ in $C_{j-1}$ are
+$\{2j,\infty\}=\{0,\infty\}$;
+\item in $C_{\beta-1}$: centre $c_2=\beta-1$ (type $t=0$), arm $\{\infty,\beta\}$;
+\item for $i=3,\dots,j$: in $C_{k_i}$, where $k_i=i-3$ if $3\le i\le\beta+1$ and $k_i=i-2$ if
+$\beta+2\le i\le j$, take centre $c_i=2k_i-y_i$ with arm $\{y_i,y_i+1\}$,
+$y_i=\beta+i-3$.
+\end{enumerate}
+\emph{Corner legality.} Cases 1 and 2 are immediate from the neighbour reading. For case 3,
+write $c_i=k_i+t_i$ with $t_i=k_i-y_i\equiv-\beta\equiv(3j-1)/2$ for $i\le\beta+1$ and
+$t_i\equiv 1-\beta\equiv(3j+1)/2$ for $i\ge\beta+2$. Both values lie in
+$\mathbb{Z}_{2j}\setminus\{0,j\}$ (they equal $0$ never, and equal $j$ only in the void case
+$j=1$, $i\ge\beta+2=3$), so the neighbour reading gives
+$N_{C_{k_i}}(c_i)=\{k_i-t_i+1,\,k_i-t_i\}=\{y_i+1,\,y_i\}$, as required.
+
+\emph{The prescribed Hamilton path.} Let
+\[
+P^* \;=\; 0,\;2j-1,\;\infty,\;\beta-1,\;\beta,\;c_3,\;\beta+1,\;c_4,\;\beta+2,\;\dots,\;
+c_i,\;\beta+i-2,\;c_{i+1},\;\dots,\;c_j,\;\beta+j-2 .
+\]
+The edge set of $P^*$ is the union of the $j$ corner arm-pairs (adjacent corners share the arm
+vertex $a_i=\beta+i-2$), i.e.\ $2j$ edges. Its vertex set is
+$\{0,\infty\}\cup\{\beta,\dots,\beta+j-2\}\cup\{c_1,\dots,c_j\}$: the arm interval
+$[\beta,\beta+j-2]=[(j+1)/2,(3j-3)/2]$ is disjoint from the centre set
+$\{1,\dots,(j-3)/2\}\sqcup\{(j-1)/2\}\sqcup\{(3j-1)/2,\dots,2j-2\}\sqcup\{2j-1\}$,
+every centre interval below $(j+1)/2$ resp.\ above $(3j-3)/2$ being separated from the arm
+interval (for $j=3$ the first centre interval is empty), and all $2j+1$ listed values are
+distinct and cover $V$. Hence $P^*$ is a Hamilton path with $2j$ edges.
+
+\emph{The partition.}
+The designated centre of $C_{j-1}$ is $c_1$, of $C_{\beta-1}$ is $c_2$, and of $C_{k_i}$ is
+$c_i$ for $i\ge3$; the index map $i\mapsto k_i$ satisfies
+$\{j-1,\beta-1\}\cup\{0,\dots,\beta-2\}\cup\{\beta,\dots,j-2\}=\{0,\dots,j-1\}$ bijectively, so
+each cycle loses exactly one corner and the corners are edge-disjoint. By
+Lemma~\ref{lem:walecki},
+\[
+E(K_{2j+1})\;=\;E(P^*)\;\sqcup\bigsqcup_{k=0}^{j-1}\bigl(E(C_k)\setminus\{\text{the two corner
+edges at } c_{k}\}\bigr),
+\]
+and each $C_k$ minus the two edges at its centre is a path on the remaining $2j$ vertices with
+$2j-1$ edges. This gives $j$ paths decomposing $K_{2j+1}-P^*$. Finally
+$\pn(K_{2j+1}-P_0)\ge\ceil{j(2j-1)/2j}=j$ by Lemma~\ref{lem:LB2}, so the value is exactly $j$.
+\end{proof}
+
+\begin{remark}
+The construction is a Walecki-type zigzag, and the base decomposition objects are classical
+\cite{LP92,Alspach08}. The statement for an \emph{arbitrarily prescribed} Hamilton path, as
+needed to chain blocks of arbitrary odd orders, appears to be new: the Oberwolfach problem and
+its variants concern $2$-regular factors and do not cover path factors, and we could not find
+this statement in the Hamilton decomposition literature. The even-$j$ residual is recorded as
+an open problem in Section~\ref{sec:open}. The formula was verified by an independent computer
+check for all odd $j\le121$; this anchor is a certificate, not part of the proof.
+\end{remark}
+
+The chaining argument needs the following accounting of the decomposition produced by
+Theorem~\ref{thm:L0}.
+
+\begin{lemma}[slot accounting]\label{lem:slots}
+Let $D=\{Q_1,\dots,Q_j\}$ be a decomposition of $K_{2j+1}-P_0$ into $j$ paths of $2j-1$ edges
+each (as in Theorem~\ref{thm:L0}), where the ends of $P_0$ are $w,w'$. Then:
+\begin{enumerate}[label={\rm(\roman*)},leftmargin=2em]
+\item each $Q_i$ misses exactly one vertex, and the $j$ missed vertices are distinct;
+\item the missed vertices all lie among the internal vertices of $P_0$ (the even-degree
+vertices of $K_{2j+1}-P_0$), and $w,w'$ are never missed;
+\item each of $w,w'$ is an endpoint of exactly one path of $D$; every internal vertex $v$ of
+$P_0$ is either missed (endpoint of no path) or an endpoint of exactly two paths; and the
+total number of path-ends is $2j$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Each $Q_i$ has $2j-1$ edges, hence spans $2j$ of the $2j+1$ vertices and misses exactly one.
+For $v\in V$,
+let $k_v$ be the number of paths missing $v$ and $s_v$ its total endpoint count; let $a_v$
+be the number of paths containing $v$ internally, so that the paths containing $v$ are
+exactly $a_v+s_v$ and $j=k_v+a_v+s_v$. Lemma
+\ref{lem:LB1}(iii) gives $s_v\equiv\deg(v)\pmod 2$, where
+$\deg_{K_{2j+1}-P_0}(v)=2j-1$ for $v\in\{w,w'\}$ and $2j-2$ otherwise; and
+$2\,a_v+s_v=\deg(v)$. If $v$ is internal to $P_0$ and $k_v=0$:
+$2a_v+s_v=2j-2$ and $a_v+s_v=j$ give $s_v=2$; if $k_v=1$: $a_v+s_v=j-1$ gives $s_v=0$. If
+$v=w$ and $k_v=1$: $2(j-1-s_v)+s_v=2j-1$ is absurd; so $k_v=0$, $a_v+s_v=j$,
+$2a_v+s_v=2j-1$ give $s_v=1$. This proves (ii) and (iii). For (i): each $Q_i$ misses
+exactly one vertex, so it suffices that no vertex is missed twice. But
+$a_v+s_v=j-k_v$ and $2a_v+s_v=\deg(v)$ give
+$s_v=2(j-k_v)-\deg(v)$; for $k_v\ge2$ this is $s_v\le 2(j-2)-\deg(v)\le
+2j-4-(2j-2)=-2<0$ (and $=-3$ at $w,w'$), impossible. Hence $k_v\le1$ for every $v$, and
+the $j$ missed vertices are
+distinct. The total $2j$ of path-ends is automatic.
+\end{proof}
+
+We also need the elementary splicing operation. If $P$ and $P'$ are paths with
+$V(P)\cap V(P')=\{w\}$ and $w$ is an endpoint of both, then $P\cdot P'$ (the concatenation) is
+a path, and replacing $P,P'$ by $P\cdot P'$ reduces the size of a decomposition by one, with
+all other path-end counts unchanged except that $w$ loses two endpoints. We call this a
+\emph{splice at $w$}.
+
+\begin{theorem}\label{thm:chain}
+Let $G$ be a connected graph whose blocks are $B_1,\dots,B_b$ with $B_i\cong K_{2j_i+1}$,
+all $j_i$ odd, and whose block tree is a path. Let $n=2\sum_ij_i+1$. Then:
+\begin{enumerate}[label={\rm(\roman*)},leftmargin=2em]
+\item if $b=1$, $\pn(G)=\ceil{n/2}=\sum_ij_i+1$;
+\item if $b\ge2$, $\pn(G)\le\floor{n/2}=\sum_ij_i$;
+\item if $b\ge4$, $\pn(G)\le\floor{n/2}-1=\sum_ij_i-1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) For $b=1$, $G=K_{2j+1}$: Lemma~\ref{lem:LB2} gives
+$\pn\ge\ceil{j(2j+1)/2j}=j+1$; conversely a Hamilton path $P$ together with the $j$-path
+decomposition of $K_{2j+1}-P$ from Theorem~\ref{thm:L0} gives $\pn\le j+1$.
+
+Assume $b\ge2$ and order the blocks along the block tree as $B_1,\dots,B_b$, with
+$B_i\cap B_{i+1}=\{w_i\}$; the $w_i$ are distinct cut vertices, $B_1,B_b$ are end blocks with
+one cut each, and each middle block $B_i$ ($2\le i\le b-1$) has cut set
+$W_i=\{w_{i-1},w_i\}$.
+
+\emph{Per-block decompositions.} In each block $B_i$, choose a Hamilton path $P_i$ whose
+endpoint set is $W_i$ (for an end block, one endpoint is its cut vertex and the other is any
+non-cut vertex). By Theorem~\ref{thm:L0}, relabelled, $B_i-P_i$ decomposes into $j_i$ paths
+$Q_{i,1},\dots,Q_{i,j_i}$. By Lemma~\ref{lem:slots} applied to $(B_i,P_i)$: each cut vertex of
+$B_i$ is an endpoint of $P_i$ and of \emph{exactly one} $Q_{i,\cdot}$, and no other path ends
+at a cut vertex. Thus each block offers exactly two path-ends at each of its cut vertices,
+one from $P_i$ and one from a single $Q_{i,\cdot}$; call the latter the \emph{$Q$-end of $B_i$
+at $w$}.
+
+\emph{Splicing.} At a cut vertex $w_i$ joining $B_i$ and $B_{i+1}$, any path of $B_i$ ending
+at $w_i$ and any path of $B_{i+1}$ ending at $w_i$ meet in exactly $\{w_i\}$ (distinct blocks
+share only their cut vertex), so they can be spliced. Each splice reduces the path count by
+one. Starting from the disjoint union of the per-block decompositions we have
+$\sum_i(j_i+1)=\sum_ij_i+b$ paths.
+
+(2) Perform the following $b$ splices:
+\begin{itemize}[leftmargin=1.5em]
+\item at $w_1$: splice $P_1@w_1$ with $P_2@w_1$, and splice the $Q$-end of $B_1$ at $w_1$ with
+the $Q$-end of $B_2$ at $w_1$ (two splices; all four paths exist and are distinct within their
+blocks, the two of $B_1$ being $P_1$ and its unique cut-$Q$, the two of $B_2$ being $P_2$ and
+its unique $Q$-end at $w_1$);
+\item at each $w_i$, $2\le i\le b-1$: splice the (currently available) $w_i$-end of the
+$P$-chain accumulated so far with $P_{i+1}@w_i$ (one splice each).
+\end{itemize}
+The $P$-chain after the splices at $w_1,\dots,w_i$ is a single path contained in
+$B_1\cup\dots\cup B_{i+1}$ and ending at $w_{i+1}$: indeed each splice consumes one endpoint of
+the chain (the one at the cut just crossed) and one endpoint of $P_{i+1}$, retaining
+$P_{i+1}$'s other endpoint, which is $w_{i+1}$. All splices are between paths intersecting
+only at their common cut vertex, hence legal. Total splices: $2+(b-2)=b$, so
+\[
+\pn(G)\;\le\;\sum_i(j_i+1)-b\;=\;\sum_ij_i\;=\;\floor{n/2}.
+\]
+
+(3) For $b\ge4$, add one further splice at the far end $w_{b-1}$: splice the $Q$-end of
+$B_{b-1}$ at $w_{b-1}$ with the $Q$-end of $B_b$ at $w_{b-1}$. The $Q$-end of $B_{b-1}$ at
+$w_{b-1}$ is still available: in step (2) the block $B_{b-1}$ only lost the endpoint
+$P_{b-1}@w_{b-2}$ (consumed by the $P$-chain splice at $w_{b-2}$), not any $Q$-end at
+$w_{b-1}$; and $B_b$'s two $w_{b-1}$-paths ($P_b$ and its cut-$Q$) had only $P_b@w_{b-1}$
+consumed. The two spliced paths lie in different blocks and meet only at $w_{b-1}$. Total
+splices: $b+1$, giving
+\[
+\pn(G)\;\le\;\sum_i(j_i+1)-(b+1)\;=\;\sum_ij_i-1\;=\;\floor{n/2}-1. \qedhere
+\]
+\end{proof}
+
+\begin{remark}[comparison with \cite{CW25} and the computational record]\label{rem:chaincomp}
+\begin{enumerate}[label={\rm(\arabic*)},leftmargin=2em]
+\item Theorem~\ref{thm:chain}(ii)--(iii) are strict refinements of \cite{CW25} on this
+subfamily: block graphs in general are only granted $\ceil{n/2}$ there, while odd clique chains
+admit $\floor{n/2}$, and $\floor{n/2}-1$ from four blocks on. The odd clique chains are far from
+arbitrary block graphs (all vertex degrees are even except four), which is what the extra
+splicing exploits.
+\item For $b=3$ the extra splice of (iii) needs the $Q$-ends of the middle block at its two
+cuts to be \emph{distinct} paths (for $b\ge4$ this is not required, by the proof above). We
+record that the chain of three $K_5$'s admits a $5$-path decomposition, i.e.\
+$\pn\le\sum j_i-1=5$, exhibited by:
+\begin{center}\small
+$a$--$b$--$c$--$d$--$w_1$--$e$--$f$--$g$--$w_2$--$h$--$i$--$j$--$k$;\quad
+$d$--$a$--$c$--$w_1$--$f$--$w_2$--$e$;\quad
+$e$--$g$--$w_1$--$w_2$--$k$--$h$--$j$;\quad
+$a$--$w_1$--$b$--$d$;\quad
+$k$--$i$--$w_2$--$j$,
+\end{center}
+with blocks $B_1=\{w_1,a,b,c,d\}$, $B_2=\{w_1,w_2,e,f,g\}$, $B_3=\{w_2,h,i,j,k\}$; each line is
+a simple path and the five paths partition the $30$ edges. We note that this contradicts the
+value $\pn=6$ for this graph recorded in the computational archive of the underlying project;
+the record should be re-verified (Appendix~\ref{app:comp}). The general $b=3$ case of the
+$-1$ refinement is open and reduces to the distinctness question above.
+\item The even-$j$ residual of Theorem~\ref{thm:L0} (chains containing blocks of order
+$4t+1$) is open; existence is verified by computer for blocks $K_5$ and $K_9$ within chains,
+but no general construction is known (Section~\ref{sec:open}).
+\end{enumerate}
+\end{remark}
+
+% !ANCHOR §4: main.tex:L1021-L1471 -> §4 (verbatim transplant landed this
+% batch). Labels owned here: sec:k4odd, lem:cap, thm:k4struct, prop:k4large,
+% prop:k4small, thm:k4odd, cor:k4gallai, cor:k4compare, rem:k4all, conj:27A,
+% subsec:27a, thm:capgen, thm:structgen, thm:ringclosure, cor:col6,
+% obs:costwall. P14 dangling refs resolved by this landing:
+% thm:structgen, thm:ringclosure, conj:27A.
+% !ANCHOR §5: main.tex:L1472-L1695 -> §5 (verbatim transplant landed this
+% batch). Labels owned here: sec:chains, thm:L0, lem:slots, thm:chain,
+% rem:chaincomp.

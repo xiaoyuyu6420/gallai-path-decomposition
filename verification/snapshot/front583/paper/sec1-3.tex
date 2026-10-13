@@ -1,0 +1,1080 @@
+% ============================================================================
+% sec1-3.tex — satellite of main_submission.tex (§1 Introduction, §2
+% Preliminaries + campaign notation, §3 Fan-type shell). Split verbatim from
+% the batch-1 single file by deep_P14 batch 2; content unchanged.
+% Ownership: this file carries the batch-1 material; further edits belong to
+% the Abstract/§1 rewrite batch (P-ARCH S8), not to campaign-chapter batches.
+% Migration anchors are inline (main.tex line refs = ledger state 8b5323c5…).
+% ============================================================================
+% ============================================================================
+% §1 INTRODUCTION (rewritten per P-ARCH §2.2: literature survey retained,
+% honesty note retained verbatim, Contributions rearranged 4 -> 5 blocks
+% (machine-campaign package and conditional full chain added), three-tier
+% declaration as a formal paragraph, six no-claims wording in the body).
+% Migration anchors: source §1 main.tex :93-261 (survey :101-121, honesty
+% note :123-128, semi-clique paragraph :130-135, contributions :137-228,
+% methodology :230-237, adjudication paragraph :239-253, open problems
+% :255-260); six no-claims verbatim register main.tex :5378-5396.
+% ============================================================================
+\section{Introduction}\label{sec:intro}
+
+Let $G$ be a finite connected simple graph on $n$ vertices. A \emph{path decomposition} of $G$
+is a partition of $E(G)$ into paths, and $\pn(G)$ denotes the minimum number of paths in such a
+decomposition. Gallai conjectured that $\pn(G)\le \ceil{n/2}$ for every connected $G$; the
+conjecture was communicated by Erd\H{o}s and is tracked as problem \#583 in \cite{EP583}. It
+remains open, with $\floor{2n/3}$ the best general bound, due to Dean and Kouider \cite{DK00}.
+
+The case analysis of the last six decades has been organized, to a remarkable degree, by the
+structure of the subgraph $\EV(G)$ induced by the even-degree vertices, together with bounds on
+the degrees of $G$ itself. Lov\'asz \cite{Lo68} showed that $E(G)$ decomposes into at most
+$\floor{n/2}$ paths and cycles, and settled the case $|\EV(G)|\le 1$; Pyber \cite{Pyb96} proved
+that $\EV(G)$ a forest implies $\pn(G)\le \floor{n/2}$; Favaron and Kouider \cite{FK88} settled
+Eulerian graphs of maximum degree~$4$; and Fan \cite{Fan05} proved the conjecture when every
+block of $\EV(G)$ is triangle-free with maximum degree at most $3$. Two strengthenings followed:
+Botler and Sambinelli \cite{BS21} proved it when $\EV(G)$ is a subgraph of a graph in their
+class $\mathcal{G}$ (blocks of maximum degree at most $3$, at most one triangular block per
+component; the strengthening being the class --- their main theorem is stated with Gallai's
+ceiling $\ceil{n/2}$ rather than the floor of Theorem~\ref{thm:fan} below), and Fan, Hou and
+Zhou \cite{FHZ23} when $\EV(G)$ contains no pair of triangles and
+every block has maximum degree at most $3$. A parallel track bounds the degrees of $G$ itself:
+maximum degree $\le 5$ \cite{BP19}, maximum degree $\le 6$ with an independence condition on
+degree-$6$ vertices \cite{CFL}, treewidth $\le 3$ \cite{BCLS20}. Very recently the
+class-based programme jumped forward: Zhang, Liu and Hong \cite{ZLH24} proved the conjecture,
+with the sharper $\floor{n/2}$ bound, for all $3$-degenerate graphs except $K_3$ and $K_5^-$,
+and Lu and Yi \cite{LY24} did the same for treewidth at most $4$ with exceptions $K_3$, $K_5^-$,
+$K_5$; Chen and Wu \cite{CW25} settled it for block graphs. On the algorithmic side, the exact
+computation of $\pn(G)$ has very recently been shown to be polynomial-time on subcubic graphs
+\cite{MY26}.
+
+\begin{quote}\small\itshape
+Honesty note. All results of the present paper lie outside the classes of
+\cite{ZLH24,LY24,CW25}, or are quantitative refinements of them; where our classes overlap
+theirs we say so explicitly. In particular, our theorems in Section~\ref{sec:astar} require a
+structural condition on $\EV(G)$ precisely where \cite{ZLH24,LY24} require none, and vice versa.
+\end{quote}
+
+Bonamy and Perrett \cite{BP19} also asked whether $\pn(G)\le \floor{n/2}$ for every connected
+$G$ that is not an \emph{odd semi-clique} (a graph obtained from $K_{2k+1}$ by deleting at most
+$k-1$ edges). The odd semi-cliques $K_3$ and $K_5^-$ are exactly the obstructions appearing in
+\cite{ZLH24,LY24}, and this is forced by a two-line density arithmetic: a $3$-degenerate odd
+semi-clique on $n=2k+1$ vertices has $2k^2+1\le 3n-6$ edges, whence $k\le 2$; cf.\ Question~1.1
+of \cite{BP19}.
+
+\paragraph{Contributions.}
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item \textbf{The exact path number of $K_{4,n}$ for odd $n$} (Section~\ref{sec:k4odd}).
+Constantinou and Ellinas \cite{CE18} gave minimal path-decomposition algorithms for complete
+bipartite graphs in three of four cases, leaving open the case of odd $n_1$ with
+$1\le n_2\le n_1-1$; their concluding remark asks first for ``the exact characteristics'' of
+this case. We close the $n_2=4$ column completely:
+\[
+\pn(K_{4,n})=(n+1)/2 \quad\text{for every odd } n\ge 3,
+\]
+which extends the even-case formula of \cite{CE18} into Case~4 and improves the best published
+bound (a factor $k+2$ from \cite{Pyb96,Fan05,LY24}, where $n=2k+1$) by one. The proof has three
+self-contained parts: a counting lower bound (each path uses at most $8$ edges), a structure
+theorem pinning the length profile of every optimal decomposition, and an explicit closed-form
+construction, supplemented by exhaustive small-case witnesses. For the remaining even columns
+we prove two general tools: a structure theorem answering the ``exact characteristics'' request
+of \cite{CE18} across the \emph{whole} even range (every optimal decomposition visits every
+vertex of the small side, and a deficit ledger pins the length profile;
+Theorem~\ref{thm:structgen}), and a \emph{ring-closure theorem}
+(Theorem~\ref{thm:ringclosure}): in the column $n_2=2h$, one explicit base decomposition of
+$K_{2k_0+1,2h}$ into $k_0+1$ paths extends, by an explicit construction, to every
+$k\ge k_0+h+1$. This upgrades our conjecture (Conjecture~\ref{conj:27A}) into a
+column-by-column decision procedure with $h+1$ base instances per column. As applications we
+close the $n_2=6$ column completely,
+\[
+\pn(K_{n_1,6})=(n_1+1)/2 \quad\text{for every odd } n_1\ge 7,
+\]
+which settles the previously bracketed instance $K_{7,6}$ at $\pn=4$ and improves the best
+published bound for that family by two; and in the columns $n_2=8$ and $n_2=10$ we prove six
+further exact values, $\pn(K_{9,8})=5$, $\pn(K_{11,8})=6$, $\pn(K_{13,8})=7$,
+$\pn(K_{11,10})=6$, $\pn(K_{13,10})=7$, $\pn(K_{15,10})=8$, together with the whole tails
+$k\ge9$ resp.\ $k\ge11$ of those columns, leaving five named base instances open
+(Section~\ref{sec:open}).
+\item \textbf{Odd clique chains: refinements beyond block graphs} (Section~\ref{sec:chains}).
+Chen and Wu \cite{CW25} proved Gallai's conjecture for all block graphs. For the subfamily of
+\emph{odd clique chains} (block graphs whose block tree is a path and whose blocks are odd
+complete graphs) we prove the precise refinements
+\[
+\pn(G)\le \floor{n/2}\ \ (b\ge 2), \qquad \pn(G)\le \floor{n/2}-1\ \ (b\ge 4),
+\]
+where $b$ is the number of blocks, along with the exact value $\pn(G)=\ceil{n/2}$ for a single
+block. The local engine, of independent interest, is: \emph{for every odd $j$ and every
+Hamilton path $P$ of $K_{2j+1}$, the graph $K_{2j+1}-P$ decomposes into $j$ paths.} The base
+zigzag objects are classical \cite{LP92,Alspach08}; the statement for an \emph{arbitrarily
+prescribed} Hamilton path appears to be new (the Oberwolfach problem and its variants concern
+$2$-regular factors and do not cover path factors), and we could not find it in the Hamilton
+decomposition literature.
+\item \textbf{Fan-type theorems beyond bounded even-degree} (Section~\ref{sec:astar}). The Fan
+line \cite{Fan05,BS21,FHZ23} has kept $\Delta(\EV(G))\le 3$ for twenty years. We prove three
+class theorems that allow high vertices: Theorem~\ref{thm:Astar} (if $\EV(G)$ is triangle-free,
+high E-degrees are compensated by an odd-degree condition, and an explicit \emph{alignment
+condition} (A4) holds at one high vertex, then $\pn(G)\le\floor{n/2}$), Theorem~\ref{thm:sep}
+(the same bound with no alignment hypothesis whenever distinct high vertices have no common
+EV-neighbour), plus Remark~\ref{rem:CO}, which weakens separation to a parity condition on the
+profiles of common EV-neighbours, and Theorem~\ref{thm:twohigh}, which settles the case of
+exactly two high vertices that share EV-neighbours whenever some common EV-neighbour is clean
+(E-degree two) or one high vertex has a private EV-neighbour of E-degree one;
+Corollary~\ref{cor:twohigh} reduces the remaining two-high graphs to a corner case subject to
+five simultaneous constraints at every common EV-neighbour of the two high vertices, of which
+no computational instance was found; a band-free tightness theorem (Remark~\ref{rem:gap}) now
+proves this corner empty on the constructed family proper whenever the counting gap is at most
+two. The general statement is posed as
+Conjecture~\ref{conj:Astar}; Proposition~\ref{prop:residue} pins down the residue class: a
+minimal counterexample must have, at \emph{every} high vertex, a far high ``bad partner'' and,
+except for the corner cases of Corollary~\ref{cor:twohigh}, at least three high vertices;
+Remark~\ref{rem:gap} exhibits the concrete $23$-vertex double-star example on which the natural
+induction stops at exactly this configuration. No counterexample is known: exact dynamic programs verify the conjecture with
+zero violations on $579$ instances ($166$ from the computational study behind this paper, a further
+$413$ in Appendix~\ref{app:comp}), and $15$ large verified decompositions achieve the bound.
+Odd-order graphs in the (A1) class admit a density ceiling
+(Proposition~\ref{prop:odddensity}), which in particular shows that the sharpness family of
+Proposition~\ref{prop:oscsharp} lies exactly on the other side of (A1). Our witness family
+$W(m)$, $m$ odd $\ge 5$, satisfies all hypotheses with $\EV(W(m))\cong K_{2,m}$, has treewidth
+$5$, degeneracy $5$, and maximum degree at least $m+1$, hence escapes every published class we are aware
+of --- in particular \cite{ZLH24,LY24,BP19,BCLS20,CFL} --- and
+Proposition~\ref{prop:escape} shows that Theorem~\ref{thm:Astar} is currently the only known
+result implying the $\floor{n/2}$ bound on $W(m)$. We also exhibit the odd semi-cliques
+$K_{2k+1}-(k-1)K_2$, on which $\pn=\ceil{n/2}>\floor{n/2}$ for all $k$, showing that the
+triangle-free requirement cannot simply be dropped.
+\item \textbf{A conditional full chain: Gallai modulo explicit hypotheses}
+(Section~\ref{sec:conditional}). We develop an endpoint-budget framework: the per-vertex
+\emph{endpoint budget} $\beta(G,x)$ (Definition~\ref{def:endpointbudget}) and the budget
+conjecture~$K$ that $\beta(G,x)\le\ceil{n/2}$ always. On the proved side we establish (i) an
+absorption-cost lemma (Lemma~\ref{lem:T1}) that expresses exactly the cost of reinserting a set
+of edges into a decomposition and unifies three obstruction phenomena from the literature;
+(ii) that $K$ implies Gallai's conjecture (Theorem~\ref{thm:Kgallai}), so $K$ is a genuine
+strengthening rather than a cheap consequence; and (iii) a reduction chain
+(Theorem~\ref{thm:reduction}) assembling
+$\text{Gallai}\Leftarrow K\Leftarrow\text{degree-two layer of }K\Leftarrow
+\text{SC-PH}\Leftarrow\text{GAP-20a}^{\prime}\Leftarrow\text{(E)+(R)}$. The chapter's central
+deliverable is an \emph{explicit hypothesis ledger}: each edge of the chain is stated in the
+form ``Gallai modulo $\Pi$'' with its premise set $\Pi$ listed item by item --- including the
+all-odd support case resting on the external reference \cite{Lo68} (flagged unverified against
+the journal record for this use), the layer-~$N(k\ge4)$ status line (theorem at $k\le3$,
+computational at $k=4,5$, open at $k\ge6$), and the open BP-odd conjecture --- so that every
+conditional claim in the paper is checkable against exactly the premises it needs (five of the
+eight premise conjuncts judgeable from the paper's own statements; the three bridge conjuncts
+carried at registered pointer level, their definitions living in the campaign archive ---
+Section~\ref{sec:conditional}).
+\item \textbf{The machine-verification campaign package} (Sections~\ref{sec:machine},
+\ref{sec:attack} and \ref{sec:lean}). The computational campaign behind the candidate
+Proposition~\ref{prop:2663cand} (the so1 overdraw programme) was closed by a two-wave
+adversarial adjudication (twelve review panels plus settlement, rework and errata executors;
+zero red-level verdicts) with a registered three-tier outcome, restated as the master statement
+of Section~\ref{sec:machine}: machine-theorem-level closure on the explicitly tested domains; a
+paper-layer candidate; and zero claims beyond the tested domains. Section~\ref{sec:attack}
+registers the current frontier of the companion selection-rule programme at $k=8$: the
+candidate lemma G2-SL over the true quantifier domain $8{,}616=1{,}088+240+7{,}288$, which
+passed a merged final adjudication with notes and stands as a \emph{candidate, not a theorem}.
+Section~\ref{sec:lean} reports the Lean formalization base and the four-domain closure of the
+hole-chain termination Theorem~D, whose four domain counts
+$588/30{,}760/634{,}960/7{,}798{,}903$ --- each carried as a five-figure five-tuple --- are
+directly machine-certified, together with the honest
+residual-debt list. Six no-claim constraints bind this whole package (paragraph below);
+the eighteen registered residual openings are collected in Section~\ref{sec:open}.
+\end{enumerate}
+
+\paragraph{Verification methodology.}
+All exact values and all decompositions cited in this paper were produced and re-checked by an
+independent machine pipeline (bitmask dynamic program plus a decomposition verifier asserting
+that the parts are simple paths and exactly partition the edge set); scripts and certificate
+files accompany the paper. Appendix~\ref{app:comp} lists, for each theorem, the verification
+status and the machine anchors. Parts of the mathematical and bibliographic work were carried
+out with computer assistance, including automated literature cross-checking against the
+published record; the division of labour is summarized in Appendix~\ref{app:comp}.
+
+\paragraph{Claim-strength declaration and the six no-claim constraints.}
+The computational campaign behind Proposition~\ref{prop:2663cand} and its
+2b dichotomy programme (Conjecture~\ref{conj:tdich}) was closed by a two-wave red/blue adjudication
+(twelve review panels, with settlement, rework and errata executors; no
+red-level verdict) with a three-tier outcome --- restated in full as the master statement of
+Section~\ref{sec:machine}: machine-theorem-level closure
+on the explicitly tested domains; a paper-layer candidate (fully proved
+components plus one reworked patch whose independent final audit has
+since landed and passed); and zero claims on the extrapolation domains. Six no-claim
+constraints bind the whole account, including this paper: we do \emph{not} claim
+(i) closure at $L\ge13$; (ii) general-$N$ paper closure; (iii) that the
+four-piece (E)+(R) landing is complete; (iv) GL-C paper closure; (v) full
+2b-side closure; (vi) theorem-level closure of
+Proposition~\ref{prop:2663cand} (the campaign-internal labels are the
+adjudication's; the verbatim register is carried in Appendix~\ref{app:errata}).
+The eighteen residual openings are registered in
+Appendix~\ref{app:finalverdict-open} and collected in Section~\ref{sec:open}.
+
+\paragraph{Open problems.}
+Section~\ref{sec:open} collects open problems: the even columns of Case~4 of \cite{CE18};
+the removal of the structural conditions of Section~\ref{sec:astar}
+(Conjecture~\ref{conj:Astar}); the even-$j$ residual of the Walecki engine; the
+pair-hosting and density conjectures of Section~\ref{sec:conditional}; and the $4$-degenerate
+residual class.
+
+% ============================================================================
+% §2 NOTATION AND PRELIMINARIES. Migration anchor: transplanted VERBATIM from
+% main.tex :262-433 (source §2 Preliminaries, incl. Lemmas LB1/LB2/sum,
+% Theorems lovasz/pyber/fan, Fan reinsertion lemmas with transcription and
+% lane_154 downgrade notes, odd semi-clique definition, Walecki partition) —
+% see ANCHOR comment at the end of the transplanted block. New subsection
+% \ref{subsec:machnotation} (unified campaign notation) added per P-ARCH §2.2
+% item 3; T_res definition written with f in {6,7} per erratum N-COLD-1
+% (FRONTIER.md REVISE-29), t := |V(T)| = f+1 per N-COLD-2.
+% ============================================================================
+\section{Preliminaries}\label{sec:prelim}
+
+All graphs are finite, simple and undirected. A \emph{path} has at least one edge and no
+repeated vertex; a \emph{path decomposition} of $G$ is a set $D$ of paths whose edge sets
+partition $E(G)$; $\pn(G)$ is the minimum size of a path decomposition. For a decomposition $D$
+and a vertex $x$ we write $D(x)$ for the number of paths of $D$ having $x$ as an endpoint. A
+\emph{block} of $G$ is a maximal $2$-connected subgraph or a bridge (together with its
+endpoints); every two blocks share at most one vertex, a \emph{cut vertex}. $G$ is
+\emph{$k$-degenerate} if every subgraph has a vertex of degree at most $k$. The
+\emph{even-degree subgraph} $\EV(G)$ is the subgraph induced by the vertices of even degree;
+for $v\in V(G)$ we write $\dEV(v)$ for the degree of $v$ inside $\EV(G)$, the \emph{E-degree}
+of $v$. Note that $\dEV(v)\ge 4$ implies in particular that $v$ has even degree.
+
+We collect the standard tools. Proofs of the first three are included for completeness; they
+are folklore.
+
+\begin{lemma}[odd-degree lower bound; endpoint parity]\label{lem:LB1}
+Let $D$ be a path decomposition of $G$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item $2|D|\ge \mathrm{odd}(G)$, where $\mathrm{odd}(G)$ is the number of odd-degree vertices;
+in particular $\pn(G)\ge \mathrm{odd}(G)/2$;
+\item every odd-degree vertex is an endpoint of at least one path of $D$;
+\item for every vertex $v$, $D(v)\equiv \deg_G(v)\pmod 2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For a path $P$ and a vertex $v$, the degree of $v$ in $P$ is $0$, $1$ or $2$, and it is $1$
+exactly when $v$ is an endpoint of $P$. Summing over $D$,
+$\deg_G(v)=\sum_{P\in D}\deg_P(v)\equiv D(v)\pmod 2$, which gives (iii); (ii) is (iii) for odd
+$\deg_G(v)$; and (i) follows by charging each odd-degree vertex to one path ending at it, each
+path being charged at most twice.
+\end{proof}
+
+\begin{lemma}[edge-count lower bound]\label{lem:LB2}
+If $G$ is connected with $n\ge 2$ vertices and $m$ edges, then
+$\pn(G)\ge \ceil{m/(n-1)}$.
+\end{lemma}
+
+\begin{proof}
+Each path has at most $n-1$ edges, so $k$ paths cover at most $k(n-1)$ edges.
+\end{proof}
+
+\begin{lemma}[disconnected sum]\label{lem:sum}
+If $G$ has components $G_1,\dots,G_c$ on $n_1,\dots,n_c$ vertices, then
+$\sum_i \floor{n_i/2}\le \floor{n/2}$.
+\end{lemma}
+
+\begin{proof}
+Immediate from $\sum_i \floor{n_i/2}\le \floor{\sum_i n_i /2}$ for integers.
+\end{proof}
+
+\begin{theorem}[Lov\'asz \cite{Lo68}]\label{thm:lovasz}
+Every $n$-vertex graph (not necessarily connected) has a decomposition of its edge set into at
+most $\floor{n/2}$ paths and cycles.
+\end{theorem}
+
+\begin{theorem}[Pyber \cite{Pyb96}]\label{thm:pyber}
+If $\EV(G)$ is a forest, then $\pn(G)\le \floor{n/2}$.
+\end{theorem}
+
+\begin{theorem}[Fan \cite{Fan05}]\label{thm:fan}
+If every block of $\EV(G)$ is triangle-free with maximum degree at most $3$, then
+$\pn(G)\le \floor{n/2}$.
+\end{theorem}
+
+Our proofs in Section~\ref{sec:astar} use Fan's reinsertion engine, whose two lemmas we state
+in the form in which they are restated in \cite{BS21} (Lemmas 6 and 7 there; in \cite{Fan05}
+they appear as Lemmas 3.4 and 3.6). For a decomposition $D$ and a vertex $x$, call a neighbour
+$w$ of $x$ \emph{active} if $D(w)>0$.
+
+\begin{lemma}[addible edge; {\cite{Fan05},\cite{BS21}}]\label{lem:fan6}
+Let $uv\in E(G)$ and let $D'$ be a path decomposition of $G-uv$. If
+$D'(v)>\ |\{w\in N_{G-uv}(u) : D'(w)=0\}|$, then $G$ has a path decomposition $D$ with
+$|D|=|D'|$, $D(u)=D'(u)+1$, $D(v)=D'(v)-1$, and $D(w)=D'(w)$ for all other $w$. One says that
+$uv$ is \emph{addible towards $u$}.
+\end{lemma}
+
+\emph{Transcription and verification note.} The proof of Lemma~\ref{lem:fan6} in \cite{Fan05}
+could not be consulted; the statement follows the restatement in \cite{BS21} (Lemma 6) and has
+not been independently checked against the original. A strengthening of the lemma that
+additionally requires the underlying re-arrangement to preserve the endpoint profile of $D'$
+pointwise is false in general (a five-vertex counterexample is machine-certified); the lemma as
+stated imposes no such requirement and has no known counterexample. Its machine evidence is
+direction-sensitive: the historical $n=6$ scan of $850{,}570{,}575$ hypothesis-satisfying
+instances tested one fixed orientation per edge, whereas the applications below use both
+orientations; the direction-corrected bidirectional rescan is complete on $n\le6$: all
+$482{,}080$ ordered instances at $n\le5$ ($241{,}040$ per orientation) and all
+$1{,}701{,}141{,}150$ ordered instances at $n=6$ ($850{,}570{,}575$ per orientation, the
+fixed-orientation half exactly reproducing the historical census), with zero violations
+(Appendix~\ref{app:comp}).
+
+\emph{Downgrade note (lane\_154).} The Lean formalization of this lemma uses the four-clause
+form obtained by deleting the final pointwise clause $D(w)=D'(w)$ for the remaining vertices:
+no application below (including the one inside Lemma~\ref{lem:fan7}) consumes that clause, the
+formal re-assembly route (a rearrangement preserving the two-point profile at $u,v$ plus the
+extension step) proves exactly the four-clause form, and the pointwise clause is retained only
+as a pending existence statement. The semantics of every application below are unaffected.
+
+\begin{lemma}[star absorption; {\cite{Fan05},\cite{BS21}}]\label{lem:fan7}
+Let $B=\{uw_1,\dots,uw_h\}$ be a set of $h$ edges incident to $u$, let $D'$ be a path
+decomposition of $G-B$ in which every neighbour of $u$ \emph{in $G$} has $D'\ge 1$, and let
+$uw$ be a specified edge of $B$. Then there is a set $A\subseteq B$ with $uw\in A$ and
+$|A|\ge\ceil{h/2}$ such that the edges of $A$ can be added back one by one, each by
+Lemma~\ref{lem:fan6} towards $u$, preserving $|D|$ and increasing $D(u)$ by one at each step.
+\end{lemma}
+
+\emph{Reading note.} The hypothesis of Lemma~\ref{lem:fan7} is read over the neighbours of $u$
+\emph{in $G$}, so that it includes the star vertices $w_i$ themselves, which are not
+neighbours of $u$ in $G-B$; this stronger reading is the one verified in every application
+below (the proof of Theorem~\ref{thm:Astar}, Step~3, makes it explicit). As with
+Lemma~\ref{lem:fan6}, the proof in \cite{Fan05} (Lemma 3.6) could not be consulted, and the
+transcription from the restatement in \cite{BS21} (Lemma 7) has not been independently checked
+against the original.
+
+\begin{definition}[odd semi-clique; {\cite{BP19}}]\label{def:osc}
+An \emph{odd semi-clique} is a graph obtained from the complete graph on $2k+1$ vertices by
+deleting at most $k-1$ edges.
+\end{definition}
+
+\begin{observation}[density obstruction]\label{obs:density}
+An odd semi-clique on $n=2k+1$ vertices has
+$m\ge \binom{2k+1}{2}-(k-1)=2k^2+1$ edges, so by Lemma~\ref{lem:LB2}
+$\pn\ge \ceil{(2k^2+1)/2k}=k+1=\ceil{n/2}$; in particular no odd semi-clique admits a
+$\floor{n/2}$-path decomposition.
+\end{observation}
+
+Finally we record the classical Walecki partition of the complete graph of odd order, in the
+form used in Section~\ref{sec:chains}. Fix $j\ge 1$ and let
+$V=\{\infty\}\cup \mathbb{Z}_{2j}$. For $k\in\mathbb{Z}_{2j}$ let $C_k$ be the cycle
+\[
+C_k \;=\; \infty,\, k,\, k+1,\, k-1,\, k+2,\, k-2,\;\dots,\, k+(j-1),\, k-(j-1),\, k+j,\, \infty
+\]
+(indices mod $2j$); equivalently the finite vertices of $C_k$ are $p_0=k$ and
+$p_s=k+(-1)^{s+1}\ceil{s/2}$ for $s=1,\dots,2j-1$.
+
+\begin{lemma}[Walecki partition; classical, cf.\
+\cite{LP92,Alspach08}]\label{lem:walecki}
+For $k=0,1,\dots,j-1$ the cycles $C_k$ are edge-disjoint and
+$\bigsqcup_{k=0}^{j-1}E(C_k)=E(K_{2j+1})$.
+\end{lemma}
+
+\begin{proof}
+Each $C_k$ is a cycle: the finite vertices $k, k\pm1,\dots,k\pm(j-1),k+j$ are $2j$ distinct
+elements covering $\mathbb{Z}_{2j}$. We show every edge lies in exactly one $C_k$, $k$ taken
+mod $j$. Write $\delta(x,y)$ for the circular distance of $x,y\in\mathbb{Z}_{2j}$, i.e.\ the
+minimum of $\pm(x-y)$ mod $2j$ in $\{0,\dots,j\}$.
+
+Reading off consecutive differences in the sequence $p_s$ (as above, $p_{s+1}-p_s=\pm(s+1)$),
+one checks that the finite edges of $C_k$ are exactly the pairs
+$\{k+t,\,k-t\}$ for $t\in\mathbb{Z}_{2j}\setminus\{0,j\}$ and the pairs
+$\{k+t,\,k-t+1\}$ for $t\in\mathbb{Z}_{2j}$, together with the two $\infty$-edges
+$\{\infty,k\}$, $\{\infty,k+j\}$. (In each of the two forms an edge is produced twice, once
+from each endpoint, so it is counted once; $t=0$ and $t=j$ would give loops in the first form
+and are excluded.) Hence $C_k$ has, among finite edges, two edges of each circular distance
+$1,\dots,j-1$ and one edge of distance $j$.
+
+Now fix an edge $e=\{x,y\}$ of $K_{2j+1}$ and let $d=\delta(x,y)$.
+\begin{itemize}[leftmargin=1.5em]
+\item If $y=x+j$ (the diameter case, $d=j$): for $j$ odd, $e$ has the form $\{k+t,k-t+1\}$,
+which forces $2k\equiv 2x+d-1\pmod{2j}$, a unique solution mod $j$ (the right side is even);
+for $j$ even, $e$ has the form $\{k+t,k-t\}$ with $2t\equiv d=j$, forcing
+$2k\equiv 2x+j\pmod{2j}$, again a unique solution mod $j$. So $e$ lies in exactly one $C_k$.
+\item If $d<j$ is even: $e=\{x,x+d\}=\{k+t,k-t\}$ forces $2k\equiv 2x+d\pmod{2j}$, unique
+mod $j$.
+\item If $d<j$ is odd: $e=\{x,x+d\}=\{k+t,k-t+1\}$ forces $2k\equiv 2x+d-1\pmod{2j}$, unique
+mod $j$.
+\item If $e=\{\infty,x\}$: $e\in C_k$ iff $x\in\{k,k+j\}$, i.e.\ $k\equiv x$ or $x+j$
+(mod $2j$), a unique class mod $j$.
+\end{itemize}
+In each case $e$ lies in exactly one of $C_0,\dots,C_{j-1}$, and each $C_k$ has $2j+1$ edges,
+so the $j(2j+1)=\binom{2j+1}{2}$ edges are partitioned.
+\end{proof}
+% !ANCHOR main.tex:L262-L433 -> main_submission.tex §2 (verbatim transplant,
+% body complete; label sec:prelim and all inner labels preserved).
+
+\subsection{Notation for the conditional and machine chapters}\label{subsec:machnotation}
+
+We collect, in one place, the notation used by the campaign chapters
+(Sections~\ref{sec:machine}, \ref{sec:attack}, \ref{sec:conditional} and \ref{sec:lean}).
+
+\begin{definition}[endpoint budget]\label{def:endpointbudget}
+For a connected graph $G$ and an even-degree non-isolated vertex $x$ of $G$, the \emph{endpoint
+budget} $\beta(G,x)$ is the minimum cardinality of a path decomposition $D$ of $G$ in which $x$
+is an endpoint of at least two paths. The \emph{budget conjecture~$K$} is the statement that
+$\beta(G,x)\le\ceil{n/2}$ for every connected $G$ and every even-degree non-isolated vertex $x$;
+the formal definition and the conjecture are restated in
+Section~\ref{sec:conditional} (Definition~\ref{def:beta}, Conjecture~\ref{conj:K}).
+\end{definition}
+
+\begin{sloppypar}
+\emph{Difference-board instances at $k=3$}
+(campaign ledgers \texttt{lane\_260\_muk3.md} and \texttt{lane\_266\_muk3final.md}; domain
+language transcribed from the source account, see Appendix~\ref{app:mu2663}). A
+\emph{$k=3$ instance} is a triple $(P,T,d)$ with $P\subseteq\mathbb{Z}_N$, $p=|P|$,
+three pairwise
+distinct anchor offsets $T=(t_1,t_2,t_3)$, and demands $d=(d_1,d_2,d_3)$ meeting
+(H1) $d_i\le p-[t_i\in P]$ for each $i$ and (H2) $\beta\ge 1$, where $n=d_1+d_2+d_3$ and
+$\beta:=p-n$. Writing $\delta_{ij}:=t_i-t_j$, a \emph{legal step pair} is a choice of
+$C_1\subseteq P\setminus\{t_1\}$, $|C_1|=d_1$, and
+\[
+  C_2\subseteq P_2(C_1):=P\setminus\bigl(C_1\cup((C_1-\delta_{12})\cap P)\cup
+  (\{t_2\}\cap P)\bigr),\qquad |C_2|=d_2;
+\]
+the \emph{three-source account} of the step is
+\[
+\begin{aligned}
+  g_{13}^{+}&=\bigl|(C_1-\delta_{13})\cap P\setminus(C_1\cup C_2)\bigr|,\\
+  g_{23}^{+}&=\bigl|(C_2-\delta_{23})\cap P\setminus(C_1\cup C_2\cup
+    ((C_1-\delta_{13})\cap P))\bigr|,\\
+  e_3&=\bigl|\{t_3\}\cap P\setminus(C_1\cup C_2)\bigr|,
+\end{aligned}
+\]
+with $g_{13}^{+}+g_{23}^{+}+e_3=:\mathrm{val}$; the instance's
+$\min\mathrm{val}$ is the minimum of $\mathrm{val}$ over all legal step pairs.
+The \emph{so1 (aligned) family} is the subfamily
+$\delta_{13}\equiv k\,\delta_{12}\pmod N$ with $g=\gcd(\delta_{12},N)$,
+$L=\mathrm{ord}(\delta_{12})$, $k\in[2,L)$ (the anchors being pairwise distinct); on each
+residue chain of $\langle\delta_{12}\rangle$ one uses main-chain coordinates
+$t_1=0$, $t_2=-1$, $t_3=-k$ in $\mathbb{Z}_L$, and a \emph{$k$-cycle} is an orbit of
+$\langle-k\,\delta_{12}\rangle$ (length $L_c\mid L$).
+\end{sloppypar}
+
+\begin{definition}[residual tree types at $k=8$; corrected quantifier
+domain]\label{def:tres}
+At $k=8$ one works over $R=\mathbb{Z}_{16}\sqcup\{\mathrm{Inf}\}$ with a class function
+$r$ on the pairs of $R$. We write $\mathcal{T}_{\mathrm{res}}$ for the family of the
+$30$ \emph{residual tree types} with $f\in\{6,7\}$ edge classes --- $9$ types at $f=6$ and
+$21$ types at $f=7$ --- independently regenerated by both audit reports. For
+$T\in\mathcal{T}_{\mathrm{res}}$ we write
+$t:=|V(T)|=f+1$ for the vertex count of $T$, and $\Delta(T)$ for the class-count parameter
+of $T$. For a free set $S\subseteq R$ with $|S|=n$ and a centre $c\in S$,
+$\mathrm{cap}_S(c)=|\{r(\{c,y\}):y\in S\setminus\{c\}\}|$ (taken over centres
+\emph{actually present in} $S$, the F-C4-1 convention) and
+$\mathrm{maxcap\_avail}(S)=\max_{c\in S}\mathrm{cap}_S(c)$. The \emph{slack} of $S$
+(relative to $T$) is $\mathrm{slack}:=n-t$.
+\end{definition}
+
+\begin{remark}[quantifier domains; erratum N-COLD-1/N-COLD-2 carried on the
+notation]\label{rem:tresdomain}
+The selection-rule candidate G2-SL of Section~\ref{sec:attack} is quantified over
+$T\in\mathcal{T}_{\mathrm{res}}$ and free $S\subseteq R$ with $\mathrm{slack}\ge1$ (i.e.\
+$n\ge t+1$) and $\mathrm{maxcap\_avail}(S)=\Delta(T)$ (guards G2-a and G2-b), with
+$\Delta\in\{3,4,5,6\}$ at $k=8$; the slack-$0$ layer is false (three T19 sets at $n=8$).
+Two erratum notes are carried on the notation itself, per the campaign frontier register:
+(i) the type family is \emph{defined} with $f\in\{6,7\}$ --- a literal reading ``$f\le7$''
+would admit $f\le5$ types not present in any machine account (a $35$-type literal domain of
+$8{,}672$ instances against the audited $8{,}616$), so the definition above fixes
+$f\in\{6,7\}$; (ii) the vertex count $t:=|V(T)|=f+1$ is part of the notation, not left to
+context.
+\end{remark}
+% !ANCHOR notation sources: main.tex :3918-3938 (k=3 instance, H1/H2, val),
+% :4263-4273 (so1 family, main-chain coordinates, k-cycles),
+% :6629-6658 (R, 30 residual types, t=f+1, slack, cap_S, maxcap_avail,
+% guards G2-a/G2-b, Delta range) — transcribed with N-COLD-1 f∈{6,7} fix.
+
+% ============================================================================
+% §3 FAN-TYPE THEOREMS — VERBATIM TRANSPLANT (construction batch 4, deep_P17).
+% Source: frozen ledger main.tex :434-1020 (P-ARCH migration row "§3 (434-1020)
+% 保留 -> 新 §3 原文不动"; 587 source lines relocated byte-for-byte). This closes
+% the eleven §3-owned dangling references registered by deep_P14/P16 (thm:Astar,
+% thm:sep, thm:twohigh, cor:twohigh, rem:CO, rem:gap, conj:Astar, prop:residue,
+% prop:escape, prop:odddensity, prop:oscsharp): all eleven labels are defined in
+% this block (source lines :451-:975).
+% ============================================================================
+\section{Fan-type theorems beyond bounded even-degree}\label{sec:astar}
+
+Throughout this section $G$ is a connected graph, $n=|V(G)|$, and $\dEV(v)$ denotes the E-degree
+of $v$. Recall that a vertex with $\dEV\ge 4$ has even degree in $G$; call such a vertex
+\emph{high}, and call a vertex with $1\le \dEV\le 3$ \emph{low}. All published results in the
+Fan line \cite{Fan05,BS21,FHZ23} require the blocks of $\EV(G)$ to have maximum degree at most
+$3$, i.e.\ they require that \emph{no} vertex be high. Theorem~\ref{thm:Astar} allows high
+vertices, under an odd-degree compensation condition (A2) together with an alignment condition
+(A4) at one high vertex; Theorem~\ref{thm:sep} removes the alignment condition when distinct
+high vertices have no common EV-neighbour, and Remark~\ref{rem:CO} weakens separation to a
+parity condition on the profiles of common EV-neighbours; Theorem~\ref{thm:twohigh} treats the
+case of exactly two high vertices that share EV-neighbours, and Corollary~\ref{cor:twohigh}
+collects the at-most-two-high layer, leaving only a corner open there, subject to five
+simultaneous constraints at every common EV-neighbour of the two high vertices; the
+band-free tightness theorem (Remark~\ref{rem:gap}, Appendix~\ref{app:band}) empties this
+corner on the constructed family proper whenever the counting gap is at most two.
+
+\begin{theorem}[alignment at a high vertex]\label{thm:Astar}
+Let $G$ be a connected graph such that
+\begin{enumerate}[label={},leftmargin=2.6em]
+\item[(A1)] $\EV(G)$ is triangle-free;
+\item[(A2)] every high vertex $v$ has odd $\dEV(v)$, and every EV-neighbour $w$ of $v$
+satisfies $\dEV(w)\le 3$;
+\item[(A4)] there is a high vertex $u$ such that every even vertex
+$x\notin\{u\}\cup N_{\EV}(u)$ satisfies
+$\dEV(x)-|N_{\EV}(x)\cap N_{\EV}(u)|\le 3$, where
+$N_{\EV}(x)$ denotes the set of EV-neighbours of $x$.
+\end{enumerate}
+Then $\pn(G)\le \floor{n/2}$.
+\end{theorem}
+
+Here $N_{\EV}(x)$ denotes the set of EV-neighbours of $x$, i.e.\ its neighbours inside
+$\EV(G)$.\footnote{The numbering skips (A3): a condition so numbered in an earlier draft of
+this section was absorbed into the separation hypothesis of
+Theorem~\ref{thm:sep}, and the remaining labels were kept unchanged.}
+
+\begin{proof}
+Let $F=\{uv : v\in N_{\EV}(u)\}$ be the $E$-star at $u$, $|F|=k$, and let $\tilde G=G-F$. We
+first analyse the parity and structure of $\tilde G$.
+
+\emph{Step 1 (structure of $\tilde G$).}
+Every edge of $F$ joins two even-degree vertices of $G$, so odd-degree vertices of $G$ lose no
+edges and stay odd. The vertex $u$ loses $k$ edges, an odd number, so $u$ is odd in
+$\tilde G$. Each $v\in N_{\EV}(u)$ loses exactly one edge, so $v$ is odd in $\tilde G$.
+Every other vertex keeps its degree. Hence
+$V(\EV(\tilde G))=\{x\notin\{u\}\cup N_{\EV}(u) : \deg_G(x)\text{ even}\}$, and since
+$\EV(\tilde G)$ is an induced subgraph of $\EV(G)$, it is triangle-free by (A1).
+
+Moreover every $x\in V(\EV(\tilde G))$ has $\dEV$ in $\tilde G$ equal to
+$\dEV(x)-|N_{\EV}(x)\cap N_{\EV}(u)|\le 3$ by (A4). Thus \emph{every} vertex of $\EV(\tilde G)$
+has E-degree at most $3$, so every block of $\EV(\tilde G)$ is triangle-free of maximum degree
+at most $3$. Applying Theorem~\ref{thm:fan} to each component of $\tilde G$ (the hypotheses are
+component-wise) and summing with Lemma~\ref{lem:sum},
+\begin{equation}\label{eq:tildebound}
+\pn(\tilde G)\;\le\;\textstyle\sum_c \floor{n_c/2}\;\le\;\floor{n/2},
+\end{equation}
+where $n_c$ are the component orders. Fix a decomposition $\tilde D$ of $\tilde G$ with
+$|\tilde D|\le\floor{n/2}$.
+
+\emph{Step 2 (hosts).}
+The neighbours of $u$ in $\tilde G$ are precisely its odd-degree neighbours in $G$; they are
+untouched and odd in $\tilde G$, so by Lemma~\ref{lem:LB1}(ii) each has $\tilde D\ge 1$.
+
+\emph{Step 3 (reinsertion of the addible part).}
+Apply Lemma~\ref{lem:fan7} with $B=F$, $h=k$, and specified edge $uv_1$ (any fixed element of
+$F$). The hypothesis of Lemma~\ref{lem:fan7} is satisfied: every neighbour of $u$ has
+$\tilde D\ge 1$ by Step 2 (this holds whether the hypothesis is read over the neighbours of $u$
+in $\tilde G$ or in $G$, since the star vertices $v\in N_{\EV}(u)$ are odd in $\tilde G$, each
+having lost a single edge, and have $\tilde D\ge 1$ by Lemma~\ref{lem:LB1}(ii)). We obtain
+$A\subseteq F$ with $|A|\ge\ceil{k/2}$ which can be added back towards $u$, producing a
+decomposition $D_1$ of $\tilde G\cup A$ with $|D_1|=|\tilde D|$ and
+$D_1(u)\ge \tilde D(u)+\ceil{k/2}\ge 1+\ceil{k/2}$, the bound $\tilde D(u)\ge1$ coming from
+Lemma~\ref{lem:LB1}(ii) applied to $u$, which is odd in $\tilde G$.
+
+\emph{Step 4 (reinsertion of the remainder).}
+Let $L=F\setminus A$; $|L|=\floor{k/2}=(k-1)/2$. Process the edges of $L$ one at a time.
+Suppose $j-1$ edges of $L$ have been reinserted, giving a decomposition $D_j$ of
+$\tilde G\cup A\cup(\text{first } j-1 \text{ edges of } L)$ with
+\[
+D_j(u)\;\ge\;1+\ceil{k/2}-(j-1).
+\]
+Let $uv\in L$ be the next edge. We apply Lemma~\ref{lem:fan6} \emph{towards $v$}, i.e.\ with
+the roles of $u$ and $v$ in the statement exchanged: the condition required is
+\[
+D_j(u)\;>\;\bigl|\{w\in N_{G_j}(v) : D_j(w)=0\}\bigr|,
+\]
+where $G_j$ is the current graph, and the operation then yields a decomposition $D_{j+1}$ of
+$G_j+uv$ with $D_{j+1}(v)=D_j(v)+1$, $D_{j+1}(u)=D_j(u)-1$, and $|D_{j+1}|=|D_j|$.
+
+We bound the right-hand side. If $D_j(w)=0$ then $w$ has even degree in $G_j$ by
+Lemma~\ref{lem:LB1}(iii). We classify the neighbours of $v$ and their endpoint counts.
+Odd-degree vertices of $G$ are never incident with a star edge, keep their degree, and
+remain odd throughout; they always have $D\ge1$. A star vertex $v'\in N_{\EV}(u)$,
+$v'\ne v$, is \emph{not a neighbour of $v$ at all}: the vertices $v$ and $v'$ are both
+even-degree vertices of $G$, so the edge $vv'$ would close the triangle $u,v,v'$ in
+$\EV(G)$, contradicting (A1). (This is just as well: a star vertex whose edge has been
+reabsorbed towards $u$ by Lemma~\ref{lem:fan7} may well have $D=0$, each absorption step
+lowering $D(v')$ by one.) The vertex $u$ \emph{is} a neighbour of $v$ and has
+regained at least $\ceil{k/2}\ge3$ edges, so $D_j(u)\ge3>0$. The only remaining
+neighbours of $v$ that were even in $G$ and lie outside $\{u\}\cup N_{\EV}(u)$ are the
+members of $N_{\EV}(v)\setminus\{u\}$, of which there are $\dEV(v)-1\le2$. Hence
+\[
+\bigl|\{w\in N_{G_j}(v) : D_j(w)=0\}\bigr|
+\;\le\; \bigl|\{w\in N_{\EV}(v) : w\ne u\}\bigr|
+\;=\;\dEV(v)-1\;\le\;2,
+\]
+using that $v$ is low, i.e.\ $\dEV(v)\le 3$ by (A2). At the last
+step $j=(k-1)/2$ we have
+$D_j(u)\ge 1+\ceil{k/2}-(j-1)=1+(k+1)/2-(k-3)/2=3>2$, and for earlier steps the budget is only
+larger. So each edge of $L$ is addible towards its star vertex $v$, free of charge.
+
+After all $k$ edges are reinserted we obtain a decomposition of $G$ with
+$|D|=|\tilde D|\le\floor{n/2}$, completing the proof.
+\end{proof}
+
+The alignment condition is not the only route through a high vertex; the following theorem
+needs no alignment hypothesis at all, at the price of a separation condition between high
+vertices.
+
+\begin{theorem}[separated high vertices]\label{thm:sep}
+Assume {\rm(A1)}, {\rm(A2)}, and moreover that any two distinct high vertices of
+$G$ have no common EV-neighbour. Then $\pn(G)\le\floor{n/2}$.
+\end{theorem}
+\begin{proof}
+We prove the stronger statement, for all graphs in the class connected or
+not, by strong induction on $|E(G)|$. If there is no high vertex, every E-degree is at
+most $3$ and Theorem~\ref{thm:fan} applies component-wise, so
+Lemma~\ref{lem:sum} gives the bound. Otherwise pick a high vertex $u$ and let
+$k=\dEV(u)\ge 4$, which is odd by {\rm(A2)}; let $F$ be the E-star at $u$ and
+$\tilde G=G-F$. Every star vertex has odd degree in $\tilde G$ (it loses the
+single edge $uv$), and $u$ has odd degree in $\tilde G$; the even-degree
+vertices of $\tilde G$ are precisely the even-degree vertices of $G$ outside
+$\{u\}\cup N_{\EV}(u)$, and for such a vertex $x$ its E-degree in $\tilde G$
+equals $\dEV(x)-|N_{\EV}(x)\cap N_{\EV}(u)|$; when $x$ is high the subtraction
+term is $0$, because distinct high vertices have no common EV-neighbour. Hence $\tilde G$
+again satisfies {\rm(A1)}, {\rm(A2)} and the separation condition, so the
+induction hypothesis gives a decomposition $\tilde D$ of $\tilde G$ with
+$|\tilde D|\le\floor{n/2}$. The neighbours of $u$ in $\tilde G$ are its
+odd-degree neighbours in $G$, so each has $\tilde D\ge 1$
+(Lemma~\ref{lem:LB1}(ii)); the star vertices are odd in $\tilde G$, each having
+lost a single edge, so they too have $\tilde D\ge1$ by
+Lemma~\ref{lem:LB1}(ii), and the hypothesis of Lemma~\ref{lem:fan7} holds read
+over $G$; Lemma~\ref{lem:fan7} returns an addible set
+$A\subseteq F$ with $|A|\ge\ceil{k/2}$ towards $u$, giving
+$D_1(u)\ge 1+\ceil{k/2}$. Each edge of $L=F\setminus A$, $|L|=\floor{k/2}$, is
+then reinserted towards its star vertex $v$ via Lemma~\ref{lem:fan6}: the
+vertices $w$ with $D_j(w)=0$ are even in $G_j$, and as in the proof of
+Theorem~\ref{thm:Astar} they are confined to $N_{\EV}(v)\setminus\{u\}$, of
+size at most $\dEV(v)-1\le 2$; at the last step $D_j(u)\ge 3>2$. This rebuilds
+a decomposition of $G$ with $\floor{n/2}$ paths.
+\end{proof}
+
+\begin{remark}\label{rem:CO}
+The proof of Theorem~\ref{thm:sep} goes through, verbatim up to one parity
+check, with separation replaced by the following weaker condition: for any two
+distinct high vertices $x,z$ and any set $S$ of high vertices disjoint from
+$\{x,z\}$, the number of common EV-neighbours $w$ of $x$ and $z$ with
+$N_{\EV}(w)\cap H\cap S=\emptyset$ is even (equivalently: for each pair $x,z$,
+the common EV-neighbours are split by their ``profile'' $\pi(w)=N_{\EV}(w)\cap H$
+into classes of even size). Indeed this condition is again inherited after a
+star deletion, because a vertex of $\EV(\tilde G)$ is precisely an even vertex
+seeing no member of $\{u\}\cup N_{\EV}(u)$, so the counts for $\tilde G$ with
+$S'$ are the original counts for $S=\{u\}\cup S'$.
+\end{remark}
+
+Separation and its profile relaxation still leave open the case of high vertices that do share
+EV-neighbours. The next theorem settles the case of exactly two high vertices except for a
+corner recorded afterwards.
+
+\begin{theorem}[two high vertices]\label{thm:twohigh}
+Assume {\rm(A1)} and {\rm(A2)}, let $u,x$ be the \emph{only} high vertices of $G$, and suppose
+$t_{ux}:=|N_{\EV}(u)\cap N_{\EV}(x)|\ge1$. If either
+\begin{enumerate}[label={\rm(\roman*)},leftmargin=2em]
+\item some common EV-neighbour $v_1$ of $u$ and $x$ has $\dEV(v_1)=2$, or
+\item $x$ has a private EV-neighbour $y^*$, i.e.\ $y^*\in N_{\EV}(x)\setminus N_{\EV}(u)$,
+with $\dEV(y^*)=1$,
+\end{enumerate}
+then $\pn(G)\le\floor{n/2}$.
+\end{theorem}
+
+\begin{proof}
+Let $F$ be the E-star at $u$, $k=\dEV(u)$, and delete one further edge $e^*$ at $x$:
+$e^*=xv_1$ in~(i), $e^*=xy^*$ in~(ii), giving $\tilde G=G-F-e^*$.
+In $\tilde G$ the vertices $u$ and $x$ are odd, and so is every former star vertex (each
+lost the single edge $uv$); in~(ii) the far endpoint $y^*$ of $e^*$ is odd as well (it lost
+$xy^*$). The remaining even vertices --- in~(i) the vertex $v_1$ (which lost both $uv_1$
+and $xv_1$ and stays even) together with the far even vertices and the private
+EV-neighbours of $x$; in~(ii) the far even vertices other than $y^*$ and the private
+EV-neighbours of $x$ other than $y^*$ --- all have E-degree at most $3$ in $\tilde G$: the
+private ones by
+{\rm(A2)} at $x$, the far ones because $u$ and $x$ are the only high vertices, and $v_1$
+because $\dEV(v_1)=2$. Hence $\EV(\tilde G)$ is triangle-free, being an induced subgraph of
+$\EV(G)$, of maximum E-degree at most $3$, so $\tilde G$ lies in the class of
+Theorem~\ref{thm:fan} and has, component-wise with Lemma~\ref{lem:sum}, a decomposition
+$\tilde D$ with $|\tilde D|\le\floor{n/2}$. In~(i) reinsert $e^*$ towards $v_1$
+(Lemma~\ref{lem:fan6}: $\tilde D(x)\ge1$ since $x$ is odd, while every neighbour of $v_1$ in
+$\tilde G$ is odd except $x$ --- the even-degree neighbours of $v_1$ in $G$ are exactly $u$ and
+$x$ --- so the passing count is $0$); this activates $v_1$. In~(ii) no activation is needed:
+every star vertex has lost exactly one edge and is odd. Then Lemma~\ref{lem:fan7} (hypothesis
+read over $G$, as in the proof of Theorem~\ref{thm:Astar}) returns $A\subseteq F$ with
+$|A|\ge\ceil{k/2}$ addible towards $u$, and each edge of $L=F\setminus A$ is reinserted towards
+its star vertex as in the proof of Theorem~\ref{thm:Astar} (passing count $\le\dEV(v)-1\le2$,
+budget $\ge3$ at the last step). In~(ii) the edge $xy^*$ is reinserted towards $y^*$, whose
+neighbours except $x$ are all odd, so this step is legal at any position of the sequence. All
+$k+1$ deleted edges are restored with $|D|=|\tilde D|\le\floor{n/2}$.
+\end{proof}
+
+\begin{corollary}\label{cor:twohigh}
+If $G$ satisfies {\rm(A1)}--{\rm(A2)} and has at most two high vertices, then
+$\pn(G)\le\floor{n/2}$, unless $G$ has exactly two high vertices $u,x$ with $t_{ux}\ge1$,
+every common EV-neighbour of $u$ and $x$ of E-degree $3$, no private EV-neighbour of E-degree
+$1$ on either side, and such that, for \emph{every} common EV-neighbour $v$ of $u$ and $x$,
+writing $z$ for the third EV-neighbour of $v$, $F$ for the E-star at $u$ and
+$\tilde G=G-F-\{xv\}$, all of the following hold:
+$\pn(\tilde G)=\floor{n/2}$; $\beta(\tilde G,x)=\floor{n/2}+1$ (cf.\
+Section~\ref{sec:conditional}% !MIGRATION NOTE (deep_P17): source main.tex reads
+% Section~ef{sec:framework}; the conditional chapter is ef{sec:conditional}
+% in the submission (P14 rename; same repair as the sec6-10 self-references).
+); $z$ is buried (i.e.\ $D(z)=0$) in every optimal decomposition of
+$\tilde G$; in every optimal decomposition $\tilde D$ of $\tilde G$, either $\tilde D(v)=0$,
+or $\tilde D(v)\ge2$ and at least $\tilde D(v)$ private EV-neighbours of $x$ have
+$\tilde D=0$; and $\tilde G$ has at most one component of odd order.
+\end{corollary}
+\begin{proof}
+$t_{ux}=0$ is Theorem~\ref{thm:sep} (with only two high vertices the separation condition
+reduces to $t_{ux}=0$). The two alternatives are Theorem~\ref{thm:twohigh}. For the remaining
+graphs fix a common EV-neighbour $v$, write $z$ for its third EV-neighbour and
+$\tilde G=G-F-\{xv\}$; then $\EV(\tilde G)$ again has maximum E-degree $\le3$, and each of the
+following five routes closes the case for this $v$, the star at $u$ being absorbed afterwards
+exactly as in the proof of Theorem~\ref{thm:twohigh}:
+\begin{enumerate}[label={\rm(\alph*)},leftmargin=2em]
+\item $\pn(\tilde G)\le\floor{n/2}-1$; take an optimal decomposition $\tilde D$. If
+$\tilde D(x)\ge3$ we are on route~(b). Otherwise $\tilde D(x)=1$ (it is odd by
+Lemma~\ref{lem:LB1}(iii), $x$ being odd in $\tilde G$), and since
+$\deg_{\tilde G}(x)=\deg_G(x)-1\ge5$, the unique path ending at $x$ continues
+through $x$; cutting it at $x$ adds one path (at most $\floor{n/2}$ in all)
+and raises the endpoint count at $x$ to $3$ --- route~(b);
+\item a decomposition $\tilde D$ with $|\tilde D|\le\floor{n/2}$ and $\tilde D(x)\ge3$: then
+$xv$ is addible towards $v$, the passing count at $v$ being at most $1$ ($z$ is the only
+neighbour of $v$ in $\tilde G$ that can be dead; all other neighbours are odd);
+\item such a decomposition with $\tilde D(x)=1$ and $\tilde D(z)\ge1$: the passing count at
+$v$ drops to $0$;
+\item such a decomposition with $\tilde D(v)\ge2$ larger than the number of dead private
+EV-neighbours of $x$: reinsert $xv$ towards $x$ (the passing count at $x$ sees only private
+EV-neighbours of $x$, the other neighbours of $x$ being active), so that $v$ remains active
+and the full star, including $uv$, is absorbable;
+\item $\tilde G$ has at least two components of odd order: the component-wise
+Theorem~\ref{thm:fan}, summed with Lemma~\ref{lem:sum}, gives route~(a).
+\end{enumerate}
+The budget arithmetic of the reinsertion skeleton behind routes (a)--(d),
+and the formal statement that the exception of this corollary is exactly the
+simultaneous failure of all five routes at \emph{every} common EV-neighbour,
+are given in Appendix~\ref{app:band} (Theorem~\ref{thm:escape} and
+Corollary~\ref{cor:corner}).
+The stated exception is exactly the case in which, for every common EV-neighbour $v$, none of
+the five routes applies.
+
+\emph{Band closure of the corner.} One further narrowing is available in the constructed
+family of Remark~\ref{rem:gap} (Definition~\ref{def:family}). Route~(a) can fail there only when $\tilde G$ carries a
+\emph{deadlock band} (an even vertex of $\tilde G$ with more corridor neighbours than
+terminal units; see Remark~\ref{rem:gap} for the definition), because a band-free $\tilde G$
+in the family has $\pn(\tilde G)=\mathrm{odd}(\tilde G)/2$
+(Theorem~\ref{thm:bandfree} in Appendix~\ref{app:band}); and the counting theorem
+(Proposition~\ref{prop:gapnoband}) forces $\tilde G$ to be band-free whenever the counting gap
+$\floor{n/2}-\mathrm{odd}(\tilde G)/2$ --- which is at least $1$ in this situation --- is at
+most $2$, on the family proper (the constructed family without cross-private pairs).
+Hence for every family-proper instance with counting gap at most $2$,
+route~(a) applies unconditionally: the corner is empty at theorem level, not merely
+computationally; the cross-private instances are backed at probe level by the machine
+certificates of Appendix~\ref{app:comp}. For larger gaps the corner is blocked only by the excess bound recorded in
+Remark~\ref{rem:gap}.
+\end{proof}
+
+\begin{corollary}\label{cor:uniquehigh}
+If $G$ satisfies (A1) and (A2) and has \emph{exactly one} high vertex, then
+$\pn(G)\le\floor{n/2}$.
+\end{corollary}
+
+\begin{proof}
+Let $u$ be the unique high vertex. Every vertex other than $u$ is low, so every even vertex
+$x\notin\{u\}\cup N_{\EV}(u)$ satisfies
+$\dEV(x)-|N_{\EV}(x)\cap N_{\EV}(u)|\le\dEV(x)\le 3$; this is condition (A4) of
+Theorem~\ref{thm:Astar}. (Alternatively, with only one high vertex the separation hypothesis of
+Theorem~\ref{thm:sep} holds vacuously.)
+\end{proof}
+
+We now formulate the statement with neither the alignment nor the separation condition, which is
+the form investigated in the computational study behind this paper and which all our computations
+support.
+
+\begin{conjecture}\label{conj:Astar}
+Let $G$ be a connected graph such that $\EV(G)$ is triangle-free, and every vertex $v$ with
+$\dEV(v)\ge 4$ has odd $\dEV(v)$ and only EV-neighbours $w$ with $\dEV(w)\le 3$. Then
+$\pn(G)\le\floor{n/2}$.
+\end{conjecture}
+
+\begin{remark}[where the general argument stops]\label{rem:gap}
+The class {\rm(A1)--(A2)} is not preserved by the only deletion the engine
+supports. Deleting the E-star at a high vertex $u$ turns every star vertex odd;
+an even vertex $x$ outside the star keeps its degree but loses the E-degrees
+contributed by star vertices, and its E-degree in $\tilde G=G-F$ equals
+$\dEV(x)-t_x$ with $t_x=|N_{\EV}(x)\cap N_{\EV}(u)|$. If $x$ is a high vertex
+with $t_x$ odd and $\dEV(x)-t_x\ge 4$, then $x$ sits in $\EV(\tilde G)$ at an
+even E-degree, the class is lost, and neither Theorem~\ref{thm:fan} nor the
+induction applies to $\tilde G$. Concretely, in the double star on
+$\{u,x,v_1,w_1,\dots,w_4,y_1,\dots,y_4\}$ with edges
+$uv_1,uw_1,\dots,uw_4,xv_1,xy_1,\dots,xy_4$ and pendant leaves attaching so
+that the eleven listed vertices have even degree, both $u$ and $x$ are high
+with $\dEV=5$, $t_{ux}=1$ is odd, and after deleting the star at $u$ the vertex
+$x$ has E-degree $4$, even. This graph (and its even-order one-leaf extension,
+on which our exact programs give $\pn=5\le 11$) satisfies {\rm(A1)--(A2)} but
+none of {\rm(A4)}, the separation condition, or the profile condition of
+Remark~\ref{rem:CO}; a minimal counterexample to
+Conjecture~\ref{conj:Astar}, if it exists, must have a high vertex with such a
+bad partner at {\rm every} high vertex (Proposition~\ref{prop:residue}).
+No counterexample is known: exact dynamic programs verify
+$\pn\le\floor{n/2}$ on all tested instances satisfying {\rm(A1)--(A2)} (166
+instances in the computational study behind this paper, a further $413$ in
+Appendix~\ref{app:comp}, zero violations), and the family above sits far from
+the bound ($\pn=\mathrm{odd}(G)/2$).
+
+The ``one endpoint unit'' obstruction recorded in an earlier draft of this section was an
+artefact: the reinsertion bookkeeping it refers to restores $k+2$ edges after deleting $k+1$,
+i.e.\ counts the patched edge $xv_1$ twice (an activation step towards $v_1$ and a final step
+towards $x$). Once $x$'s endpoint loss is recognised as cost-free --- $|D|$ is the only
+invariant, and the argument of Theorem~\ref{thm:twohigh} involves no induction --- the
+obstruction disappears for all two-high graphs except the corner recorded in
+Corollary~\ref{cor:twohigh}.
+
+The exceptional graphs of Corollary~\ref{cor:twohigh} are subject to five simultaneous
+constraints, of which only the first two were recorded when the corner was first isolated:
+the burial of the third EV-neighbour $z$ and of $v$ (or of enough private neighbours of $x$)
+in \emph{every} optimal decomposition of $\tilde G$ (with $\tilde G$ as in
+Corollary~\ref{cor:twohigh}), and the parity of the components of $\tilde G$, are each
+individually sufficient to reopen the reinsertion argument (the edge $xv$ can then be added
+towards $v$ at zero passing cost, or a second deletion $G-\tilde G$ becomes unnecessary). No
+instance satisfying even the original two constraints was found: across $207$ constructed
+instances of the dirty class---including the entire range where the counting gap
+$\floor{n/2}-\mathrm{odd}(\tilde G)/2$ attains its minimum $1$, which the degree capacity of
+the two far vertices forces to a single parameter-free shape---a decomposition of $\tilde G$
+with at most $\floor{n/2}-1$ paths was always produced, so the corner never materializes in
+computation.
+
+The band-free tightness statement is now a theorem for the \emph{constructed family} (the
+two-high graphs satisfying the invariants of our construction pipeline: no $\EV$-edge joins
+two far even vertices of $\tilde G$; the odd-neighbour blocks of $u$ and of $x$ are of leaf
+type (an odd number of pendant leaves) or gadget type, possibly mixed; every far vertex of
+$\tilde G$ has degree at most $4$; the $207$ instances above and the $125$ decision-level
+instances of Appendix~\ref{app:comp} all lie in it). Writing, for an even vertex $f$ of
+$\tilde G$, $Y(f)$ for its \emph{corridor} neighbours --- the degree-two even vertices
+adjacent to both $x$ and $f$ --- and $N(f)$ for its neighbour set in $\tilde G$, call $f$ a
+\emph{deadlock band} if it has more corridor neighbours than terminal units, where the
+terminal units of $f$ are its remaining incident edges (in symbols,
+$|Y(f)|>|N(f)|-|Y(f)|$). If no even vertex is a deadlock band, then $\tilde G$ admits a
+\emph{paired} decomposition: exactly $\mathrm{odd}(\tilde G)/2$ paths with all and only the
+odd vertices of $\tilde G$ as endpoints. The proof (Theorem~\ref{thm:bandfree} in
+Appendix~\ref{app:band}) is a five-step pairing
+scheme---self-contained odd-neighbour blocks, forced fusions of the corridors and of the unit
+at the common neighbour, an injective pairing of corridor ends with distinct terminal units
+at every far vertex (which is precisely the negation of the band condition), and a sorted
+offset matching at $x$ that never joins two corridors of the same far vertex, possible
+because a far vertex of the family has degree at most $4$ and hence at most two corridors.
+Every resulting trail visits $x$ once and leaves each far vertex for good, so no trail
+closes. A single band, on the other hand, costs exactly one path: spending the free edge of
+$x$ on a surplus corridor makes that corridor a double endpoint and lets its partner ride
+through $x$ to a terminal, matching the exact value
+$\pn(\tilde G)=\mathrm{odd}(\tilde G)/2+1$ computed by dynamic program. Consequently the
+corner of Corollary~\ref{cor:twohigh} is empty whenever the counting gap is at most $2$,
+unconditionally on the constructed family proper, with the cross-private extension covered
+at probe level by the machine certificates of Appendix~\ref{app:comp} (Proposition~\ref{prop:gapnoband} and
+Corollary~\ref{cor:bandiff} in Appendix~\ref{app:band}); for larger gaps it remains blocked only by the
+excess bound $\mathrm{excess}\le\lfloor y/2\rfloor$, where
+$\mathrm{excess}:=\pn(\tilde G)-\mathrm{odd}(\tilde G)/2$ and $y$ is the number of corridors
+--- verified on all $235$ computed instances of the family, the provable bound being
+$\pn(\tilde G)\le \mathrm{odd}(\tilde G)/2+2B-1$ for $B$ bands
+(Proposition~\ref{prop:excb}), with a single band forcing
+exactly $+1$ (Proposition~\ref{prop:patch}). The restriction to the constructed family is now
+known to be sharper than necessary in two directions and irreducible in a third. Far--far
+edges of the even subgraph and far vertices carrying several parity leaves, both excluded by
+the construction, can be admitted: the corridor ends at a far vertex $f$ admit an injective
+pairing with terminal units and far--far ends whenever $|Y(f)|\le t(f)+d(f)$ (where $t(f)$ is
+the number of terminal units of $f$ and $d(f)$ its far--far degree), and the matching at $x$
+survives arbitrary corridor multiplicities because a far vertex of the class has at most
+three even neighbours, so a rearrangement argument replaces the sorted offset. What cannot be
+admitted are arbitrary odd-neighbour blocks: a block whose component has exactly two odd
+vertices admits a paired decomposition if and only if it admits a Hamilton path between them,
+and the cycle-with-one-pendant and double-triangle blocks have none, so $\tilde G$ can be
+untight while carrying no band at all---the band-free tightness statement is a phenomenon of
+the constructed family, not of the class, and these cycle blocks are the first known
+counterexamples to the general band-free statement. (Same-side pairs of private neighbours, a
+third candidate obstruction, are excluded by the triangle-free condition {\rm(A1)} already.)
+The counting gap of the dirty class also assumes that every even vertex lies in the
+skeleton; blocks with even interior vertices shift $\floor{n/2}$ and must be recomputed
+directly (see Appendix~\ref{app:comp} for the machine certificates).
+\end{remark}
+
+\begin{proposition}\label{prop:residue}
+Let $G$ be a minimal counterexample to Conjecture~\ref{conj:Astar}. Then every
+high vertex $u$ of $G$ admits a far high vertex $x$ with
+$|N_{\EV}(x)\cap N_{\EV}(u)|$ odd and $\dEV(x)-|N_{\EV}(x)\cap N_{\EV}(u)|\ge4$.
+In particular, by Theorem~\ref{thm:twohigh} a minimal counterexample has at least three high
+vertices, unless it is one of the two-high exceptional graphs of Corollary~\ref{cor:twohigh}
+(empty on the constructed family proper whenever the counting gap is at most two, by the
+band-free tightness material of Remark~\ref{rem:gap} and Appendix~\ref{app:band}, with the
+cross-private extension covered at probe level by the machine certificates of
+Appendix~\ref{app:comp}; no instance was found in our computations, in or beyond the family).
+\end{proposition}
+\begin{proof}
+Read ``minimal'' as minimal with respect to the number of edges, and let $u$
+be a high vertex of $G$. We show that if $u$ has no bad partner, then
+$\pn(G)\le\floor{n/2}$, contradicting the choice of $G$; hence $u$ has a bad
+partner. Suppose, then, that no far even vertex $x$ satisfies
+$t_x$ odd and $\dEV(x)-t_x\ge4$, where $t_x=|N_{\EV}(x)\cap N_{\EV}(u)|$.
+Let $F$ be the E-star at $u$ and $\tilde G=G-F$. As in Step~1 of the proof of
+Theorem~\ref{thm:Astar}, the even-degree vertices of $\tilde G$ are precisely
+the far even vertices of $G$, $\EV(\tilde G)$ is an induced subgraph of
+$\EV(G)$ and hence triangle-free, and a far vertex $x$ has E-degree
+$\dEV(x)-t_x$ in $\tilde G$. Thus every high vertex of $\tilde G$ is a far
+even vertex $x$ of $G$ with $\dEV(x)-t_x\ge4$; by our assumption $t_x$ is
+even for such an $x$, and since $\dEV(x)\ge4$ makes $x$ high in $G$, (A2)
+gives $\dEV(x)$ odd, so the E-degree $\dEV(x)-t_x$ of $x$ in $\tilde G$ is
+odd. Moreover the EV-neighbours $w$ in $\tilde G$ of such an $x$ satisfy
+$\dEV(w)-t_w\le\dEV(w)\le3$, the last inequality by (A2) applied to the high
+vertex $x$ in $G$. Hence $\tilde G$ satisfies {\rm(A1)} and {\rm(A2)}. Each
+component of $\tilde G$ is a connected graph satisfying {\rm(A1)}--{\rm(A2)}
+with fewer edges than $G$ (as $u$ is high, $F\neq\emptyset$), so by minimality
+each admits a decomposition with at most $\floor{n_c/2}$ paths, and
+Lemma~\ref{lem:sum} gives a decomposition $\tilde D$ of $\tilde G$ with
+$|\tilde D|\le\floor{n/2}$. Now the reinsertion argument of Steps~3 and~4 of
+the proof of Theorem~\ref{thm:Astar} uses (A4) only through the existence of
+such a $\tilde D$: the star vertices are odd in $\tilde G$, so the hypothesis
+of Lemma~\ref{lem:fan7} holds read over $G$ exactly as in Step~3, and each
+edge of $F\setminus A$ is addible towards its star vertex against a passing
+count of at most $\dEV(v)-1\le2$ (by (A2)) and a budget of at least $3$. The
+full star is restored with $|D|=|\tilde D|\le\floor{n/2}$ paths --- a
+contradiction.
+\end{proof}
+
+We also record a structural consequence of (A1) on odd orders, used below to place the
+sharpness family of Proposition~\ref{prop:oscsharp} relative to the class.
+
+\begin{proposition}\label{prop:odddensity}
+Let $G$ be connected of odd order $n$ with $\EV(G)$ triangle-free. Then
+$m\le (n-1)^2/2$; equivalently, no odd semi-clique has triangle-free
+$\EV(G)$.
+\end{proposition}
+\begin{proof}
+Suppose $c=\binom{n}{2}-m\le (n-3)/2$. Let $S$ be the set of even-degree
+vertices, $s=|S|$; since $n$ is odd, a vertex has odd degree iff its
+complement-degree is odd, so each vertex outside $S$ has positive
+complement-degree. Let $t$ be the number of complement edges inside $S$.
+Since $G[S]=\EV(G)$ is triangle-free, Mantel's theorem gives
+$\binom{s}{2}-t\le\floor{s^2/4}$, i.e.\ $t\ge \binom{s}{2}-\floor{s^2/4}$.
+Counting complement degrees over $S$ and over its complement separately,
+$2c\ge 2t+(n-s)$, so $2t\le s-3$. If $s$ is even this reads
+$s(s-2)/2\le s-3$, i.e.\ $s^2-4s+6\le0$; if $s$ is odd,
+$(s-1)^2/2\le s-3$, i.e.\ $s^2-4s+7\le0$; both are impossible. (Note
+$s\ge1$: the number of odd-degree vertices is even while $n$ is odd.)
+\end{proof}
+
+We record the sharpness of the triangle-free requirement. By
+Proposition~\ref{prop:odddensity} this failure is a density phenomenon: on odd orders, high
+density and (A1) are mutually exclusive, so the following family is forced.
+
+\begin{proposition}\label{prop:oscsharp}
+For every $k\ge 2$, the graph $G_k=K_{2k+1}-(k-1)K_2$ (delete a matching of size $k-1$)
+satisfies $\EV(G_k)\cong K_3$, hence violates (A1), and
+$\pn(G_k)\ge k+1=\ceil{n/2}>\floor{n/2}$. Moreover $\pn(G_k)=k+1$ for the tested values
+$k\in\{2,3,4,5,6,8,10\}$, with explicit decompositions machine-verified.
+\end{proposition}
+
+\begin{proof}
+The $k-1$ matched vertices have degree $2k-1$ and the three unmatched vertices have degree
+$2k$; the latter are pairwise adjacent, so $\EV(G_k)$ is a triangle on them. The edge count is
+$m=\binom{2k+1}{2}-(k-1)=2k^2+1$, so Lemma~\ref{lem:LB2} gives
+$\pn\ge\ceil{(2k^2+1)/2k}=k+1$; equivalently $G_k$ is an odd semi-clique and
+Observation~\ref{obs:density} applies. This proves the necessity claim for all $k$. For the
+tested values, explicit decompositions into $k+1$ paths (obtained from the Walecki cycle
+decomposition of $K_{2k+1}$, spreading the matching edges over distinct cycles, cutting each
+affected cycle at its matching edge and splitting the untouched cycle into a path plus a single
+edge) were verified by machine to partition $E(G_k)$ exactly; for $k=2$ the value
+$\pn(K_5-M_1)=3$ is also certified by exact dynamic programming.
+\end{proof}
+
+\begin{remark}
+The exactness claim in Proposition~\ref{prop:oscsharp} is stated only for tested $k$: the
+existence, for all $k$, of a Walecki-type cycle decomposition of $K_{2k+1}$ in which a given
+$(k-1)$-matching is spread over distinct cycles is plausible but we do not prove it.
+\end{remark}
+
+Next, the witness family $W(m)$, which motivates Theorem~\ref{thm:Astar}: it lies in no
+published class we are aware of, yet satisfies all hypotheses.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.92\textwidth}\small
+For odd $m\ge 5$, let $W(m)$ have vertex set
+$\{a_1,a_2\}\cup\{b_1,\dots,b_m\}\cup\{\ell_1,\ell_2\}\cup\{h,h'\}\cup\{x_1,\dots,x_6\}$ and
+edge set
+\[
+E(K_{2,m}) \;\cup\; \{a_1\ell_1,\,a_2\ell_2\} \;\cup\;
+\{b_1h,\,b_1h'\} \;\cup\; \{hx_1,\,hx_2,\,h'x_1,\,h'x_2\} \;\cup\; E(K_6),
+\]
+where $K_6$ has vertex set $\{x_1,\dots,x_6\}$. Precisely: $h$ and $h'$ each have neighbourhood
+$\{b_1,x_1,x_2\}$.
+\end{minipage}
+\caption{The witness family $W(m)$.}\label{fig:Wm}
+\end{figure}
+
+\begin{lemma}\label{lem:WmEV}
+For every odd $m\ge 5$, the graph $W(m)$ of Figure~\ref{fig:Wm} satisfies
+$\EV(W(m))\cong K_{2,m}$ exactly, hence satisfies (A1) and (A2) with $\dEV(a_1)=\dEV(a_2)=m$
+and $\dEV(b_j)=2$ for all $j$.
+\end{lemma}
+
+\begin{proof}
+The degrees are:
+$\deg(a_i)=m+1$, even; $\deg(b_j)=2$ for $j\ge2$ and $\deg(b_1)=4$, all even;
+$\deg(\ell_i)=1$, $\deg(h)=\deg(h')=3$, and $\deg(x_i)=5+2=7$ for $i\in\{1,2\}$,
+$\deg(x_i)=5$ for $i\in\{3,\dots,6\}$, all odd. Hence the even-degree vertex set is exactly
+$\{a_1,a_2\}\cup\{b_1,\dots,b_m\}$, and the induced subgraph is $K_{2,m}$: triangle-free, with
+$\dEV(a_i)=m$ odd and all EV-neighbours of $a_i$ of E-degree $2\le3$. Note that the two
+degree-$3$ vertices $h,h'$ attach to $b_1$ \emph{in pairs} (both $h$ and $h'$), keeping $b_1$
+even; attaching a single such vertex would flip $b_1$ to odd degree and destroy the structure.
+\end{proof}
+
+\begin{proposition}\label{prop:Wmbound}
+For every odd $m\ge 5$, $\pn(W(m))\le\floor{n/2}$ with $n=m+12$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:WmEV} the graph satisfies (A1), (A2). We verify (A4) at $u=a_1$: the only
+even-degree vertex outside $\{a_1\}\cup\{b_1,\dots,b_m\}$ is $a_2$, and, since
+$N_{\EV}(a_1)=N_{\EV}(a_2)=\{b_1,\dots,b_m\}$,
+$\dEV(a_2)-|N_{\EV}(a_2)\cap N_{\EV}(a_1)|=m-m=0\le3$; every vertex outside this set other than
+$a_2$ has odd degree, hence is not in $\EV(\tilde G)$ after the deletion and is irrelevant (its
+E-degree in $\tilde G$ is $0$). Thus (A4) holds, and
+Theorem~\ref{thm:Astar} gives $\pn(W(m))\le\floor{(m+12)/2}$. For $m\in\{5,7,9\}$ explicit
+decompositions into exactly $\floor{n/2}=8,9,10$ paths were in addition machine-verified.
+\end{proof}
+
+We now compare Theorem~\ref{thm:Astar} with the published record. The following two statements
+make the incomparability precise; both witnesses have exactly computed path numbers.
+
+\begin{proposition}[escape]\label{prop:escape}
+Let $m\ge5$ be odd and let $W(m)$ be as in Figure~\ref{fig:Wm}. Then $\EV(W(m))\cong K_{2,m}$,
+whence Theorem~\ref{thm:Astar} gives $\pn(W(m))\le\floor{n/2}$ with $n=m+12$. No published
+theorem known to us implies this bound:
+\begin{itemize}[leftmargin=1.5em]
+\item every member of the Fan line \cite{Fan05,BS21,FHZ23} requires the blocks of $\EV(G)$ to
+have maximum degree at most $3$, while $\Delta(\EV(W(m)))=m\ge5$;
+\item $W(m)$ contains a $K_6$, so $\mathrm{tw}(W(m))\ge5$ and its degeneracy is at least $5$,
+which excludes \cite{LY24} (treewidth $\le4$), \cite{BCLS20} (treewidth $\le3$) and
+\cite{ZLH24} ($3$-degenerate);
+\item $\Delta(W(m))=\max(m+1,7)\ge7$, which excludes \cite{BP19} ($\Delta\le5$) and
+\cite{CFL} ($\Delta\le6$ with an independence condition);
+\item $\Delta(W(m))\ge7$, so $W(m)$ is not subcubic and the polynomial-time algorithm of
+\cite{MY26} for subcubic graphs does not apply;
+\item $\EV(W(m))\cong K_{2,m}$ contains a $4$-cycle, so it is not a forest and \cite{Pyb96}
+does not apply;
+\item $W(m)$ is not Eulerian, so \cite{FK88} does not apply; it is not a block graph, so
+\cite{CW25} does not apply.
+\end{itemize}
+For $m\in\{5,7,9\}$ every membership and non-membership claim above, together with explicit
+decompositions into $\floor{n/2}$ paths, is machine-certified.
+\end{proposition}
+
+\begin{proposition}[proper inclusion in both directions]\label{prop:incomp}
+The class of Theorem~\ref{thm:Astar} neither contains nor is contained in the Botler--Sambinelli
+class $\mathcal{G}$ \cite{BS21} or the Fan--Hou--Zhou class \cite{FHZ23}.
+\begin{enumerate}[label={\rm(\roman*)},leftmargin=2em]
+\item Let $G$ be $K_{2,5}$ with one pendant leaf attached to each of the two degree-$5$
+vertices. Then $\EV(G)\cong K_{2,5}$ is triangle-free, the two degree-$5$ vertices have odd
+E-degree $5$ with all E-neighbours of E-degree $2$, so $G$ satisfies (A1)--(A2); but
+$\Delta(\EV(G))=5$, so $G$ lies in none of \cite{Fan05,BS21,FHZ23}. Moreover
+$\pn(G)=3\le\floor{9/2}$ by exact computation. (For the record, $G$ is $2$-degenerate, so its
+bound is also implied by \cite{ZLH24}; this witness is used only for the incomparability with
+the Fan line.)
+\item Let $G'$ be a triangle $\{t_1,t_2,t_3\}$ together with two vertices $w_1,w_2$ adjacent
+only to $t_1$ and to three pendant leaves each, so that $\EV(G')$ consists of the triangle
+$\{t_1,t_2,t_3\}$ plus the two bridge edges $t_1w_1$, $t_1w_2$. Every block of $\EV(G')$ has
+maximum degree at most $3$ and its single component contains exactly one block with triangles,
+so $G'$ lies in $\mathcal{G}$ and in the Fan--Hou--Zhou class; yet the triangle in $\EV(G')$
+violates (A1), so Theorem~\ref{thm:Astar} is silent on $G'$. Note $G'$ is not one of the
+degenerate exceptions of the ``Gallai-or-SET'' alternative of \cite{BS21}. Exactly,
+$\pn(G')=4\le\floor{11/2}$ by exact computation, while the main theorem of \cite{BS21}
+gives only $\pn(G')\le\ceil{11/2}=6$ on its class (the Botler--Sambinelli bound is stated
+with Gallai's ceiling, as noted in Section~\ref{sec:intro}); the Fan--Hou--Zhou membership
+of $G'$ rests on the block structure of $\EV(G')$ alone and is unaffected.
+\end{enumerate}
+\end{proposition}
+

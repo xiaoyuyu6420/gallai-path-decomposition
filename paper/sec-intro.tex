@@ -1,0 +1,545 @@
+% ============================================================================
+% sec-intro.tex — Introduction, notation, and the shape of the results.
+% Label prefix: int: (all labels owned by this file).
+% ============================================================================
+\section{Introduction, notation, and the shape of the results}\label{sec:intro}
+
+Let $G$ be a finite connected simple graph on $n$ vertices. A \emph{path decomposition} of
+$G$ is a partition of $E(G)$ into paths, and $\pn(G)$ denotes the minimum number of paths in
+such a decomposition. In his 1966 Tihany lecture, published as \cite{Gallai68}, Gallai
+conjectured that $\pn(G)\le\ceil{n/2}$ for every connected $G$; the conjecture was
+communicated by Erd\H{o}s and is tracked as problem \#583 in \cite{EP583}. It remains open,
+with $\floor{2n/3}$ the best general upper bound, due to Dean and Kouider \cite{DK00}.
+
+The case analysis of the last six decades has been organized, to a remarkable degree, by the
+structure of the subgraph $\EV(G)$ induced by the even-degree vertices, together with bounds
+on the degrees of $G$ itself. Lov\'asz \cite{Lo68} showed that $E(G)$ decomposes into at most
+$\floor{n/2}$ paths and cycles, and settled the case $|\EV(G)|\le1$; Pyber \cite{Pyb96}
+proved that $\EV(G)$ a forest implies $\pn(G)\le\floor{n/2}$, with the general bound
+$n/2+O(n^{3/4})$; Favaron and Kouider \cite{FK88} settled Eulerian graphs of maximum
+degree~$4$; and Fan \cite{Fan05} proved the conjecture when every block of $\EV(G)$ is
+triangle-free with maximum degree at most~$3$. Two strengthenings followed: Botler and
+Sambinelli \cite{BS21} proved it for graphs whose $\EV(G)$ is a subgraph of a graph in their
+class $\mathcal{G}$ (each block of $\EV(G)$ of maximum degree at most~$3$, at most one
+triangular block per component; their main theorem is stated with Gallai's ceiling
+$\ceil{n/2}$ rather than the floor of Theorem~\ref{int:thm-fan} below), and Fan, Hou and
+Zhou \cite{FHZ23} proved it when $\EV(G)$ contains no pair of triangles and every block of
+$\EV(G)$ has maximum degree at most~$3$. A parallel track bounds the degrees of $G$ itself:
+$\Delta\le5$ \cite{BP19} and treewidth at most~$3$ \cite{BCLS20}. The class-based programme then accelerated: Zhang, Liu and Hong \cite{ZLH24}
+proved the conjecture, with the sharper $\floor{n/2}$ bound, for all $3$-degenerate graphs
+except $K_3$ and $K_5^-$; Lu and Yi \cite{LY24} did the same for treewidth at most~$4$ with
+exceptions $K_3$, $K_5^-$, $K_5$; and Chen and Wu \cite{CW25} settled it for block graphs.
+On the algorithmic side, exact path partitions on subcubic graphs are computable in
+polynomial time \cite{MY26}. Two further general results bound the problem from above: for
+triangle-free graphs, Chu, Fan and Zhou \cite{CFZ22} proved the global bound
+$\pn(G)\le 3n/5$; for the \emph{odd semi-cliques} (Definition~\ref{int:def-osc}), the
+question raised by Bonamy and Perrett \cite{BP19} whether $\pn(G)\le\floor{n/2}$ holds for
+every connected graph that is not an odd semi-clique has its first substantial progress in
+Chu, Fan and Zhou \cite{CFZ26}: if the E-subgraph ($\EV(G)$) is isomorphic to a complete
+graph $K_m$ with $m\le15$, then $\pn(G)\le\floor{n/2}+1$. Finally, minimal path
+decompositions of complete bipartite graphs were studied by Constantinou and Ellinas
+\cite{CE18}, whose algorithms cover three of four parameter cases; we return to the open
+case below.
+
+\subsection{Blocks versus global maximum degree}\label{int:subsec-blockvsglobal}
+
+The Fan-line conditions quoted above are \emph{block-level}: they constrain the blocks of
+$\EV(G)$ one by one, not $\EV(G)$ as a whole. The distinction is not pedantic; the two
+readings are not equivalent, in either direction. In $K_{1,5}$ with one pendant leaf attached
+at each of its six vertices, the even-degree subgraph is $\EV(G)\cong K_{1,5}$, which has a
+vertex of E-degree~$5$, while every block of $\EV(G)$ is a single edge (maximum degree~$1$):
+a large \emph{global} degree can coexist with a Fan-line hypothesis satisfied block by block.
+Conversely, a cut vertex of $\EV(G)$ may belong to arbitrarily many blocks each of maximum
+degree at most~$3$, so the absence of high E-degree vertices is stronger than the block
+condition. Accordingly, the correct reading of the twenty-year-old Fan-line hypothesis is:
+\emph{every block of $\EV(G)$ is triangle-free and has maximum degree at most~$3$}
+\cite{Fan05}, read through Theorem~2(c) of \cite{BS21}, with the forest case of
+Theorem~2(b) of \cite{BS21} going back to Pyber \cite{Pyb96}. The theorems of
+Section~\ref{subsec:astar} are new precisely at the block level: they admit a \emph{block} of
+$\EV(G)$ of maximum degree at least~$4$.
+
+\subsection{Contributions}\label{int:subsec-contrib}
+
+The paper has four mathematical parts (Parts~I--III being constructive and Part~IV
+conditional and machine-backed) and a verification apparatus. We list the contributions,
+with pointers to the sections that carry them.
+
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item \textbf{The exact path number of $K_{4,n}$ for odd $n$, and a decision procedure for
+the even columns of Case~4 of \cite{CE18}} (Section~\ref{subsec:k4odd}). Constantinou and
+Ellinas \cite{CE18} partition the parameter pairs of $K_{n_1,n_2}$ into four cases and give
+minimal-decomposition algorithms for three of them, leaving open Case~4 (odd $n_1$,
+$1\le n_2\le n_1-1$) with an explicit request for its ``exact characteristics''. We close the
+$n_2=4$ column completely:
+\[
+\pn(K_{4,n})=(n+1)/2 \qquad\text{for every odd } n\ge3,
+\]
+improving the best published bound for the family (the published bound $k+2$, where
+$n=2k+1$, from \cite{Pyb96,Fan05,LY24}) by one. The value for odd $n\ge3$ is formalized in Lean as a
+single theorem with axiom profile \texttt{[propext, Classical.choice, Quot.sound]} and no
+\texttt{sorryAx}; numeric corollaries at $n=5,13,19$ follow from it without independent
+gaps. For the remaining even columns we prove a general counting cap, a structure theorem
+for optimal decompositions across the whole even range, and a \emph{ring-closure theorem}
+(one explicit base decomposition of $K_{2k_0+1,2h}$ into $k_0+1$ paths extends, by an
+explicit construction, to every $k\ge k_0+h+1$); the column $n_2=6$ closes completely, the
+columns $n_2=8,10$ close except for five named base instances, and the conjecture that
+$\pn(K_{n_1,n_2})=\ceil{n_1/2}$ throughout the even range (Conjecture~\ref{conj:con27A} in the
+body) becomes a column-by-column decision procedure with $h+1$ base instances per column.
+
+\item \textbf{Odd clique chains: refinements beyond block graphs, with the domain fixed}
+(Section~\ref{subsec:chains}). Chen and Wu \cite{CW25} proved Gallai's conjecture for all block
+graphs. For the subfamily of \emph{odd clique chains} --- block graphs whose block tree is a
+path and whose blocks are $B_i\cong K_{2j_i+1}$ with \emph{all $j_i$ odd}, i.e.\ blocks of
+order $\equiv 3 \pmod 4$, $K_3$ allowed --- we prove
+\[
+\pn(G)\le \floor{n/2}\ \ (b\ge2), \qquad \pn(G)\le \floor{n/2}-1\ \ (b\ge4),
+\]
+where $b$ is the number of blocks and $n=2\sum_i j_i+1$, along with the exact value
+$\pn(G)=\ceil{n/2}$ for a single block. Two qualifications fix the domain precisely. First,
+\emph{every} vertex of such a chain has even degree: a non-cut vertex of a block
+$K_{2j_i+1}$ has degree $2j_i$, and a cut vertex shared by consecutive blocks has degree
+$2j_i+2j_{i+1}$; hence $\EV(G)=G$. Second, the complementary case --- chains containing
+blocks of order $1 \pmod 4$ (even $j_i$, e.g.\ $K_5$) --- is \emph{open}: no general
+construction is known, and in-chain existence is machine-verified only for the block values
+$K_5$ and $K_9$. For $b=3$ the $-1$ refinement is likewise open and reduces to a
+distinctness question on the middle block. The local engine is: \emph{for every odd $j$ and
+every Hamilton path $P$ of $K_{2j+1}$, the graph $K_{2j+1}-P$ decomposes into $j$ paths};
+the base zigzag objects are classical \cite{LP92,Alspach08}, the statement for an
+arbitrarily prescribed Hamilton path appears to be new.
+
+\item \textbf{Fan-type theorems admitting a block of $\EV(G)$ of maximum degree $\ge4$}
+(Section~\ref{subsec:astar}). The Fan line \cite{Fan05,BS21,FHZ23} has kept its requirement at
+the block level for twenty years: every block of $\EV(G)$ has maximum degree at most~$3$.
+We prove class theorems that admit a block of $\EV(G)$ of maximum degree at least~$4$:
+Theorems~\ref{thm:claAstar} and~\ref{thm:lasep} (if $\EV(G)$ is triangle-free, high E-degrees are compensated by an
+odd-degree condition, and an explicit alignment condition holds at one high vertex, then
+$\pn(G)\le\floor{n/2}$; and the same bound with no alignment hypothesis
+whenever distinct high vertices have no common EV-neighbour), and a two-high-vertex theorem
+with a corner-case reduction. An honesty note travels with these results: our witness
+family $W(m)$ ($m$ odd, $\ge5$) has $\EV(W(m))\cong K_{2,m}$, a single block of maximum
+degree $m$, and has treewidth $5$, degeneracy $5$ and maximum degree at least $m+1$; it
+therefore lies \emph{outside} the degeneracy and treewidth classes of \cite{ZLH24,LY24} and
+outside every published class we are aware of, so our theorems and the class-based line
+\cite{ZLH24,LY24,BCLS20,BP19,CW25} are incomparable rather than competitive. The general
+statement is posed as Conjecture~\ref{conj:claAstar}.
+
+\item \textbf{A conditional route: Gallai modulo an explicit premise ledger} (Part~IV,
+Sections~\ref{sec:computation}--\ref{sec:open}). We develop an endpoint-budget framework: the
+per-vertex \emph{endpoint budget} $\beta(G,x)$ (Definition~\ref{int:def-budget}) and the
+\emph{budget conjecture} $K$ that $\beta(G,x)\le\ceil{n/2}$ always. On the proved side we
+establish an absorption-cost viewpoint (Remark~\ref{rem:absorb}) unifying three obstruction
+phenomena from the literature; that $K$ implies Gallai's conjecture
+(Theorem~\ref{int:thm-Kgallai}, proved here), so $K$ is a genuine strengthening; and a
+conditional chain (Theorem~\ref{int:thm-ledger}, stated here and carried at pointer level in
+the ledger subsection) assembling
+$\text{Gallai}\Leftarrow K\Leftarrow\text{degree-two layer of }K\Leftarrow
+\text{SC-PH}\Leftarrow\text{a placement conjecture}\Leftarrow\text{(E)+(R)}$, with the
+bridge from the valuation line (the criterion of Section~\ref{subsubsec:criteria}) carried as a
+parallel, redundant-for-implication route. The chapter's central deliverable is an \emph{explicit
+hypothesis ledger}: an eight-item premise set, restated descriptively in
+Section~\ref{int:subsec-conditional} below. The premise set mixes three kinds of conjuncts:
+external steps flagged as unverified against the journal record (the all-odd support of the
+Lov\'asz decomposition theorem as consumed by our proof of
+Theorem~\ref{int:thm-Kgallai}), open conjectures internal to the paper (BP-odd, the
+odd-order density conjecture, SC-PH), and paper-open items with machine backing. No premise
+is claimed to be proved.
+
+\item \textbf{Verification methodology} (Sections~\ref{sec:computation} and the formalization
+section, Appendices). All exact values and all decompositions cited in this paper were produced and
+re-checked by an independent machine pipeline (a bitmask dynamic program plus a
+decomposition verifier asserting that the parts are simple paths and exactly partition the
+edge set). The large-scale machine accounts of Part~IV are quoted at their measured
+strength, under two standing conventions. First, the \emph{one-way superset convention}:
+every machine check of the covering identity is performed in a reading that omits one
+definitional branch (the \texttt{v7} branch, whose machine face is frozen because the
+legacy candidate-generation source files are lost), giving a conservative superset
+$\mathrm{fam}_{\mathrm{noV7}}\subseteq\mathrm{Im}\cap L$; zero counterexamples on the
+superset face strictly imply zero counterexamples on the true face, and not conversely (the
+residual \texttt{v7}-only mass is nonzero and precisely measured on the tested domains).
+Second, the \emph{accounting layers are kept separate}: the nine-domain key tables
+(comprising $2{,}412{,}436$ keys and $98{,}602{,}396$ key-weighted positions over
+$N\in\{6,\dots,14\}$) are counted key-weighted, each key once, while the per-instance
+accounts at $N=8$ and $N=9$ are instance-weighted; the two accountings are never mixed, and
+the $N=14$ domain is an affine-normalized domain whose equivalence to exhaustive enumeration
+is unproven. Lean certificates carry their trust boundaries verbatim: theorems proved from
+first principles are reported with their axiom profiles, and finite certificates checked by
+\texttt{native\_decide} carry the kernel-reflection axiom \texttt{Lean.ofReduceBool}
+explicitly.
+\end{enumerate}
+
+\subsection{Claim-strength declaration}\label{int:subsec-claims}
+
+Six no-claim constraints bind the whole account, including this introduction; we state them
+verbatim. We do \emph{not} claim:
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2em]
+\item closure at $L\ge13$ (machine evidence at larger $N$ is extrapolation evidence, not
+proof; only candidate-level status is claimed there);
+\item general-$N$ paper closure of the covering identity (the general-$N$ existence half
+stays open);
+\item that the four-piece (E)+(R) landing is complete;
+\item paper closure of the general-$L$ uniform-construction account (the
+capacity-starved branch of the channel-or-menu dichotomy programme);
+\item full closure of that dichotomy programme;
+\item an unconditional theorem-form statement of the criterion of
+Conjecture~\ref{conj:clacand}. The Lean theorem \texttt{thmA2663\_upgraded} is a
+\emph{criterion-level bound}: under the explicit hypotheses that the target side has the
+prescribed size and that $\mathrm{val}\le1$, it proves $g_{13}\le d_2+1$ with axiom profile
+\texttt{[propext, Quot.sound]} and no \texttt{sorryAx}; the hypothesis $\mathrm{val}\le1$
+itself is \emph{not} proved by the theorem, and a per-instance criterion verified over
+finitely many $N$ is not a feasibility-existence proof for general $N$.
+\end{enumerate}
+
+\subsection{Notation and preliminaries}\label{int:subsec-notation}
+
+All graphs are finite, simple and undirected. A \emph{path} has at least one edge and no
+repeated vertex; a \emph{path decomposition} of $G$ is a set $D$ of paths whose edge sets
+partition $E(G)$; $\pn(G)$ is the minimum size of a path decomposition. For a decomposition
+$D$ and a vertex $x$ we write $D(x)$ for the number of paths of $D$ having $x$ as an
+endpoint. A \emph{block} of $G$ is a maximal $2$-connected subgraph or a bridge (together
+with its endpoints); every two blocks share at most one vertex, a \emph{cut vertex}. $G$ is
+\emph{$k$-degenerate} if every subgraph has a vertex of degree at most $k$. The
+\emph{even-degree subgraph} $\EV(G)$ is the subgraph induced by the vertices of even degree;
+for $v\in V(G)$ we write $\dEV(v)$ for the degree of $v$ inside $\EV(G)$, the \emph{E-degree}
+of $v$; a vertex with $\dEV(v)\ge4$ is called \emph{high}. Note that $\dEV(v)\ge4$ implies
+in particular that $v$ has even degree in $G$.
+
+We collect the three folklore lower bounds used throughout; proofs are included for
+completeness.
+
+\begin{lemma}[odd-degree lower bound; endpoint parity]\label{int:lem-LB1}
+Let $D$ be a path decomposition of $G$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item $2|D|\ge \mathrm{odd}(G)$, where $\mathrm{odd}(G)$ is the number of odd-degree
+vertices; in particular $\pn(G)\ge \mathrm{odd}(G)/2$;
+\item every odd-degree vertex is an endpoint of at least one path of $D$;
+\item for every vertex $v$, $D(v)\equiv \deg_G(v)\pmod 2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For a path $P$ and a vertex $v$, the degree of $v$ in $P$ is $0$, $1$ or $2$, and it is $1$
+exactly when $v$ is an endpoint of $P$. Summing over $D$,
+$\deg_G(v)=\sum_{P\in D}\deg_P(v)\equiv D(v)\pmod 2$, which gives (iii); (ii) is (iii) for
+odd $\deg_G(v)$; and (i) follows by charging each odd-degree vertex to one path ending at
+it, each path being charged at most twice.
+\end{proof}
+
+\begin{lemma}[edge-count lower bound]\label{int:lem-LB2}
+If $G$ is connected with $n\ge2$ vertices and $m$ edges, then
+$\pn(G)\ge \ceil{m/(n-1)}$.
+\end{lemma}
+
+\begin{proof}
+Each path has at most $n-1$ edges, so $k$ paths cover at most $k(n-1)$ edges.
+\end{proof}
+
+\begin{lemma}[disconnected sum]\label{int:lem-sum}
+If $G$ has components $G_1,\dots,G_c$ on $n_1,\dots,n_c$ vertices, then
+$\sum_i \floor{n_i/2}\le \floor{n/2}$.
+\end{lemma}
+
+\begin{proof}
+Immediate from $\sum_i \floor{n_i/2}\le \floor{\sum_i n_i /2}$ for integers.
+\end{proof}
+
+The three standard tools from the literature, stated in the form used later:
+
+\begin{theorem}[Lov\'asz \cite{Lo68}]\label{int:thm-lovasz}
+Every $n$-vertex graph (not necessarily connected) has a decomposition of its edge set into
+at most $\floor{n/2}$ paths and cycles.
+\end{theorem}
+
+\begin{theorem}[Pyber \cite{Pyb96}]\label{int:thm-pyber}
+If $\EV(G)$ is a forest, then $\pn(G)\le \floor{n/2}$.
+\end{theorem}
+
+\begin{theorem}[Fan \cite{Fan05}]\label{int:thm-fan}
+If every block of $\EV(G)$ is triangle-free with maximum degree at most $3$, then
+$\pn(G)\le \floor{n/2}$.
+\end{theorem}
+
+\begin{definition}[odd semi-clique; {\cite{BP19}}]\label{int:def-osc}
+An \emph{odd semi-clique} is a graph obtained from the complete graph on $2k+1$ vertices by
+deleting at most $k-1$ edges.
+\end{definition}
+
+\begin{observation}[density obstruction]\label{int:obs-density}
+An odd semi-clique on $n=2k+1$ vertices has
+$m\ge \binom{2k+1}{2}-(k-1)=2k^2+1$ edges, so by Lemma~\ref{int:lem-LB2}
+$\pn\ge \ceil{(2k^2+1)/2k}=k+1=\ceil{n/2}$; in particular no odd semi-clique admits a
+$\floor{n/2}$-path decomposition.
+\end{observation}
+
+Finally we record the classical Walecki partition of the complete graph of odd order, in
+the form used in Section~\ref{subsec:chains}; the base objects are classical
+\cite{LP92,Alspach08}. Fix $j\ge 1$ and let $V=\{\infty\}\cup \mathbb{Z}_{2j}$. For
+$k\in\mathbb{Z}_{2j}$ let $C_k$ be the cycle
+\[
+C_k \;=\; \infty,\, k,\, k+1,\, k-1,\, k+2,\, k-2,\;\dots,\, k+(j-1),\, k-(j-1),\, k+j,\, \infty
+\]
+(indices mod $2j$); equivalently the finite vertices of $C_k$ are $p_0=k$ and
+$p_s=k+(-1)^{s+1}\ceil{s/2}$ for $s=1,\dots,2j-1$.
+
+\begin{lemma}[Walecki partition; classical, cf.\ \cite{LP92,Alspach08}]\label{int:lem-walecki}
+For $k=0,1,\dots,j-1$ the cycles $C_k$ are edge-disjoint and
+$\bigsqcup_{k=0}^{j-1}E(C_k)=E(K_{2j+1})$.
+\end{lemma}
+
+\begin{proof}
+Each $C_k$ is a cycle: the finite vertices $k, k\pm1,\dots,k\pm(j-1),k+j$ are $2j$ distinct
+elements covering $\mathbb{Z}_{2j}$. We show every edge lies in exactly one $C_k$, $k$ taken
+mod $j$. Write $\delta(x,y)$ for the circular distance of $x,y\in\mathbb{Z}_{2j}$, i.e.\ the
+minimum of $\pm(x-y)$ mod $2j$ in $\{0,\dots,j\}$.
+
+Reading off consecutive differences in the sequence $p_s$ (as above,
+$p_{s+1}-p_s=\pm(s+1)$), one checks that the finite edges of $C_k$ are exactly the pairs
+$\{k+t,\,k-t\}$ for $t\in\mathbb{Z}_{2j}\setminus\{0,j\}$ and the pairs
+$\{k+t,\,k-t+1\}$ for $t\in\mathbb{Z}_{2j}$, together with the two $\infty$-edges
+$\{\infty,k\}$, $\{\infty,k+j\}$. (In each of the two forms an edge is produced twice, once
+from each endpoint, so it is counted once; $t=0$ and $t=j$ would give loops in the first
+form and are excluded.) Hence $C_k$ has, among finite edges, two edges of each circular
+distance $1,\dots,j-1$ and one edge of distance $j$.
+
+Now fix an edge $e=\{x,y\}$ of $K_{2j+1}$ and let $d=\delta(x,y)$.
+\begin{itemize}[leftmargin=1.5em]
+\item If $y=x+j$ (the diameter case, $d=j$): for $j$ odd, $e$ has the form
+$\{k+t,k-t+1\}$, which forces $2k\equiv 2x+d-1\pmod{2j}$, a unique solution mod $j$ (the
+right side is even); for $j$ even, $e$ has the form $\{k+t,k-t\}$ with $2t\equiv d=j$,
+forcing $2k\equiv 2x+j\pmod{2j}$, again a unique solution mod $j$. So $e$ lies in exactly
+one $C_k$.
+\item If $d<j$ is even: $e=\{x,x+d\}=\{k+t,k-t\}$ forces $2k\equiv 2x+d\pmod{2j}$, unique
+mod $j$.
+\item If $d<j$ is odd: $e=\{x,x+d\}=\{k+t,k-t+1\}$ forces $2k\equiv 2x+d-1\pmod{2j}$,
+unique mod $j$.
+\item If $e=\{\infty,x\}$: $e\in C_k$ iff $x\in\{k,k+j\}$, i.e.\ $k\equiv x$ or $x+j$
+(mod $2j$), a unique class mod $j$.
+\end{itemize}
+In each case $e$ lies in exactly one of $C_0,\dots,C_{j-1}$, and each $C_k$ has $2j+1$
+edges, so the $j(2j+1)=\binom{2j+1}{2}$ edges are partitioned.
+\end{proof}
+
+\subsection{Notation for the machine chapters}\label{int:subsec-machnotation}
+
+The machine chapters (Section~\ref{sec:computation} and the formalization material of
+Section~\ref{sec:open}) work with finite
+combinatorial instances; we fix the notation once here, transcribed so that the chapter
+statements are readable without further apparatus.
+
+\begin{definition}[instances]\label{int:def-instance}
+An \emph{instance} is $I=(N,P,T,d)$: $\mathbb{Z}_N:=\mathbb{Z}/N\mathbb{Z}$;
+$P\subseteq\mathbb{Z}_N$ with $|P|=p$; $T=(t_1,t_2,t_3)$, three pairwise distinct elements
+of $\mathbb{Z}_N$; $d=(d_1,d_2,d_3)$ with $d_i\ge1$; and the capacity surplus
+$\beta:=p-d_1-d_2-d_3\ge1$ (capacity admission: $d_1\le p-[t_1\in P]$). The shifts are
+$\delta_{12}:=t_1-t_2$, $\delta_{13}:=t_1-t_3$, $\delta_{23}:=t_2-t_3$ (mod $N$). The
+instance is \emph{aligned} (\emph{so1}) when, with $g:=\gcd(\delta_{12},N)$ and
+$L:=\mathrm{ord}(\delta_{12})$, one has $\delta_{13}\equiv k\,\delta_{12}\pmod N$ for the
+canonical $k\in[2,L)$; equivalently, $t_1,t_2,t_3$ lie on one coset (``line'') of
+$\langle\delta_{12}\rangle$.
+\end{definition}
+
+\begin{definition}[legal pairs and the value functional]\label{int:def-legalval}
+For $C_1\subseteq P\setminus\{t_1\}$ put $B_{12}:=C_1-\delta_{12}$ and
+$Q(C_1):=P\setminus(C_1\cup(B_{12}\cap P)\cup\{t_2\})$. A \emph{legal pair} is
+$(C_1,C_2)$ with $C_1\subseteq P\setminus\{t_1\}$, $|C_1|=d_1$, $C_2\subseteq Q(C_1)$,
+$|C_2|=d_2$. With $F_{13}:=(C_1-\delta_{13})\cap P$ and $F_{23}:=(C_2-\delta_{23})\cap P$,
+the \emph{value} of a legal pair is the three-term count
+\[
+\mathrm{val}(C_1,C_2)
+ :=\bigl|F_{13}\setminus(C_1\cup C_2)\bigr|
+  +\bigl|F_{23}\setminus(C_1\cup C_2\cup F_{13})\bigr|
+  +\bigl|\{t_3\}\cap P\setminus(C_1\cup C_2)\bigr| .
+\]
+The \emph{min-val} of the instance is the minimum of $\mathrm{val}$ over all legal pairs.
+\end{definition}
+
+The \emph{so1 (aligned) family} is the family of aligned instances; it is the family on
+which the paper layer of the conditional chain is formulated, and the machine accounts of
+Section~\ref{sec:computation} sweep exactly the statement ``every so1 instance with $\beta\ge2$
+has $\min\mathrm{val}\le1$'' on the explicitly tested domains (the sweep domain $\beta\ge1$
+contains the $\beta\ge2$ slice). The candidate form of that statement is registered as
+Conjecture~\ref{conj:clacand} in Section~\ref{subsubsec:criteria}; its general-$N$ existence
+half is Conjecture~\ref{int:conj-gapex}.
+
+\subsection{Two reinsertion lemmas from the literature}\label{int:subsec-fanlemmas}
+
+The Fan-type arguments of Section~\ref{subsec:astar} and the budget framework of
+Section~\ref{int:subsec-conditional} consume two deletion--reinsertion lemmas, which we
+state in the form used throughout; both follow the restatements in \cite{BS21}
+(Lemmas~6 and~7 there), and we record our provenance boundaries with them.
+
+\begin{lemma}[addible edge; {\cite{Fan05},\cite{BS21}}]\label{int:lem-fan6}
+Let $uv\in E(G)$ and let $D'$ be a path decomposition of $G-uv$. If
+$D'(v)>\ |\{w\in N_{G-uv}(u) : D'(w)=0\}|$, then $G$ has a path decomposition $D$ with
+$|D|=|D'|$, $D(u)=D'(u)+1$, $D(v)=D'(v)-1$, and $D(w)=D'(w)$ for all other $w$. One says that
+$uv$ is \emph{addible towards $u$}.
+\end{lemma}
+
+\begin{remark}[transcription, downgrade and machine evidence]\label{int:rem-fan6}
+The proof of Lemma~\ref{int:lem-fan6} in \cite{Fan05} could not be consulted; the statement
+follows the restatement in \cite{BS21} (Lemma~6) and has not been independently checked
+against the original. A strengthening of the lemma that additionally requires the
+underlying re-arrangement to preserve the endpoint profile of $D'$ pointwise is false in
+general (a five-vertex counterexample is machine-certified); the lemma as stated imposes no
+such requirement and has no known counterexample, and the Lean formalization used in
+Section~\ref{sec:computation} carries the four-clause form obtained by deleting the final
+pointwise clause $D(w)=D'(w)$ for the remaining vertices --- no application in this paper
+consumes that clause. The machine evidence is direction-sensitive and has been
+direction-corrected: the bidirectional rescan is complete at $n\le6$, all
+$1{,}701{,}141{,}150$ ordered instances at $n=6$ (the fixed-orientation half exactly
+reproducing the historical census of $850{,}570{,}575$), with zero violations
+(Section~\ref{com:subsec-pipeline}).
+\end{remark}
+
+\begin{lemma}[star absorption; {\cite{Fan05},\cite{BS21}}]\label{int:lem-fan7}
+Let $B=\{uw_1,\dots,uw_h\}$ be a set of $h$ edges incident to $u$, let $D'$ be a path
+decomposition of $G-B$ in which every neighbour of $u$ \emph{in $G$} has $D'\ge 1$, and let
+$uw$ be a specified edge of $B$. Then there is a set $A\subseteq B$ with $uw\in A$ and
+$|A|\ge\ceil{h/2}$ such that the edges of $A$ can be added back one by one, each by
+Lemma~\ref{int:lem-fan6} towards $u$, preserving $|D|$ and increasing $D(u)$ by one at each
+step.
+\end{lemma}
+
+\begin{remark}\label{int:rem-fan7}
+The hypothesis of Lemma~\ref{int:lem-fan7} is read over the neighbours of $u$ \emph{in
+$G$}, so that it includes the star vertices $w_i$ themselves, which are not neighbours of
+$u$ in $G-B$; this stronger reading is the one verified in every application below. As with
+Lemma~\ref{int:lem-fan6}, the proof in \cite{Fan05} (Lemma~3.6 there) could not be
+consulted, and the transcription from the restatement in \cite{BS21} (Lemma~7) has not been
+independently checked against the original.
+\end{remark}
+
+\subsection{The absorption-cost accounting and the budget conjecture}\label{int:subsec-budget}
+
+Several proofs in the literature --- Lov\'asz' deletion--reinsertion, Fan's star absorption,
+and the analysis of minimal counterexamples --- fail at the same type of point: one needs a
+decomposition of a reduced graph in which \emph{specified vertices hold sufficiently many
+path endpoints}, and the count of available endpoints is not controlled by the usual
+hypotheses. The following elementary accounting fact, quoted from the project's
+verification work, quantifies the obstruction class once and is used only as a viewpoint in
+this paper.
+
+\begin{remark}[absorption cost]\label{rem:absorb}
+Let $G$ be a graph, $D$ a path decomposition of $G$, $v$ a vertex not incident with any
+edge of $G$ ($v$ may be a new vertex), and $N=\{w_1,\dots,w_d\}\subseteq V(G)$ a set of $d$
+distinct vertices; let $G^+=G+\{vw: w\in N\}$. Build the bipartite graph $B(D)$ with left
+side the $d$ edges $vw$ of the star and right side the paths of $D$, where $vw$ is adjacent
+to $P$ iff $P$ has $w$ (or $v$) as an endpoint; let $\mu^*$ be a maximum matching of
+$B(D)$. Within the operation class --- (i) attach a star edge $vw$ to the $w$-end of a path
+of $D$ ending at $w$; (ii) pair two star edges $vw,vw'$ into the single path $w$--$v$--$w'$;
+(iii) let a star edge be a single-edge path --- the minimum number of new paths required to
+extend $D$ to a decomposition of $G^+$ is exactly $\ceil{(d-\mu^*)/2}$, and the resulting
+$D(v)$ can be made at least $\mu^*$. The equality holds within the operation class and is
+\emph{not} a lower bound for arbitrary decompositions of $G^+$. Three obstruction
+phenomena in the literature are instances of ``the cost exceeds the budget'': the
+Lov\'asz-style vertex reinsertion gap (the unproved strengthening of
+Theorem~\ref{int:thm-lovasz} to path-only decompositions with endpoint control), the parity
+wall for even-sized stars in the Fan engine (a star of even size leaves its centre even, so
+no endpoint at the centre is forced), and the simplicity wall of Lemma~\ref{int:lem-fan6} (a
+host endpoint may exist but be unusable because the path through it already contains the
+reinsertion target).
+\end{remark}
+
+\subsection{The shape of the conditional route}\label{int:subsec-conditional}
+
+The conditional chapters measure, at each vertex, the one quantity that the classical
+deletion--reinsertion arguments leave uncontrolled: the number of path endpoints a
+decomposition can be made to hold at a specified vertex.
+
+\begin{definition}[endpoint budget]\label{int:def-budget}
+For a connected graph $G$ and an even-degree non-isolated vertex $x$ of $G$, the
+\emph{endpoint budget} $\beta(G,x)$ is the minimum cardinality of a path decomposition $D$
+of $G$ in which $x$ is an endpoint of at least two paths, i.e.\
+$\beta(G,x):=\min\{|D| : D \text{ a path decomposition of } G,\ D(x)\ge2\}$. The
+\emph{budget conjecture} $K$ is the statement that $\beta(G,x)\le\ceil{n/2}$ for every
+connected $G$ on $n$ vertices and every even-degree non-isolated vertex $x$.
+\end{definition}
+
+\begin{theorem}\label{int:thm-Kgallai}
+Conjecture~$K$ implies Gallai's conjecture: every connected $n$-vertex graph $G$ has
+$\pn(G)\le\ceil{n/2}$.
+\end{theorem}
+
+\begin{proof}
+If $G$ has an even-degree non-isolated vertex $x$, then $K$ provides a decomposition with
+at most $\ceil{n/2}$ paths and we are done. Otherwise $G$ is all-odd, so $n$ is even, and
+Theorem~\ref{int:thm-lovasz} gives a decomposition into $p$ paths and $c$ cycles with
+$p+c\le n/2$. In a mixed path-cycle decomposition the parity identity of
+Lemma~\ref{int:lem-LB1}(iii) still holds (cycles contribute even degree at each vertex), so
+every vertex is an endpoint of at least one path and $2p\ge n$; hence $p\ge n/2$, so
+$p=n/2$, $c=0$, and the decomposition is pure, giving $\pn(G)\le n/2=\ceil{n/2}$.
+\end{proof}
+
+Thus $K$ is a strengthening of Gallai's conjecture, not a consequence of it. The remaining
+links of the conditional chain --- from the degree-two layer of $K$ through the odd
+semi-clique pair-hosting conjecture to the placement problems --- are assembled descriptively
+below and carried at ledger level in Section~\ref{sta:subsec-limitations}; here we restate,
+descriptively, the eight-item premise set behind the conditional-chain claim of
+Section~\ref{int:subsec-contrib}; each link's verification level, premises and residual gaps
+are registered at pointer level in the limitations subsection.
+
+\begin{theorem}[conditional chain; descriptive registration]\label{int:thm-ledger}
+There is a chain of implications, each available at paper level or registered at pointer
+level with its verification status recorded, leading from the conjunction of the eight-item
+premise set listed in this subsection (with the valuation criterion of
+Conjecture~\ref{conj:clacand} entering, if at all, only through the bridge premises as a
+parallel, redundant-for-implication route) to the conclusion
+$\pn(G)\le\ceil{n/2}$ for every connected $G$ on $n$ vertices. The theorem is the
+\emph{existence of the conditional route}, not the truth of any premise: every premise is an
+open conjecture, an unverified external step, or a paper-open item with machine backing,
+none is claimed proved, and no unconditional progress on Gallai's conjecture is claimed.
+\end{theorem}
+
+Each item below is an \emph{open} conjecture, an \emph{unverified external step}, or a
+\emph{paper-open item with machine backing}; none is claimed proved.
+\begin{itemize}[leftmargin=2em,itemsep=0.1em]
+\item \emph{(external, flagged unverified against the journal record)} the all-odd
+branch of the Lov\'asz decomposition theorem (Theorem~\ref{int:thm-lovasz}) as consumed by
+the proof that the budget conjecture implies Gallai's conjecture: if $G$ is all-odd, the
+theorem gives $p$ paths and $c$ cycles with $p+c\le n/2$, and the parity identity forces
+$p=n/2$, $c=0$.
+\item \emph{(external-origin, open)} BP-odd: every connected graph $H$ on an odd
+number $2k+1$ of vertices with $|E(H)|\le 2k^2$ satisfies $\pn(H)\le k$ --- the odd-order,
+tightness-special case of Question~1.1 of \cite{BP19}.
+\item \emph{(internal, open)} the odd-order density conjecture at $k\ge4$: every
+tight connected graph on $2k+1$ vertices ($\pn=\ceil{(2k+1)/2}$) is an odd semi-clique;
+proved at $k\le3$ by exhaustive census, machine-certified at $k=4$ and supported by directed
+search at $k=5$, open at $k\ge6$.
+\item SC-PH: every odd semi-clique on $2k+1$ vertices hosts any two specified
+non-isolated vertices on distinct paths of a $(k+1)$-path decomposition.
+\item \emph{(open)} the surviving layers of the budget conjecture $K$: the
+degree-two cut-vertex branch (computational level, awaiting theorization) and the
+degree-$\ge4$ general-layer residual (a recorded dead zone of $42$ instances, discharged at
+witness level only). \textbf{This premise is open as stated}: the recorded instances have
+witness certificates, but no general paper proof exists, and the premise must be quoted as
+an open hypothesis wherever the chain is used.
+\item \emph{(paper-open, machine-backed)} general solvability of the placement
+problem on the $(E)$-side, cyclic domain included: zero counterexamples at $k\le7$ over all
+$188$ types (and machine accounts beyond), paper proof open.
+\item \emph{(paper-open)} the $(R)$-side on the $3f\ge k$ domain: computational at
+$k\le7$ (zero counterexamples), paper proof open.
+\item \emph{(bridge, open)} the valuation-line bridge conditions: three registered
+open conjectures of the difference-board analysis, quoted here descriptively and carried at
+pointer level in the ledger.
+\end{itemize}
+
+We record explicitly what the ledger is and is not. The chain above is \emph{not} assembled
+into a single master theorem of the form ``premises $\wedge$ criterion $\Rightarrow$ Gallai''
+in this paper: the bridge premises (the last three items) are registered at pointer level
+only, their full definitions residing in the project archive, so the paper certifies their
+provenance rather than their re-adjudicability. What the ledger delivers is checkability:
+any future resolution of any single premise propagates along the described chain through
+paper-level implications whose verification status is recorded. No premise is claimed to be
+within reach of the machine layer except as recorded, and the conditional route must not be
+cited as progress towards Gallai's conjecture beyond its registered content.
+
+\subsection{Reproducibility}\label{int:subsec-repro}
+
+The machine pipeline behind every computational claim in this paper --- the exact-value
+computations, the decomposition verifiers, the per-instance sweeps of
+Section~\ref{sec:computation}, and the Lean development reported there and in
+Section~\ref{sec:open} --- will be released together with the paper: the verification scripts, the certificate and
+ledger files, the Lean sources with their axiom profiles, and the per-theorem verification
+status table. The release makes every machine-checked number in this paper independently
+re-runnable and every Lean theorem independently re-compilable.
+
+% end sec-intro.tex
