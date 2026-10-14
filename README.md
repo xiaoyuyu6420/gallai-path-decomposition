@@ -93,6 +93,16 @@ quoted as "machine-checked by kernel reduction", never as pure proofs. An axiom 
 five declared `sorry` placeholders and is cited strictly as paper proofs with
 formalization in progress.
 
+Two audit records are shipped, covering different declaration sets. The audit you can
+regenerate locally (`lake env lean AxiomAudit.lean` inside `formalization/`, recorded in
+`formalization/lean_axioms.log`) covers the packing-table modules released there. The
+axiom profiles of `pNumK4n_odd_all`, `pCompleteOdd`, and the other earlier declarations
+(those sources live in the hash-pinned snapshot
+`verification/snapshot/front583/lean/`) are recorded in
+`formalization/lean_axioms_2026-10-10-review.log` from the 2026-10-10 independent
+review — see `formalization/README.md` ("Axiom audit", "Provenance") for the exact
+correspondence.
+
 ## Scope and limitations
 
 The paper states every claim at its verified strength. In particular it does **not**
